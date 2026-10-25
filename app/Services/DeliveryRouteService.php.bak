@@ -1,0 +1,137 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Order;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+class DeliveryRouteService
+{
+    public function getRoute(Order $order): ?array
+    {
+        if (
+            $order->status !== 'on_the_way' ||
+            $order->delivery_type !== 'delivery' ||
+            $order->driver_tracking_started_at === null ||
+            $order->driver_tracking_stopped_at !== null ||
+            $order->driver_location_updated_at === null ||
+            $order->driver_location_updated_at->lt(now()->subSeconds(60))
+        ) {
+            return null;
+        }
+
+        $coordinates = [
+            $order->driver_latitude,
+            $order->driver_longitude,
+            $order->delivery_latitude,
+            $order->delivery_longitude,
+        ];
+
+        if (in_array(null, $coordinates, true)) {
+            return null;
+        }
+
+        [$fromLat, $fromLng, $toLat, $toLng] =
+            array_map('floatval', $coordinates);
+
+        if (
+            abs($fromLat) > 90 ||
+            abs($toLat) > 90 ||
+            abs($fromLng) > 180 ||
+            abs($toLng) > 180
+        ) {
+            return null;
+        }
+
+        $baseUrl = rtrim(
+            (string) config('services.delivery_routing.url', ''),
+            '/'
+        );
+
+        if (
+            !$baseUrl ||
+            !str_starts_with($baseUrl, 'https://')
+        ) {
+            return null;
+        }
+
+        // Redondear para reutilizar rutas próximas y evitar
+        // consultar al proveedor por cada pequeño movimiento.
+        $key = 'driver_route_v2_' . hash(
+            'sha256',
+            implode('|', [
+                $order->id,
+                round($fromLat, 4),
+                round($fromLng, 4),
+                round($toLat, 5),
+                round($toLng, 5),
+            ])
+        );
+
+        return Cache::remember(
+            $key,
+            now()->addSeconds(30),
+            function () use (
+                $baseUrl,
+                $fromLat,
+                $fromLng,
+                $toLat,
+                $toLng
+            ) {
+                try {
+                    $points = sprintf(
+                        '%.7F,%.7F;%.7F,%.7F',
+                        $fromLng,
+                        $fromLat,
+                        $toLng,
+                        $toLat
+                    );
+
+                    $response = Http::connectTimeout(3)
+                        ->timeout(8)
+                        ->get(
+                            $baseUrl . '/route/v1/driving/' . $points,
+                            [
+                                'overview' => 'full',
+                                'geometries' => 'geojson',
+                                'steps' => 'false',
+                            ]
+                        );
+
+                    if (!$response->successful()) {
+                        return null;
+                    }
+
+                    $route = $response->json('routes.0');
+                    $geometry = data_get($route, 'geometry');
+
+                    if (
+                        !is_array($geometry) ||
+                        ($geometry['type'] ?? null) !== 'LineString' ||
+                        !is_array($geometry['coordinates'] ?? null) ||
+                        count($geometry['coordinates']) < 2
+                    ) {
+                        return null;
+                    }
+
+                    return [
+                        'geometry' => $geometry,
+                        'distance_km' => round(
+                            (float) data_get($route, 'distance', 0) / 1000,
+                            2
+                        ),
+                    ];
+
+                } catch (\Throwable $exception) {
+                    Log::warning('Error calculando ruta GPS', [
+                        'error' => $exception->getMessage(),
+                    ]);
+
+                    return null;
+                }
+            }
+        );
+    }
+}

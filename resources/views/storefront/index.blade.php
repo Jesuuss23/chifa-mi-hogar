@@ -94,17 +94,14 @@
                 <a href="{{ route('storefront.show', $product->slug) }}"
                    class="relative block overflow-hidden">
 
-                    @if($product->image_path)
-                    <x-catalog-image
-                        :item="$product"
-                        variant="detail"
-                        loading="eager"
-                        class="w-full aspect-[4/3] object-cover rounded-2xl"
-                    />
+                    @if($product->mediaAsset || $product->image_path)
+                        <x-catalog-image
+                            :item="$product"
+                            variant="card"
+                            class="h-full w-full object-cover"
+                        />
                     @else
-                        <div class="flex aspect-[4/3] items-center
-                                    justify-center bg-[#F2E8DD]
-                                    text-center text-sm text-gray-500">
+                        <div class="flex h-full w-full items-center justify-center bg-[#F2E8DD] text-gray-500">
                             Fotografía próximamente
                         </div>
                     @endif

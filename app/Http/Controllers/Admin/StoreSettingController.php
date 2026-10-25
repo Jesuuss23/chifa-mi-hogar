@@ -49,7 +49,11 @@ class StoreSettingController extends Controller
                 'min:0',
                 'max:999999.99',
             ],
-
+            'google_reviews_url' => [
+                'nullable',
+                'url:http,https',
+                'max:500',
+            ],
             'additional_cost_per_km' => [
                 'required',
                 'numeric',

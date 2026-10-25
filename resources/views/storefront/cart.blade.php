@@ -56,24 +56,70 @@
                     <article class="rounded-2xl bg-white p-5 shadow-sm">
                         <div class="flex gap-4">
 
-                            @if($item['product']->image_path)
-                            <x-catalog-image
-                                :item="$product"
-                                variant="card"
-                                class="w-full aspect-[4/3] object-cover rounded-xl"
-                            />
+                        @if($item['type'] === 'combo')
+
+                            @if($item['combo']->mediaAsset)
+                                <img
+                                    src="{{ $item['combo']->mediaAsset->cardUrl() }}"
+                                    alt="{{ $item['combo']->name }}"
+                                    class="h-28 w-32 rounded-xl object-cover"
+                                >
                             @endif
 
+                        @else
+
+                            @if($item['product']->media_asset_id || $item['product']->image_path)
+                                <x-catalog-image
+                                    :item="$item['product']"
+                                    variant="card"
+                                    class="h-28 w-32 rounded-xl object-cover"
+                                />
+                            @endif
+
+                        @endif
+
                             <div class="min-w-0 flex-1">
-                                <h2 class="font-bold">
+                            <h2 class="font-bold">
+                                @if($item['type'] === 'combo')
+                                    {{ $item['combo']->name }}
+                                    <span class="ml-2 rounded bg-amber-100 px-2 py-1 text-xs text-amber-800">
+                                        Combo
+                                    </span>
+                                @else
                                     {{ $item['product']->name }}
-                                </h2>
+                                @endif
+                            </h2>
+
+                            @if($item['type'] === 'combo')
+
+                                <div class="mt-3 space-y-1">
+
+                                    @foreach($item['components'] as $component)
+
+                                        <p class="text-xs text-gray-600">
+                                            {{ $component['selected_quantity'] }} ×
+                                            {{ $component['name'] }}
+
+                                            @if($component['additional_quantity'] > 0)
+                                                <span class="font-semibold text-[#982E26]">
+                                                    (+{{ $component['additional_quantity'] }} adicional)
+                                                </span>
+                                            @endif
+                                        </p>
+
+                                    @endforeach
+
+                                </div>
+
+                            @else
 
                                 @foreach($item['extras'] as $extra)
                                     <p class="mt-1 text-xs text-gray-500">
                                         + {{ $extra->name }}
                                     </p>
                                 @endforeach
+
+                            @endif
 
                                 <p class="mt-3 font-bold text-[#982E26]">
                                     S/ {{ number_format($item['unit_price'], 2) }}
@@ -157,10 +203,11 @@
                     la dirección de entrega.
                 </p>
 
-                <p class="mt-6 rounded-xl bg-[#FFF4E7] p-4
-                          text-center text-sm text-gray-700">
-                    Próximamente: confirmar pedido y enviar por WhatsApp.
-                </p>
+                <a href="{{ route('cart.checkout') }}"
+                class="mt-6 block rounded-xl bg-[#982E26] px-6 py-4
+                        text-center font-bold text-white">
+                    Continuar con mi pedido
+                </a>
             </aside>
 
         </div>

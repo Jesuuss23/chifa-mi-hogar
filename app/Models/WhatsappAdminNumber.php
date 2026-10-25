@@ -12,6 +12,7 @@ class WhatsappAdminNumber extends Model
         'is_active',
         'can_control_store',
         'receive_orders',
+        'last_inbound_at',
     ];
 
     protected function casts(): array
@@ -20,6 +21,8 @@ class WhatsappAdminNumber extends Model
             'is_active' => 'boolean',
             'can_control_store' => 'boolean',
             'receive_orders' => 'boolean',
+            'last_inbound_at' => 'datetime',
         ];
     }
+
 }

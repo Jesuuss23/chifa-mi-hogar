@@ -14,7 +14,7 @@
     <div class="grid gap-10 lg:grid-cols-2">
 
         <div>
-            @if($product->image_path)
+            @if($product->mediaAsset || $product->image_path)
                 <x-catalog-image
                     :item="$product"
                     variant="detail"

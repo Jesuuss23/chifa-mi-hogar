@@ -317,7 +317,23 @@
                           placeholder="Por el momento no estamos recibiendo pedidos.">{{ old('closed_message', $settings->closed_message) }}</textarea>
             </div>
         </section>
+        <div class="space-y-2">
+            <label class="block font-semibold">
+                Enlace para recibir reseñas de Google
+            </label>
 
+            <input
+                type="url"
+                name="google_reviews_url"
+                value="{{ old('google_reviews_url', $settings->google_reviews_url) }}"
+                placeholder="https://g.page/r/..."
+                class="w-full rounded-lg border-gray-300"
+            >
+
+            <p class="text-sm text-gray-500">
+                Los clientes podrán abrir Google y dejar una reseña del negocio.
+            </p>
+        </div>
         <div class="flex flex-wrap items-center justify-end gap-3">
             <a href="{{ route('admin.products.index') }}"
                class="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-700">

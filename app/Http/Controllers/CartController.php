@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\ComboService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -112,7 +113,69 @@ class CartController extends Controller
         $result = [];
         $cleanCart = [];
 
+        $comboService = app(ComboService::class);
+
         foreach ($cart as $key => $item) {
+
+            // ================================================
+            // COMBOS PERSONALIZADOS
+            // ================================================
+            if (($item['type'] ?? null) === 'combo') {
+
+                try {
+                    $quantity = max(
+                        1,
+                        min(20, (int) ($item['quantity'] ?? 1))
+                    );
+
+                    $line = $comboService->buildLine([
+                        'type' => 'combo',
+                        'id' => $item['combo_id'] ?? null,
+                        'quantity' => $quantity,
+                        'components' => $item['components'] ?? [],
+                    ]);
+
+                    $combo = \App\Models\Combo::with('mediaAsset')
+                        ->find($line['id']);
+
+                    if (!$combo) {
+                        continue;
+                    }
+
+                    $cleanCart[$key] = [
+                        'type' => 'combo',
+                        'combo_id' => $combo->id,
+                        'quantity' => $quantity,
+                        'components' => $item['components'] ?? [],
+                    ];
+
+                    $result[$key] = [
+                        'key' => $key,
+                        'type' => 'combo',
+                        'combo' => $combo,
+                        'product' => null,
+                        'extras' => collect(),
+                        'components' => $line['components'],
+                        'quantity' => $quantity,
+                        'unit_price' => (
+                            $line['base_cents']
+                            + $line['extras_cents']
+                        ) / 100,
+                        'total' => $line['line_total_cents'] / 100,
+                    ];
+
+                } catch (ValidationException $exception) {
+                    // El combo dejó de estar disponible
+                    // o cambió la configuración del catálogo.
+                    continue;
+                }
+
+                continue;
+            }
+
+            // ================================================
+            // PLATOS TRADICIONALES
+            // ================================================
             $product = Product::with('category')
                 ->where('is_available', true)
                 ->whereHas('category', fn ($query) =>
@@ -120,7 +183,7 @@ class CartController extends Controller
                 )
                 ->find($item['product_id'] ?? null);
 
-            if (! $product) {
+            if (!$product) {
                 continue;
             }
 
@@ -136,16 +199,19 @@ class CartController extends Controller
                 ->whereIn('extras.id', $requestedIds)
                 ->get();
 
-            // Si cambió la disponibilidad de un adicional,
-            // retiramos esta combinación del carrito.
             if ($extras->count() !== count($requestedIds)) {
                 continue;
             }
 
-            $quantity = max(1, min(20, (int) ($item['quantity'] ?? 1)));
+            $quantity = max(
+                1,
+                min(20, (int) ($item['quantity'] ?? 1))
+            );
 
             $unitPrice = (float) $product->price
-                + $extras->sum(fn ($extra) => (float) $extra->price);
+                + $extras->sum(
+                    fn ($extra) => (float) $extra->price
+                );
 
             $cleanCart[$key] = [
                 'product_id' => $product->id,
@@ -155,8 +221,11 @@ class CartController extends Controller
 
             $result[$key] = [
                 'key' => $key,
+                'type' => 'product',
                 'product' => $product,
+                'combo' => null,
                 'extras' => $extras,
+                'components' => [],
                 'quantity' => $quantity,
                 'unit_price' => $unitPrice,
                 'total' => round($unitPrice * $quantity, 2),

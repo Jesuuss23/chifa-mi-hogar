@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\StoreSetting;
 use App\Models\WhatsappAdminNumber;
 use App\Models\WhatsappCommandLog;
+use App\Services\MetaWhatsappService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -39,8 +40,10 @@ class MetaWhatsappWebhookController extends Controller
         return response('Forbidden', 403);
     }
 
-    public function receive(Request $request): Response
-    {
+    public function receive(
+        Request $request,
+        MetaWhatsappService $whatsapp
+    ): Response {
         $secret = config('meta_whatsapp.app_secret');
 
         if (!is_string($secret) || $secret === '') {
@@ -64,28 +67,44 @@ class MetaWhatsappWebhookController extends Controller
 
         $payload = $request->json()->all();
 
+        if (($payload['object'] ?? '') !== 'whatsapp_business_account') {
+            return response('EVENT_RECEIVED', 200);
+        }
+
         foreach (($payload['entry'] ?? []) as $entry) {
             foreach (($entry['changes'] ?? []) as $change) {
+                if (($change['field'] ?? '') !== 'messages') {
+                    continue;
+                }
+
                 $value = $change['value'] ?? [];
 
-                // Solo procesar mensajes del número técnico configurado.
-                $phoneId = (string) (
+                $receivedPhoneId = (string) (
                     $value['metadata']['phone_number_id'] ?? ''
                 );
 
-                $configuredId = (string) config(
-                    'meta_whatsapp.phone_number_id'
+                $configuredPhoneId = (string) config(
+                    'meta_whatsapp.phone_number_id',
+                    ''
                 );
 
                 if (
-                    $configuredId === ''
-                    || $phoneId !== $configuredId
+                    $configuredPhoneId === ''
+                    || $receivedPhoneId !== $configuredPhoneId
                 ) {
                     continue;
                 }
 
                 foreach (($value['messages'] ?? []) as $message) {
-                    $this->processMessage($message);
+                    try {
+                        $this->processMessage($message, $whatsapp);
+                    } catch (\Throwable $e) {
+                        Log::error('Error procesando comando WhatsApp', [
+                            'error' => $e->getMessage(),
+                        ]);
+
+                        return response('Processing failed', 500);
+                    }
                 }
             }
         }
@@ -93,13 +112,16 @@ class MetaWhatsappWebhookController extends Controller
         return response('EVENT_RECEIVED', 200);
     }
 
-    private function processMessage(array $message): void
-    {
+    private function processMessage(
+        array $message,
+        MetaWhatsappService $whatsapp
+    ): void {
         if (($message['type'] ?? '') !== 'text') {
             return;
         }
 
         $messageId = (string) ($message['id'] ?? '');
+
         $sender = preg_replace(
             '/\D+/',
             '',
@@ -107,41 +129,77 @@ class MetaWhatsappWebhookController extends Controller
         );
 
         $command = mb_strtoupper(
-            trim((string) ($message['text']['body'] ?? ''))
+            trim((string) ($message['text']['body'] ?? '')),
+            'UTF-8'
         );
 
         if ($messageId === '' || $sender === '') {
             return;
         }
 
-        if (!in_array($command, [
+        $commands = [
             'ABRIR CHIFA',
             'CERRAR CHIFA',
             'ESTADO CHIFA',
-        ], true)) {
-            return;
-        }
+            'ACTIVAR VENTANA',
+        ];
 
+        // Validar que sea un administrador activo.
         $admin = WhatsappAdminNumber::query()
             ->where('phone', $sender)
             ->where('is_active', true)
-            ->where('can_control_store', true)
             ->first();
 
         if (!$admin) {
-            Log::warning('Comando WhatsApp no autorizado', [
-                'sender' => substr($sender, -4),
-            ]);
-
             return;
         }
 
-        DB::transaction(function () use (
+        // Registrar la fecha real del mensaje recibido por Meta.
+        $timestamp = filter_var(
+            $message['timestamp'] ?? null,
+            FILTER_VALIDATE_INT
+        );
+
+        if ($timestamp !== false && $timestamp !== null) {
+            $receivedAt = \Illuminate\Support\Carbon::createFromTimestamp(
+                (int) $timestamp,
+                'UTC'
+            );
+
+            // No permitir que mensajes antiguos o fechas futuras
+            // alteren incorrectamente la ventana de atención.
+            if (
+                $receivedAt->lte(now()->addMinutes(2)) &&
+                $receivedAt->gt($admin->last_inbound_at ?? now()->subYears(10))
+            ) {
+                $admin->update([
+                    'last_inbound_at' => $receivedAt,
+                ]);
+            }
+        }
+
+        // Un mensaje normal abre la ventana en Meta,
+        // aunque no sea uno de nuestros comandos.
+        if (!in_array($command, $commands, true)) {
+            return;
+        }
+
+        // Solo los administradores con permiso pueden
+        // ejecutar comandos que controlan la tienda.
+        if (
+            $command !== 'ACTIVAR VENTANA' &&
+            !$admin->can_control_store
+        ) {
+            return;
+        }
+
+        // Guardar el comando y actualizar el negocio de forma atómica.
+        // Si Meta reenvía el mismo ID, no ejecutaremos el comando otra vez.
+        $result = DB::transaction(function () use (
             $messageId,
             $sender,
             $command
         ) {
-            // Impide ejecutar dos veces el mismo mensaje de Meta.
             $log = WhatsappCommandLog::firstOrCreate(
                 ['meta_message_id' => $messageId],
                 [
@@ -152,34 +210,78 @@ class MetaWhatsappWebhookController extends Controller
             );
 
             if (!$log->wasRecentlyCreated) {
-                return;
+                return null;
             }
+
+            $settings = StoreSetting::current();
 
             $settings = StoreSetting::query()
+                ->whereKey($settings->id)
                 ->lockForUpdate()
-                ->find(1);
-
-            if (!$settings) {
-                $settings = StoreSetting::current();
-            }
+                ->firstOrFail();
 
             if ($command === 'ABRIR CHIFA') {
-                $settings->update([
-                    'accepting_orders' => true,
-                ]);
+                $settings->accepting_orders = true;
+                $settings->save();
             }
 
             if ($command === 'CERRAR CHIFA') {
-                $settings->update([
-                    'accepting_orders' => false,
-                ]);
+                $settings->accepting_orders = false;
+                $settings->save();
             }
 
+            $isOpen = (bool) $settings->accepting_orders;
+
             $log->update([
-                'result' => $settings->accepting_orders
-                    ? 'open'
-                    : 'closed',
+                'result' => $isOpen ? 'open' : 'closed',
             ]);
-        });
+
+            return [
+                'command' => $command,
+                'is_open' => $isOpen,
+            ];
+        }, 3);
+
+        if ($result === null) {
+            return;
+        }
+
+        $reply = match ($command) {
+            'ABRIR CHIFA' =>
+                "🟢 CHIFA MI HOGAR\n\n"
+                . "La recepción de pedidos está ABIERTA.\n"
+                . "Los clientes ya pueden realizar sus pedidos.",
+
+            'CERRAR CHIFA' =>
+                "🔴 CHIFA MI HOGAR\n\n"
+                . "La recepción de pedidos está CERRADA.\n"
+                . "El catálogo seguirá visible, pero no se aceptarán nuevos pedidos.",
+            'ACTIVAR VENTANA' =>
+                "🟢 CHIFA MI HOGAR\n\n"
+                . "Mensaje recibido correctamente.\n"
+                . "El sistema registró tu última interacción "
+                . "para las notificaciones de pedidos.\n\n"
+                . "La ventana de atención de Meta dura 24 horas "
+                . "desde tu último mensaje.",
+            'ESTADO CHIFA' =>
+                "📋 ESTADO DE CHIFA MI HOGAR\n\n"
+                . (
+                    $result['is_open']
+                    ? "🟢 ABIERTO: recibiendo pedidos."
+                    : "🔴 CERRADO: no se reciben pedidos."
+                ),
+
+            default => null,
+        };
+
+        if ($reply !== null) {
+            $sent = $whatsapp->sendText($sender, $reply);
+
+            if (!$sent) {
+                Log::warning('Comando ejecutado sin respuesta WhatsApp', [
+                    'command_log_message_id' => $messageId,
+                ]);
+            }
+        }
     }
 }

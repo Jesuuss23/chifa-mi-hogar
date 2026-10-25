@@ -28,7 +28,7 @@ class StorefrontController extends Controller
         }
 
         $products = Product::query()
-            ->with('category')
+            ->with(['category', 'mediaAsset'])
             ->where('is_available', true)
             ->whereHas('category', function ($query) {
                 $query->where('is_active', true);

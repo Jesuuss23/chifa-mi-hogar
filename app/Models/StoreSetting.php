@@ -20,6 +20,7 @@ class StoreSetting extends Model
         'accepting_orders',
         'closed_message',
         'whatsapp_group_url',
+        'google_reviews_url',
     ];
 
     protected function casts(): array

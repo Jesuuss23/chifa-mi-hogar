@@ -13,7 +13,16 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
-
+    'geoapify' => [
+        'key' => env('GEOAPIFY_API_KEY'),
+    ],
+    'delivery_routing' => [
+    'url' => env('DELIVERY_ROUTING_URL'),
+    ],
+    'google_places' => [
+        'key' => env('GOOGLE_PLACES_API_KEY'),
+        'place_id' => env('GOOGLE_PLACES_PLACE_ID'),
+    ],
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

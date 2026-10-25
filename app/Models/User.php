@@ -50,4 +50,25 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+    public function isDelivery(): bool
+    {
+        return $this->role === 'delivery';
+    }
+
+    public function assignedDeliveries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(
+            \App\Models\Order::class,
+            'delivery_user_id'
+        );
+    }
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Order::class);
+    }
+
+    public function orderRatings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(OrderRating::class);
+    }
 }
