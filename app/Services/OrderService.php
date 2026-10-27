@@ -411,6 +411,9 @@ class OrderService
             $product = Product::query()
                 ->whereKey($id)
                 ->where('is_available', true)
+                ->whereHas('category', fn ($query) =>
+                    $query->where('is_active', true)
+                )
                 ->first();
 
             if (!$product) {
@@ -433,6 +436,9 @@ class OrderService
 
             $recommendation = ProductRecommendation::query()
                 ->with(['product', 'extras'])
+                ->whereHas('product.category', fn ($query) =>
+                    $query->where('is_active', true)
+                )
                 ->whereKey($id)
                 ->where('is_active', true)
                 ->whereNull('deleted_at')
