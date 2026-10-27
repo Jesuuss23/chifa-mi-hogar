@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let maximumProgressIndex = 0;
 
     async function loadDeliveryMap() {
-        if (routeLoading || document.hidden) return;
+        if (routeLoading || document.hidden || currentStatus !== 'on_the_way') return;
 
         const container = document.getElementById('delivery-route-map');
         const info = document.getElementById('delivery-route-info');
@@ -214,6 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const result = await response.json();
+
+            // Ignorar respuestas GPS que llegaron después de finalizar el pedido.
+            if (currentStatus !== 'on_the_way' || document.hidden) return;
 
             if (!result.gps_fresh || !result.driver) {
                 if (routeLayer) {
@@ -397,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => deliveryMap.invalidateSize(), 100);
 
         } catch (error) {
-            if (info) {
+            if (info && currentStatus === 'on_the_way') {
                 info.textContent =
                     'No se pudo actualizar el mapa. Reintentando...';
             }
@@ -481,36 +484,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateTracking(currentStatus, currentPaymentStatus);
 
+    let statusLoading = false;
+    let trackingInterval = null;
+
+    function isFinished() {
+        return ['delivered', 'cancelled'].includes(currentStatus);
+    }
+
     async function refreshTracking() {
-        if (document.hidden) return;
+        if (document.hidden || statusLoading || isFinished()) return;
+
+        statusLoading = true;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
 
         try {
             const response = await fetch(statusUrl, {
                 headers: { 'Accept': 'application/json' },
                 cache: 'no-store',
-                credentials: 'same-origin'
+                credentials: 'same-origin',
+                signal: controller.signal
             });
 
             if (!response.ok) return;
 
             const data = await response.json();
 
+            // Conservar el último estado válido ante respuestas inesperadas.
+            if (
+                !Object.prototype.hasOwnProperty.call(labels, data.status)
+                || !['pending', 'verified', 'rejected'].includes(data.payment_status)
+            ) return;
+
             currentStatus = data.status;
             currentPaymentStatus = data.payment_status;
 
             updateTracking(currentStatus, currentPaymentStatus);
 
+            if (isFinished()) {
+                clearInterval(trackingInterval);
+                trackingInterval = null;
+            }
         } catch (error) {
             console.warn('No se pudo actualizar el seguimiento.');
+        } finally {
+            clearTimeout(timeout);
+            statusLoading = false;
         }
     }
 
-    refreshTracking();
-    setInterval(() => {
-        if (currentStatus === 'on_the_way' && !document.hidden) {
-            loadDeliveryMap();
-        }
-    }, 15000);
+    // Una sola consulta de estado por ciclo; updateTracking actualiza el mapa
+    // únicamente mientras el pedido está en camino.
+    if (!isFinished()) {
+        trackingInterval = setInterval(refreshTracking, 15000);
+        refreshTracking();
+        document.addEventListener('visibilitychange', refreshTracking);
+    }
     });
 </script>
 @endsection
