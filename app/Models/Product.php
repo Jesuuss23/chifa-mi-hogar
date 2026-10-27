@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Concerns\HasMediaAsset;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     use SoftDeletes;
@@ -42,5 +43,12 @@ class Product extends Model
     public function extras(): BelongsToMany
     {
         return $this->belongsToMany(Extra::class);
+    }
+    public function recommendations(): HasMany
+    {
+        return $this->hasMany(
+            ProductRecommendation::class,
+            'product_id'
+        );
     }
 }

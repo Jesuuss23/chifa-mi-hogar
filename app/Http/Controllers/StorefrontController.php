@@ -60,8 +60,30 @@ class StorefrontController extends Controller
         }
 
         $product->load([
+            'category',
+            'mediaAsset',
+
+            // Adicionales disponibles para el plato.
             'extras' => function ($query) {
-                $query->where('is_available', true)
+                $query
+                    ->where('is_available', true)
+                    ->with([
+                        'mediaAsset',
+                        'extraCategory',
+                    ])
+                    ->orderBy('sort_order')
+                    ->orderBy('name');
+            },
+
+            // Recomendaciones asociadas a este plato.
+            'recommendations' => function ($query) {
+                $query
+                    ->where('is_active', true)
+                    ->with([
+                        'mediaAsset',
+                        'extras.mediaAsset',
+                        'extras.extraCategory',
+                    ])
                     ->orderBy('sort_order')
                     ->orderBy('name');
             },

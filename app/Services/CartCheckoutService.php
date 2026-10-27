@@ -25,6 +25,7 @@ class CartCheckoutService
                 ]);
             }
 
+            // Mantener intacto el flujo de combos.
             if (($entry['type'] ?? null) === 'combo') {
                 $items[] = [
                     'type' => 'combo',
@@ -36,11 +37,36 @@ class CartCheckoutService
                 continue;
             }
 
+            // Nuevo formato de platos personalizados.
+            if (
+                in_array(
+                    $entry['type'] ?? null,
+                    ['product', 'recommendation'],
+                    true
+                )
+                && ($entry['extras_mode'] ?? null) === 'replace'
+            ) {
+                $type = $entry['type'];
+
+                $items[] = [
+                    'type' => $type,
+                    'id' => $type === 'recommendation'
+                        ? ($entry['recommendation_id'] ?? null)
+                        : ($entry['product_id'] ?? null),
+                    'quantity' => $quantity,
+                    'extras_mode' => 'replace',
+                    'extras' => $entry['extras'] ?? [],
+                ];
+
+                continue;
+            }
+
+            // Compatibilidad con el carrito tradicional.
             $extras = [];
 
             foreach (($entry['extra_ids'] ?? []) as $extraId) {
                 $extras[] = [
-                    'id' => $extraId,
+                    'id' => (int) $extraId,
                     'quantity' => 1,
                 ];
             }

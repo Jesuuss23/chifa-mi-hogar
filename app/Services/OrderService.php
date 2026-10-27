@@ -367,6 +367,11 @@ class OrderService
         }, 3);
     }
 
+    public function previewLine(array $item): array
+    {
+        return $this->buildLine($item);
+    }
+
     /**
      * Calcula una línea del carrito.
      */
@@ -449,29 +454,35 @@ class OrderService
             $name = $recommendation->name;
             $description = $recommendation->description;
 
-            foreach ($recommendation->extras as $extra) {
+            if (($item['extras_mode'] ?? 'add') !== 'replace') {
 
-                if (!$extra->is_available) {
-                    throw ValidationException::withMessages([
-                        'items' =>
-                            'Un extra de la recomendación no está disponible.',
-                    ]);
+                foreach ($recommendation->extras as $extra) {
+
+                    if (!$extra->is_available) {
+                        throw ValidationException::withMessages([
+                            'items' =>
+                                'Un extra de la recomendación no está disponible.',
+                        ]);
+                    }
+
+                    $includedQuantity = (int) $extra->pivot->quantity;
+
+                    if (
+                        $includedQuantity < 1 ||
+                        $includedQuantity > 50
+                    ) {
+                        throw ValidationException::withMessages([
+                            'items' => 'Cantidad de extras inválida.',
+                        ]);
+                    }
+
+                    $extras[$extra->id] = [
+                        'id' => $extra->id,
+                        'name' => $extra->name,
+                        'quantity' => $includedQuantity,
+                        'unit_cents' => $this->cents($extra->price),
+                    ];
                 }
-
-                $includedQuantity = (int) $extra->pivot->quantity;
-
-                if ($includedQuantity < 1 || $includedQuantity > 50) {
-                    throw ValidationException::withMessages([
-                        'items' => 'Cantidad de extras inválida.',
-                    ]);
-                }
-
-                $extras[$extra->id] = [
-                    'id' => $extra->id,
-                    'name' => $extra->name,
-                    'quantity' => $includedQuantity,
-                    'unit_cents' => $this->cents($extra->price),
-                ];
             }
         }
 

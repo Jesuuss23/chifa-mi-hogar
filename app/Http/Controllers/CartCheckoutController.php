@@ -177,12 +177,12 @@ class CartCheckoutController extends Controller
     private function validatedData(Request $request, bool $confirm = false): array
     {
         $rules = [
-            'delivery_type' => ['required', Rule::in(['pickup', 'delivery'])],
+            'delivery_type' => ['required', Rule::in(['delivery']),],
             'delivery_address' => ['required_if:delivery_type,delivery', 'nullable', 'string', 'max:500'],
             'delivery_reference' => ['nullable', 'string', 'max:500'],
             'delivery_latitude' => ['required_if:delivery_type,delivery', 'nullable', 'numeric', 'between:-90,90'],
             'delivery_longitude' => ['required_if:delivery_type,delivery', 'nullable', 'numeric', 'between:-180,180'],
-            'payment_method' => ['required', Rule::in(['yape', 'plin', 'cash'])],
+            'payment_method' => ['required', Rule::in(['cash', 'yape']),],
             'cash_payment_type' => ['required_if:payment_method,cash', 'nullable', Rule::in(['exact', 'change'])],
             'cash_received_amount' => ['required_if:cash_payment_type,change', 'nullable', 'numeric', 'decimal:0,2', 'min:0'],
             'customer_notes' => ['nullable', 'string', 'max:1000'],

@@ -6,10 +6,10 @@ use App\Models\Concerns\HasMediaAsset;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class ProductRecommendation extends Model
 {
-    use HasMediaAsset;
+    use SoftDeletes, HasMediaAsset;
 
     protected $table = 'product_recommendations';
 
