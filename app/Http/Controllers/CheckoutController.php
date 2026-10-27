@@ -14,6 +14,7 @@ class CheckoutController extends Controller
         OrderService $orders
     ): JsonResponse {
         $data = $request->validate([
+            'checkout_token' => ['required', 'uuid'],
             'customer_name' => ['required', 'string', 'max:150'],
             'customer_phone' => [
                 'required', 'string', 'regex:/^9[0-9]{8}$/',
@@ -110,6 +111,18 @@ class CheckoutController extends Controller
             ],
         ]);
 
+        $sessionToken = $request->session()->get('json_checkout_token');
+
+        if (
+            !is_string($sessionToken)
+            || $sessionToken === ''
+            || !hash_equals($sessionToken, $data['checkout_token'])
+        ) {
+            abort(419, 'La sesión de compra ha expirado. Vuelve a cotizar.');
+        }
+
+        // Retener el token para reintentar la misma compra sin duplicarla.
+        // La siguiente cotización lo renovará si el pedido ya fue creado.
         $order = $orders->create($data);
 
         return response()->json([

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class CheckoutQuoteController extends Controller
 {
@@ -148,7 +150,20 @@ class CheckoutQuoteController extends Controller
 
         unset($quote['items']);
 
+        // Usar una clave separada del checkout HTML para no alterar su carrito.
+        $token = $request->session()->get('json_checkout_token');
+
+        if (
+            !is_string($token)
+            || !Str::isUuid($token)
+            || Order::query()->where('checkout_token', $token)->exists()
+        ) {
+            $token = (string) Str::uuid();
+            $request->session()->put('json_checkout_token', $token);
+        }
+
         return response()->json([
+            'checkout_token' => $token,
             'message' => 'Cotización calculada correctamente.',
             'quote' => $quote,
             'items' => $items,
