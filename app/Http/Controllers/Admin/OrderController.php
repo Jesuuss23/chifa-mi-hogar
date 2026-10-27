@@ -178,17 +178,6 @@ class OrderController extends Controller
             if (!in_array($locked->status, ['confirmed', 'preparing', 'on_the_way'], true)) {
                 return 'Primero debes confirmar el pedido.';
             }
-            if (
-                $to === 'on_the_way'
-                && (
-                    $locked->delivery_type !== 'delivery'
-                    || $locked->delivery_user_id === null
-                    || $locked->delivery_latitude === null
-                    || $locked->delivery_longitude === null
-                )
-            ) {
-                return 'Debes asignar un repartidor y configurar el destino antes de iniciar la entrega.';
-            }
             $locked->payment_status = 'verified';
             $locked->payment_verified_at = now();
             $locked->payment_verified_by = auth()->id();
@@ -253,6 +242,18 @@ class OrderController extends Controller
                 ) {
                     return 'El pago de este pedido está rechazado.';
                 }
+            }
+
+            if (
+                $to === 'on_the_way'
+                && (
+                    $locked->delivery_type !== 'delivery'
+                    || $locked->delivery_user_id === null
+                    || $locked->delivery_latitude === null
+                    || $locked->delivery_longitude === null
+                )
+            ) {
+                return 'Debes asignar un repartidor y configurar el destino antes de iniciar la entrega.';
             }
 
             // Ningún pedido se entrega sin pago registrado.
