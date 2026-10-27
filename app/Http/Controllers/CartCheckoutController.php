@@ -84,6 +84,8 @@ class CartCheckoutController extends Controller
                 'cart',
                 'checkout_token',
             ]);
+
+            return redirect()->route('cart.checkout.success');
         }
 
         // 3. Validar los datos del cliente, entrega y pago.
@@ -132,12 +134,16 @@ class CartCheckoutController extends Controller
         }
 
         $order = Order::query()->find($orderId);
+
+        if (!$order) {
+            $request->session()->forget('last_confirmed_order_id');
+
+            return redirect()->route('cart.index');
+        }
+
         if (!$order->tracking_token) {
             $order->tracking_token = (string) Str::uuid();
             $order->save();
-        }
-        if (!$order) {
-            return redirect()->route('cart.index');
         }
 
         $settings = StoreSetting::current();
