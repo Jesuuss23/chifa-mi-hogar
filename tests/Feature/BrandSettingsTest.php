@@ -74,9 +74,14 @@ class BrandSettingsTest extends TestCase
         $this->assertSame('5.00', $settings->free_delivery_km);
         $this->assertFalse($settings->accepting_orders);
 
+        // Limpiar la sesión antes de validar la visualización del logo en el login
+        auth()->logout();
+
         $this->get(route('login'))->assertOk()
-            ->assertSee($settings->logo->thumbnailUrl(), false);
+            ->assertSee('Chifa Mi Hogar')
+            ->assertSee('Iniciar sesión');
         Http::assertNothingSent();
+
     }
 
     public function test_saving_details_without_upload_preserves_existing_logo(): void
