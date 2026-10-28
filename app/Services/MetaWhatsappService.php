@@ -9,19 +9,25 @@ class MetaWhatsappService
 {
     public function sendText(string $to, string $message): bool
     {
+        return $this->sendTextResult($to, $message) === 'sent';
+    }
+
+    // Mantener sendText() para las respuestas del webhook.
+    public function sendTextResult(string $to, string $message): string
+    {
         $token = config('meta_whatsapp.access_token');
         $phoneId = config('meta_whatsapp.phone_number_id');
         $version = config('meta_whatsapp.api_version', 'v25.0');
 
         if (empty($token) || empty($phoneId)) {
             Log::error('Meta WhatsApp: faltan credenciales de envío.');
-            return false;
+            return 'failed';
         }
 
         $to = preg_replace('/\D+/', '', $to);
 
         if (!$to) {
-            return false;
+            return 'failed';
         }
 
         try {
@@ -49,17 +55,20 @@ class MetaWhatsappService
                     'type' => $response->json('error.type'),
                 ]);
 
-                return false;
+                // Un error de servidor o timeout puede llegar después de aceptar el envío.
+                return $response->serverError() || $response->status() === 408
+                    ? 'uncertain'
+                    : 'failed';
             }
 
-            return !empty($response->json('messages.0.id'));
+            return !empty($response->json('messages.0.id')) ? 'sent' : 'uncertain';
 
         } catch (\Throwable $e) {
             Log::error('Meta WhatsApp: fallo de conexión', [
                 'message' => $e->getMessage(),
             ]);
 
-            return false;
+            return 'uncertain';
         }
     }
 }

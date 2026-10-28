@@ -4,120 +4,120 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\WhatsappAdminNumber;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 class OrderWhatsappNotificationService
 {
+    public const MAX_ATTEMPTS = 3;
+
     public function __construct(
         private readonly MetaWhatsappService $whatsapp
     ) {}
 
     public function send(Order $order): void
     {
-        $order->loadMissing([
-            'items.extras',
-            'items.comboComponents',
-        ]);
+        // No enviar avisos de pedidos terminados ni avisos antiguos como nuevos.
+        $order->refresh();
+        if (
+            in_array($order->status, ['delivered', 'cancelled'], true)
+            || $order->created_at->lt(now()->subDay())
+        ) {
+            return;
+        }
 
+        $order->loadMissing(['items.extras', 'items.comboComponents']);
         $admins = WhatsappAdminNumber::query()
             ->where('is_active', true)
             ->where('receive_orders', true)
             ->get();
-
         $message = $this->buildMessage($order);
 
         foreach ($admins as $admin) {
+            DB::table('order_whatsapp_notifications')->insertOrIgnore([
+                'order_id' => $order->id,
+                'whatsapp_admin_number_id' => $admin->id,
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-            $notification = DB::table('order_whatsapp_notifications')
-                ->where('order_id', $order->id)
-                ->where('whatsapp_admin_number_id', $admin->id)
-                ->first();
-
-            if (!$notification) {
-                DB::table('order_whatsapp_notifications')
-                    ->insertOrIgnore([
-                        'order_id' => $order->id,
-                        'whatsapp_admin_number_id' => $admin->id,
-                        'status' => 'pending',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+            // Sin ventana no se consume un intento ni se llama a Meta.
+            if (
+                $admin->last_inbound_at === null
+                || $admin->last_inbound_at->lte(now()->subHours(23))
+                || $admin->last_inbound_at->gt(now())
+            ) {
+                continue;
             }
 
-            // Reclamar el envío de forma atómica.
-            // Un registro sent o processing no se envía otra vez.
-            $claimed = DB::table('order_whatsapp_notifications')
-                ->where('order_id', $order->id)
-                ->where('whatsapp_admin_number_id', $admin->id)
-                ->whereIn('status', ['pending', 'failed'])
-                ->update([
+            $claim = (string) Str::uuid();
+            $notification = DB::transaction(function () use ($order, $admin, $claim) {
+                $row = DB::table('order_whatsapp_notifications')
+                    ->where('order_id', $order->id)
+                    ->where('whatsapp_admin_number_id', $admin->id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (
+                    !in_array($row->status, ['pending', 'failed'], true)
+                    || $row->attempts >= self::MAX_ATTEMPTS
+                    || ($row->next_attempt_at !== null && now()->lt($row->next_attempt_at))
+                ) {
+                    return null;
+                }
+
+                DB::table('order_whatsapp_notifications')->where('id', $row->id)->update([
                     'status' => 'processing',
+                    'attempts' => $row->attempts + 1,
+                    'attempt_token' => $claim,
+                    'next_attempt_at' => null,
                     'last_error' => null,
                     'updated_at' => now(),
                 ]);
 
-            if ($claimed !== 1) {
-                continue;
-            }
+                return ['id' => $row->id, 'attempts' => $row->attempts + 1];
+            }, 3);
 
-            // Margen de seguridad antes de las 24 horas.
-            $windowOpen = $admin->last_inbound_at !== null
-                && $admin->last_inbound_at->gt(
-                    now()->subHours(23)
-                );
-
-            if (!$windowOpen) {
-                DB::table('order_whatsapp_notifications')
-                    ->where('order_id', $order->id)
-                    ->where('whatsapp_admin_number_id', $admin->id)
-                    ->update([
-                        'status' => 'pending',
-                        'last_error' => 'Ventana de WhatsApp no vigente.',
-                        'updated_at' => now(),
-                    ]);
-
+            if ($notification === null) {
                 continue;
             }
 
             try {
-                $sent = $this->whatsapp->sendText(
-                    $admin->phone,
-                    $message
-                );
-
-                DB::table('order_whatsapp_notifications')
-                    ->where('order_id', $order->id)
-                    ->where('whatsapp_admin_number_id', $admin->id)
-                    ->update([
-                        'status' => $sent ? 'sent' : 'failed',
-                        'sent_at' => $sent ? now() : null,
-                        'last_error' => $sent
-                            ? null
-                            : 'Meta no confirmó la aceptación del mensaje.',
-                        'updated_at' => now(),
-                    ]);
-
-            } catch (\Throwable $e) {
-
-                DB::table('order_whatsapp_notifications')
-                    ->where('order_id', $order->id)
-                    ->where('whatsapp_admin_number_id', $admin->id)
-                    ->update([
-                        'status' => 'failed',
-                        'last_error' => 'Error durante el envío.',
-                        'updated_at' => now(),
-                    ]);
-
-                Log::error(
-                    'Error notificando pedido por WhatsApp',
-                    [
-                        'order_id' => $order->id,
-                        'admin_id' => $admin->id,
-                        'exception' => get_class($e),
-                    ]
-                );
+                $result = $this->whatsapp->sendTextResult($admin->phone, $message);
+            } catch (\Throwable $exception) {
+                $result = 'uncertain';
+                Log::error('Resultado de notificación WhatsApp desconocido', [
+                    'notification_id' => $notification['id'],
+                    'exception' => get_class($exception),
+                ]);
             }
+
+            if (!in_array($result, ['sent', 'failed', 'uncertain'], true)) {
+                $result = 'uncertain';
+            }
+
+            // Solo el propietario del intento puede finalizarlo.
+            DB::table('order_whatsapp_notifications')
+                ->where('id', $notification['id'])
+                ->where('status', 'processing')
+                ->where('attempt_token', $claim)
+                ->update([
+                    'status' => $result,
+                    'sent_at' => $result === 'sent' ? now() : null,
+                    'attempt_token' => null,
+                    'next_attempt_at' => $result === 'failed'
+                        && $notification['attempts'] < self::MAX_ATTEMPTS
+                            ? now()->addSeconds($notification['attempts'] === 1 ? 60 : 300)
+                            : null,
+                    'last_error' => match ($result) {
+                        'sent' => null,
+                        'failed' => 'Meta rechazó el envío o faltan datos de configuración.',
+                        default => 'Resultado desconocido. Revisar antes de reenviar.',
+                    },
+                    'updated_at' => now(),
+                ]);
         }
     }
 
