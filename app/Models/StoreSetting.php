@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class StoreSetting extends Model
 {
     protected $fillable = [
+        'business_owner',
+        'privacy_email',
+        'website_url',
+        'business_ruc',
+        'logo_media_asset_id',
         'yape_number',
         'plin_number',
         'payment_holder',
@@ -42,11 +47,30 @@ class StoreSetting extends Model
         );
     }
 
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(MediaAsset::class, 'logo_media_asset_id');
+    }
+
+    public function logoUrl(): ?string
+    {
+        if ($this->logo) {
+            return $this->logo->thumbnailUrl();
+        }
+
+        return is_file(public_path('images/brand/logo.jpeg'))
+            ? asset('images/brand/logo.jpeg')
+            : null;
+    }
+
     public static function current(): self
     {
         return static::firstOrCreate(
             ['id' => 1],
             [
+                'business_owner' => 'Rossi Rivadeneyra Jara',
+                'privacy_email' => 'chifamihogar@gmail.com',
+                'website_url' => 'https://chifamihogar.com',
                 'free_delivery_km' => 3,
                 'additional_cost_per_km' => 2,
                 'accepting_orders' => true,

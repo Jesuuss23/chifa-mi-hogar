@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('layouts.storefront', function ($view) {
+            $view->with('brandLogoUrl', \App\Models\StoreSetting::current()->load('logo')->logoUrl());
+        });
     }
 }

@@ -142,12 +142,17 @@
                 aria-label="Chifa Mi Hogar, ir al inicio"
             >
 
+                @if($brandLogoUrl)
+                    <img src="{{ $brandLogoUrl }}" alt="" width="44" height="44"
+                         class="h-11 w-11 shrink-0 object-contain">
+                @else
                 <span
                     class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#982E26] text-sm font-black tracking-tight text-white shadow-sm transition group-hover:bg-[#B43A31] sm:h-11 sm:w-11"
                     aria-hidden="true"
                 >
                     CM
                 </span>
+                @endif
 
                 <span class="flex min-w-0 flex-col">
 
@@ -483,12 +488,17 @@
 
                 <div class="flex items-center gap-3">
 
+                    @if($brandLogoUrl)
+                        <img src="{{ $brandLogoUrl }}" alt="" width="44" height="44"
+                             class="h-11 w-11 shrink-0 object-contain">
+                    @else
                     <div
                         class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#982E26] text-sm font-black text-white"
                         aria-hidden="true"
                     >
                         CM
                     </div>
+                    @endif
 
                     <div>
 

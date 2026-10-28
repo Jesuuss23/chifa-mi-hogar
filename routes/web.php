@@ -171,6 +171,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             \App\Http\Controllers\Admin\StoreSettingController::class,
             'update'
         ])->name('settings.update');
+        Route::put('/settings/brand', [
+            \App\Http\Controllers\Admin\BrandSettingController::class,
+            'update',
+        ])->middleware('throttle:10,1')->name('settings.brand.update');
+
         // Administración de WhatsApp
         Route::get('/whatsapp', [
             \App\Http\Controllers\Admin\WhatsappAdminController::class,
