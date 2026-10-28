@@ -139,6 +139,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('login');
 
         Route::post('/login', [AuthController::class, 'login'])
+            ->middleware('throttle:5,1')
             ->name('login.submit');
     });
     Route::middleware(['auth', 'admin'])->group(function () {

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Crear cuenta | Chifa Mi Hogar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if(config('turnstile.enabled') && config('turnstile.site_key'))
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endif
 </head>
 <body class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
 
@@ -69,6 +72,20 @@
                        minlength="8"
                        class="mt-1 w-full rounded-lg border p-3">
             </div>
+
+            @if(config('turnstile.enabled'))
+                @if(config('turnstile.site_key'))
+                    <div class="cf-turnstile"
+                         data-sitekey="{{ config('turnstile.site_key') }}"
+                         data-action="register" data-language="es"></div>
+                    <noscript><p class="text-sm text-red-600">Activa JavaScript para completar la verificación.</p></noscript>
+                @else
+                    <p class="text-sm text-red-600">El registro no está disponible temporalmente. Inténtalo más tarde.</p>
+                @endif
+            @endif
+            @error('cf-turnstile-response')
+                <p role="alert" class="text-sm text-red-600">{{ $message }}</p>
+            @enderror
 
             <button type="submit"
                     class="w-full rounded-lg bg-red-700 p-3 font-semibold text-white hover:bg-red-800">

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
+use App\Services\LoginAttemptLimiter;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -15,21 +15,14 @@ class AuthController extends Controller
         return view('admin.auth.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request, LoginAttemptLimiter $limiter)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        $key = 'admin-login:' .
-            sha1(strtolower($credentials['email']) . '|' . $request->ip());
-
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            throw ValidationException::withMessages([
-                'email' => 'Demasiados intentos. Inténtalo más tarde.',
-            ]);
-        }
+        $limiter->ensureAllowed($request, $credentials['email']);
 
         $valid = Auth::attempt([
             ...$credentials,
@@ -37,14 +30,14 @@ class AuthController extends Controller
         ]);
 
         if (! $valid) {
-            RateLimiter::hit($key, 60);
+            $limiter->failed($request, $credentials['email']);
 
             throw ValidationException::withMessages([
                 'email' => 'Credenciales incorrectas.',
             ]);
         }
 
-        RateLimiter::clear($key);
+        $limiter->clear($request, $credentials['email']);
         $request->session()->regenerate();
 
         return redirect()->route('admin.dashboard');
