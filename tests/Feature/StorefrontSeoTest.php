@@ -33,7 +33,7 @@ class StorefrontSeoTest extends TestCase
         StoreSetting::current()->update(['website_url' => 'https://chifamihogar.com']);
     }
 
-    private function head(TestResponse $response): \DOMXPath
+    private function extractHead(TestResponse $response): \DOMXPath
     {
         $response->assertOk();
         preg_match('/<head>(.*?)<\/head>/s', $response->getContent(), $match);
@@ -84,7 +84,7 @@ class StorefrontSeoTest extends TestCase
 
     public function test_home_has_one_complete_set_of_public_metadata(): void
     {
-        $head = $this->head($this->get('/?utm_source=test&tracking_token=private'));
+        $head = $this->extractHead($this->get('/?utm_source=test&tracking_token=private'));
         $this->assertSame('https://chifamihogar.com/', $this->canonical($head));
         $this->assertSame('https://chifamihogar.com/', $this->meta($head, 'property', 'og:url'));
         $this->assertStringContainsString('Dark Kitchen', $this->meta($head, 'property', 'og:title'));
@@ -98,7 +98,7 @@ class StorefrontSeoTest extends TestCase
     public function test_category_and_pagination_are_retained_but_tracking_parameters_are_removed(): void
     {
         $this->product();
-        $head = $this->head($this->get('/?categoria=arroces&page=2&utm_campaign=ignored'));
+        $head = $this->extractHead($this->get('/?categoria=arroces&page=2&utm_campaign=ignored'));
         $this->assertSame('https://chifamihogar.com/?categoria=arroces&page=2', $this->canonical($head));
         $this->assertStringContainsString('Arroces', $this->meta($head, 'property', 'og:title'));
         $this->assertStringContainsString('Página 2', $this->meta($head, 'property', 'og:title'));
@@ -108,7 +108,7 @@ class StorefrontSeoTest extends TestCase
     {
         $asset = $this->media();
         $product = $this->product(['media_asset_id' => $asset->id]);
-        $head = $this->head($this->get(route('storefront.show', $product).'?utm_source=test'));
+        $head = $this->extractHead($this->get(route('storefront.show', $product).'?utm_source=test'));
         $this->assertSame('https://chifamihogar.com/platos/chaufa-especial', $this->canonical($head));
         $this->assertSame('https://chifamihogar.com/storage/catalog/details/plate.webp', $this->meta($head, 'property', 'og:image'));
         $this->assertSame('Chaufa preparado al momento.', $this->meta($head, 'name', 'description'));
@@ -120,7 +120,7 @@ class StorefrontSeoTest extends TestCase
         $asset = $this->media();
         Storage::disk('public')->delete($asset->detail_path);
         $product = $this->product(['media_asset_id' => $asset->id]);
-        $head = $this->head($this->get(route('storefront.show', $product)));
+        $head = $this->extractHead($this->get(route('storefront.show', $product)));
         $this->assertStringContainsString('/api/brand/share-image.jpg?v=', $this->meta($head, 'property', 'og:image'));
     }
 
@@ -130,9 +130,9 @@ class StorefrontSeoTest extends TestCase
             'name' => 'Combo familiar', 'slug' => 'combo-familiar', 'description' => 'Un combo para compartir.',
             'price' => 40, 'is_available' => true, 'show_in_menu' => true,
         ]);
-        $list = $this->head($this->get('/combos?page=2&utm_source=test'));
+        $list = $this->extractHead($this->get('/combos?page=2&utm_source=test'));
         $this->assertSame('https://chifamihogar.com/combos?page=2', $this->canonical($list));
-        $detail = $this->head($this->get(route('combos.show', $combo)));
+        $detail = $this->extractHead($this->get(route('combos.show', $combo)));
         $this->assertSame('https://chifamihogar.com/combos/combo-familiar', $this->canonical($detail));
         $this->assertSame('Combo familiar | Chifa Mi Hogar', $this->meta($detail, 'property', 'og:title'));
         $this->assertSame('Un combo para compartir.', $this->meta($detail, 'property', 'og:description'));
@@ -144,7 +144,7 @@ class StorefrontSeoTest extends TestCase
             'name' => 'Chaufa " onload="alert(1)',
             'description' => '<b>Sabroso</b> &quot;><script>alert(1)</script>',
         ]);
-        $head = $this->head($this->get(route('storefront.show', $product)));
+        $head = $this->extractHead($this->get(route('storefront.show', $product)));
         $this->meta($head, 'property', 'og:title');
         $this->meta($head, 'property', 'og:description');
         $this->assertCount(0, $head->query('//script'));
@@ -153,7 +153,7 @@ class StorefrontSeoTest extends TestCase
 
     public function test_request_host_cannot_change_canonical_or_image_origin(): void
     {
-        $head = $this->head($this->get('http://untrusted.example/'));
+        $head = $this->extractHead($this->get('http://untrusted.example/'));
         $this->assertSame('https://chifamihogar.com/', $this->canonical($head));
         $this->assertStringStartsWith('https://chifamihogar.com/', $this->meta($head, 'property', 'og:image'));
     }
@@ -170,7 +170,7 @@ class StorefrontSeoTest extends TestCase
     #[DataProvider('privateRoutes')]
     public function test_transactional_pages_do_not_get_catalog_metadata(string $name): void
     {
-        $head = $this->head($this->get(route($name)));
+        $head = $this->extractHead($this->get(route($name)));
         $this->assertCount(0, $head->query('//meta[starts-with(@property, "og:")]'));
         $this->assertCount(0, $head->query('//link[@rel="canonical"]'));
     }
@@ -185,16 +185,16 @@ class StorefrontSeoTest extends TestCase
         ]);
         $response = $this->get(route('orders.tracking.show', $order->tracking_token));
         $response->assertHeader('X-Robots-Tag', 'noindex, nofollow');
-        $head = $this->head($response);
+        $head = $this->extractHead($response);
         $this->assertSame('noindex, nofollow', $this->meta($head, 'name', 'robots'));
         $this->assertCount(0, $head->query('//meta[starts-with(@property, "og:")]'));
     }
 
     public function test_admin_preview_does_not_get_public_social_metadata(): void
-    {
-        $this->actingAs(User::factory()->create(['role' => 'admin']));
-        $head = $this->head($this->get(route('admin.legal.preview', 'privacy')));
-        $this->assertCount(0, $head->query('//meta[starts-with(@property, "og:")]'));
-        $this->assertCount(0, $head->query('//link[@rel="canonical"]'));
-    }
+        {
+            $this->actingAs(User::factory()->create(['role' => 'admin']));
+            $head = $this->extractHead($this->get(route('admin.legal.preview', 'privacy')));
+            $this->assertCount(0, $head->query('//meta[starts-with(@property, "og:")]'));
+            $this->assertCount(0, $head->query('//link[@rel="canonical"]'));
+        }
 }
