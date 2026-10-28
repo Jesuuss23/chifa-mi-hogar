@@ -5,17 +5,17 @@
 @section('content')
 
 <!-- HERO -->
-<section class="relative isolate overflow-hidden bg-[#171717] text-white">
+<section class="catalog-surface relative isolate overflow-hidden bg-muted text-foreground">
 
     <div class="absolute inset-0 bg-gradient-to-r
-                from-[#171717] via-[#171717]/95 to-[#171717]/70">
+                from-muted via-muted/95 to-background/70">
     </div>
 
     <div class="relative mx-auto flex min-h-[340px] max-w-7xl
                 flex-col justify-center px-4 py-16 sm:px-6 lg:py-24">
 
         <p class="mb-4 text-xs font-bold uppercase tracking-[0.3em]
-                  text-[#F5D28C]">
+                  text-primary">
             Bienvenido a Chifa Mi Hogar
         </p>
 
@@ -24,7 +24,7 @@
             El sabor que te hace volver
         </h1>
 
-        <p class="mt-5 max-w-lg text-base leading-7 text-gray-300">
+        <p class="mt-5 max-w-lg text-base leading-7 text-foreground/75">
             Disfruta nuestros platos preparados al momento.
             Elige tus favoritos y recíbelos por delivery.
         </p>
@@ -32,9 +32,9 @@
         <div class="mt-8">
             <a href="#carta"
                class="inline-flex items-center justify-center
-                      rounded-xl bg-[#982E26] px-7 py-3
-                      font-bold text-white transition
-                      hover:bg-[#B5382E]">
+                      rounded-none bg-primary px-7 py-3
+                      font-bold text-primary-foreground transition
+                      hover:bg-primary/90">
                 Explorar carta ↓
             </a>
         </div>
@@ -42,11 +42,11 @@
 </section>
 
 <!-- CARTA -->
-<section id="carta" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
+<section id="carta" class="catalog-surface mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
 
     <div class="mb-8">
         <p class="mb-2 text-xs font-bold uppercase
-                  tracking-[0.2em] text-[#982E26]">
+                  tracking-[0.2em] text-primary">
             Nuestros platos
         </p>
 
@@ -54,7 +54,7 @@
             Nuestra carta
         </h2>
 
-        <p class="mt-3 text-gray-500">
+        <p class="mt-3 text-foreground/75">
             Descubre el sabor de cada especialidad.
         </p>
     </div>
@@ -64,19 +64,19 @@
          class="mb-9 flex gap-3 overflow-x-auto pb-3">
 
         <a href="{{ route('storefront.index') }}#carta"
-           class="shrink-0 rounded-full px-6 py-3 text-sm font-bold
+           class="shrink-0 rounded-none px-6 py-3 text-sm font-bold
                   {{ !$selectedCategory
-                      ? 'bg-[#982E26] text-white'
-                      : 'bg-white text-gray-700 shadow-sm' }}">
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-card text-foreground shadow-storefront' }}">
             Todos
         </a>
 
         @foreach($categories as $category)
             <a href="{{ route('storefront.index', ['categoria' => $category->slug]) }}#carta"
-               class="shrink-0 rounded-full px-6 py-3 text-sm font-bold
+               class="shrink-0 rounded-none px-6 py-3 text-sm font-bold
                       {{ $selectedCategory?->id === $category->id
-                          ? 'bg-[#982E26] text-white'
-                          : 'bg-white text-gray-700 shadow-sm' }}">
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-card text-foreground shadow-storefront' }}">
                 {{ $category->name }}
             </a>
         @endforeach
@@ -87,9 +87,9 @@
 
         @forelse($products as $product)
             <article class="group flex h-full flex-col overflow-hidden
-                            rounded-2xl border border-gray-100 bg-white
-                            shadow-sm transition duration-300
-                            hover:-translate-y-1 hover:shadow-xl">
+                            rounded-none border border-border bg-card
+                            shadow-storefront transition duration-300
+                            hover:-translate-y-1 hover:shadow-storefront">
 
                 <a href="{{ route('storefront.show', $product->slug) }}"
                    class="relative block overflow-hidden">
@@ -101,15 +101,15 @@
                             class="h-full w-full object-cover"
                         />
                     @else
-                        <div class="flex h-full w-full items-center justify-center bg-[#F2E8DD] text-gray-500">
+                        <div class="flex h-full w-full items-center justify-center bg-accent text-foreground/75">
                             Fotografía próximamente
                         </div>
                     @endif
 
                     @if($product->is_featured)
-                        <span class="absolute left-3 top-3 rounded-full
-                                     bg-[#F5D28C] px-3 py-1 text-xs
-                                     font-bold text-[#4B3012]">
+                        <span class="absolute left-3 top-3 rounded-none
+                                     bg-accent px-3 py-1 text-xs
+                                     font-bold text-accent-foreground">
                             ★ Destacado
                         </span>
                     @endif
@@ -118,7 +118,7 @@
                 <div class="flex flex-1 flex-col p-5">
 
                     <p class="text-xs font-bold uppercase
-                              tracking-wide text-[#982E26]">
+                              tracking-wide text-primary">
                         {{ $product->category->name }}
                     </p>
 
@@ -127,21 +127,21 @@
                     </h3>
 
                     <p class="mt-2 line-clamp-2 text-sm
-                              leading-6 text-gray-500">
+                              leading-6 text-foreground/75">
                         {{ $product->description ?: 'Preparado con nuestro sabor especial.' }}
                     </p>
 
                     <div class="mt-auto flex items-center
                                 justify-between gap-3 pt-6">
 
-                        <span class="text-xl font-black text-[#982E26]">
+                        <span class="text-xl font-black text-primary">
                             S/ {{ number_format((float)$product->price, 2) }}
                         </span>
 
                         <a href="{{ route('storefront.show', $product->slug) }}"
-                           class="rounded-xl bg-[#982E26] px-4 py-3
-                                  text-sm font-bold text-white
-                                  transition hover:bg-[#B5382E]">
+                           class="rounded-none bg-primary px-4 py-3
+                                  text-sm font-bold text-primary-foreground
+                                  transition hover:bg-primary/90">
                             Ver plato
                         </a>
                     </div>
@@ -149,12 +149,12 @@
             </article>
 
         @empty
-            <div class="col-span-full rounded-2xl bg-white p-12 text-center">
+            <div class="col-span-full rounded-none bg-card p-12 text-center">
                 <h3 class="text-xl font-bold">
                     No hay platos disponibles
                 </h3>
 
-                <p class="mt-3 text-gray-500">
+                <p class="mt-3 text-foreground/75">
                     Pronto encontrarás más especialidades.
                 </p>
             </div>
@@ -162,7 +162,7 @@
     </div>
 
     <div class="mt-10">
-        {{ $products->links() }}
+        {{ $products->links('pagination.storefront') }}
     </div>
 
 </section>

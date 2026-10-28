@@ -4,10 +4,10 @@
 
 @section('content')
 
-<section class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+<section class="catalog-surface mx-auto max-w-6xl px-4 py-10 sm:px-6">
 
     <a href="{{ route('combos.index') }}"
-       class="mb-6 inline-block text-sm font-medium text-[#982E26]">
+       class="mb-6 inline-block text-sm font-medium text-primary">
         ← Volver a combos
     </a>
 
@@ -18,18 +18,18 @@
                 <img
                     src="{{ $combo->mediaAsset->detailUrl() }}"
                     alt="{{ $combo->name }}"
-                    class="w-full rounded-2xl object-cover"
+                    class="w-full rounded-none object-cover"
                 >
             @else
                 <div class="flex aspect-square items-center justify-center
-                            rounded-2xl bg-[#F2E8DD] text-gray-500">
+                            rounded-none bg-accent text-foreground/75">
                     Fotografía próximamente
                 </div>
             @endif
         </div>
 
         <div>
-            <span class="text-sm font-semibold text-[#982E26]">
+            <span class="text-sm font-semibold text-primary">
                 Combos
             </span>
 
@@ -37,16 +37,16 @@
                 {{ $combo->name }}
             </h1>
 
-            <p class="mt-5 leading-7 text-gray-600">
+            <p class="mt-5 leading-7 text-foreground/75">
                 {{ $combo->description }}
             </p>
 
-            <p class="mt-6 text-3xl font-black text-[#982E26]">
+            <p class="mt-6 text-3xl font-black text-primary">
                 S/ {{ number_format((float) $combo->price, 2) }}
             </p>
 
             @if($errors->any())
-                <div class="mt-6 rounded-lg bg-red-50 p-4 text-red-700">
+                <div class="mt-6 rounded-none bg-destructive/10 p-4 text-destructive">
                     {{ $errors->first() }}
                 </div>
             @endif
@@ -70,7 +70,7 @@
                         Personaliza tu combo
                     </h2>
 
-                    <p class="mt-2 text-sm text-gray-500">
+                    <p class="mt-2 text-sm text-foreground/75">
                         Puedes aumentar las cantidades incluidas.
                         Cada unidad adicional se cobra por separado.
                     </p>
@@ -87,7 +87,7 @@
                             $price = (float) $catalogItem->price;
                         @endphp
 
-                        <div class="rounded-xl border bg-white p-4">
+                        <div class="rounded-none border bg-card p-4">
 
                             <div class="flex flex-wrap items-center justify-between gap-4">
 
@@ -96,7 +96,7 @@
                                         {{ $catalogItem->name }}
                                     </h3>
 
-                                    <p class="mt-1 text-xs text-gray-500">
+                                    <p class="mt-1 text-xs text-foreground/75">
                                         Incluye {{ $included }}
                                         · Adicional S/ {{ number_format($price, 2) }}
                                     </p>
@@ -112,7 +112,7 @@
                                     data-combo-component
                                     data-included="{{ $included }}"
                                     data-price-cents="{{ (int) round($price * 100) }}"
-                                    class="w-24 rounded-lg border p-3"
+                                    class="w-24 rounded-none border p-3"
                                 >
 
                             </div>
@@ -148,24 +148,24 @@
                         min="1"
                         max="20"
                         required
-                        class="w-28 rounded-lg border p-3"
+                        class="w-28 rounded-none border p-3"
                     >
                 </div>
 
-                <div class="rounded-xl bg-[#FFF4E7] p-5">
+                <div class="rounded-none bg-accent p-5">
 
-                    <p class="text-sm text-gray-600">
+                    <p class="text-sm text-foreground/75">
                         Total estimado
                     </p>
 
                     <p
                         id="combo-total"
-                        class="mt-2 text-3xl font-black text-[#982E26]"
+                        class="mt-2 text-3xl font-black text-primary"
                     >
                         S/ {{ number_format((float) $combo->price, 2) }}
                     </p>
 
-                    <p class="mt-2 text-xs text-gray-500">
+                    <p class="mt-2 text-xs text-foreground/75">
                         El precio definitivo se verifica al procesar el pedido.
                     </p>
 
@@ -173,8 +173,8 @@
 
                 <button
                     type="submit"
-                    class="w-full rounded-xl bg-[#982E26] px-6 py-4
-                           font-bold text-white hover:bg-[#B5382E]"
+                    class="w-full rounded-none bg-primary px-6 py-4
+                           font-bold text-primary-foreground hover:bg-primary/90"
                 >
                     Agregar combo al carrito
                 </button>

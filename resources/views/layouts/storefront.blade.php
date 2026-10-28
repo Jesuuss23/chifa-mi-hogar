@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1"
     >
 
-    <meta name="theme-color" content="#982E26">
+    <meta name="theme-color" content="#af3a03">
 
     @if(isset($seo))
         @include('components.storefront-seo')
@@ -91,13 +91,13 @@
     );
 @endphp
 
-<body class="flex min-h-screen flex-col bg-[#FAF8F5] text-[#26211F] antialiased">
+<body class="storefront-theme flex min-h-screen flex-col bg-background text-foreground antialiased">
 
     {{-- =====================================================
          BARRA SUPERIOR
     ====================================================== --}}
 
-    <div class="bg-[#982E26] text-white">
+    <div class="catalog-surface bg-primary text-primary-foreground">
 
         <div
             class="mx-auto flex min-h-8 max-w-7xl items-center justify-center gap-2 px-4 py-1.5 text-center text-[11px] font-semibold tracking-wide sm:text-xs"
@@ -132,7 +132,7 @@
     ====================================================== --}}
 
     <header
-        class="sticky top-0 z-40 border-b border-[#EBE3DB] bg-white/95 backdrop-blur-xl"
+        class="catalog-surface sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-xl"
     >
 
         <div
@@ -152,7 +152,7 @@
                          class="h-11 w-11 shrink-0 object-contain">
                 @else
                 <span
-                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#982E26] text-sm font-black tracking-tight text-white shadow-sm transition group-hover:bg-[#B43A31] sm:h-11 sm:w-11"
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-primary text-sm font-black tracking-tight text-primary-foreground shadow-storefront transition group-hover:bg-primary/90 sm:h-11 sm:w-11"
                     aria-hidden="true"
                 >
                     CM
@@ -162,13 +162,13 @@
                 <span class="flex min-w-0 flex-col">
 
                     <span
-                        class="whitespace-nowrap text-[15px] font-black leading-tight tracking-tight text-[#982E26] sm:text-lg"
+                        class="whitespace-nowrap text-[15px] font-black leading-tight tracking-tight text-primary sm:text-lg"
                     >
                         Chifa Mi Hogar
                     </span>
 
                     <span
-                        class="hidden text-[10px] font-semibold tracking-wider text-[#806E65] sm:block"
+                        class="hidden text-[10px] font-semibold tracking-wider text-foreground/75 sm:block"
                     >
                         SABOR QUE REÚNE
                     </span>
@@ -187,9 +187,9 @@
                 <a
                     href="{{ route('storefront.index') }}"
                     @class([
-                        'rounded-xl px-4 py-2.5 text-sm font-semibold transition',
-                        'bg-[#FFF1EC] text-[#982E26]' => request()->routeIs('storefront.index'),
-                        'text-gray-600 hover:bg-[#FAF5F1] hover:text-[#982E26]' => !request()->routeIs('storefront.index'),
+                        'rounded-none px-4 py-2.5 text-sm font-semibold transition',
+                        'bg-accent text-primary' => request()->routeIs('storefront.index'),
+                        'text-foreground/75 hover:bg-accent hover:text-primary' => !request()->routeIs('storefront.index'),
                     ])
                 >
                     Nuestra carta
@@ -198,9 +198,9 @@
                 <a
                     href="{{ route('combos.index') }}"
                     @class([
-                        'rounded-xl px-4 py-2.5 text-sm font-semibold transition',
-                        'bg-[#FFF1EC] text-[#982E26]' => request()->routeIs('combos.*'),
-                        'text-gray-600 hover:bg-[#FAF5F1] hover:text-[#982E26]' => !request()->routeIs('combos.*'),
+                        'rounded-none px-4 py-2.5 text-sm font-semibold transition',
+                        'bg-accent text-primary' => request()->routeIs('combos.*'),
+                        'text-foreground/75 hover:bg-accent hover:text-primary' => !request()->routeIs('combos.*'),
                     ])
                 >
                     Combos
@@ -220,14 +220,14 @@
 
                         <a
                             href="{{ route('login') }}"
-                            class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 hover:text-[#982E26]"
+                            class="rounded-none px-3 py-2.5 text-sm font-semibold text-foreground transition hover:bg-accent hover:text-primary"
                         >
                             Iniciar sesión
                         </a>
 
                         <a
                             href="{{ route('customer.register') }}"
-                            class="rounded-xl border border-[#E9D6CE] bg-[#FFF8F4] px-4 py-2.5 text-sm font-bold text-[#982E26] transition hover:bg-[#FDECE5]"
+                            class="rounded-none border border-border bg-accent px-4 py-2.5 text-sm font-bold text-primary transition hover:bg-accent"
                         >
                             Registrarse
                         </a>
@@ -238,11 +238,11 @@
 
                             <a
                                 href="{{ route($accountRoute) }}"
-                                class="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-[#FFF5F0] hover:text-[#982E26]"
+                                class="flex items-center gap-2 rounded-none px-3 py-2.5 text-sm font-semibold text-foreground transition hover:bg-accent hover:text-primary"
                             >
 
                                 <span
-                                    class="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4E6DF] text-xs font-black text-[#982E26]"
+                                    class="flex h-8 w-8 items-center justify-center rounded-none bg-accent text-xs font-black text-primary"
                                     aria-hidden="true"
                                 >
                                     {{ mb_strtoupper(mb_substr($currentUser->name, 0, 1)) }}
@@ -264,7 +264,7 @@
 
                 <a
                     href="{{ route('cart.index') }}"
-                    class="relative inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#982E26] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#B5382E] sm:px-4"
+                    class="relative inline-flex h-11 items-center justify-center gap-2 rounded-none bg-primary px-3 text-sm font-bold text-primary-foreground shadow-storefront transition hover:bg-primary/90 sm:px-4"
                     aria-label="Ver carrito, {{ $cartCount }} {{ $cartCount === 1 ? 'unidad' : 'unidades' }}"
                 >
 
@@ -292,7 +292,7 @@
                     @if($cartCount > 0)
 
                         <span
-                            class="flex min-h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-black text-[#982E26]"
+                            class="flex min-h-5 min-w-5 items-center justify-center rounded-none bg-card px-1 text-[10px] font-black text-primary"
                         >
                             {{ $cartCount > 99 ? '99+' : $cartCount }}
                         </span>
@@ -306,7 +306,7 @@
                 <details class="group relative md:hidden">
 
                     <summary
-                        class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-xl border border-[#EAE1D9] bg-white text-gray-800 transition hover:bg-[#FFF6F1] [&::-webkit-details-marker]:hidden"
+                        class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-none border border-border bg-card text-foreground transition hover:bg-accent [&::-webkit-details-marker]:hidden"
                         aria-label="Abrir menú"
                     >
 
@@ -345,27 +345,27 @@
                     </summary>
 
                     <nav
-                        class="absolute right-0 top-[calc(100%+12px)] z-50 w-[min(88vw,300px)] space-y-1 rounded-2xl border border-[#EBE1D9] bg-white p-3 shadow-xl"
+                        class="absolute right-0 top-[calc(100%+12px)] z-50 w-[min(88vw,300px)] space-y-1 rounded-none border border-border bg-card p-3 shadow-storefront"
                         aria-label="Menú móvil"
                     >
 
                         <a
                             href="{{ route('storefront.index') }}"
-                            class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-[#FFF5F0] hover:text-[#982E26]"
+                            class="block rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent hover:text-primary"
                         >
                             Nuestra carta
                         </a>
 
                         <a
                             href="{{ route('combos.index') }}"
-                            class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-[#FFF5F0] hover:text-[#982E26]"
+                            class="block rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent hover:text-primary"
                         >
                             Combos
                         </a>
 
                         <a
                             href="{{ route('cart.index') }}"
-                            class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-[#FFF5F0] hover:text-[#982E26]"
+                            class="block rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent hover:text-primary"
                         >
                             Mi carrito
                             @if($cartCount > 0)
@@ -373,29 +373,29 @@
                             @endif
                         </a>
 
-                        <div class="my-2 border-t border-gray-100"></div>
+                        <div class="my-2 border-t border-border"></div>
 
                         @guest
 
                             <a
                                 href="{{ route('login') }}"
-                                class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-[#FFF5F0]"
+                                class="block rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
                             >
                                 Iniciar sesión
                             </a>
 
                             <a
                                 href="{{ route('customer.register') }}"
-                                class="block rounded-xl bg-[#982E26] px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-[#B5382E]"
+                                class="block rounded-none bg-primary px-4 py-3 text-center text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
                             >
                                 Crear cuenta
                             </a>
 
                         @else
 
-                            <p class="px-4 py-2 text-xs text-gray-500">
+                            <p class="px-4 py-2 text-xs text-foreground/75">
                                 Sesión iniciada como
-                                <span class="font-bold text-gray-800">
+                                <span class="font-bold text-foreground">
                                     {{ $currentUser->name }}
                                 </span>
                             </p>
@@ -404,7 +404,7 @@
 
                                 <a
                                     href="{{ route($accountRoute) }}"
-                                    class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-[#FFF5F0]"
+                                    class="block rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
                                 >
                                     {{ $userRole === 'customer' ? 'Mi cuenta' : 'Mi panel' }}
                                 </a>
@@ -421,7 +421,7 @@
 
                                     <button
                                         type="submit"
-                                        class="w-full rounded-xl px-4 py-3 text-left text-sm font-semibold text-red-700 transition hover:bg-red-50"
+                                        class="w-full rounded-none px-4 py-3 text-left text-sm font-semibold text-primary transition hover:bg-destructive/10"
                                     >
                                         Cerrar sesión
                                     </button>
@@ -443,20 +443,20 @@
         {{-- NAVEGACIÓN INTERMEDIA PARA TABLETS --}}
 
         <nav
-            class="hidden border-t border-gray-100 px-4 py-2 md:flex md:items-center md:justify-center md:gap-8 lg:hidden"
+            class="hidden border-t border-border px-4 py-2 md:flex md:items-center md:justify-center md:gap-8 lg:hidden"
             aria-label="Categorías principales"
         >
 
             <a
                 href="{{ route('storefront.index') }}"
-                class="text-sm font-semibold text-gray-600 hover:text-[#982E26]"
+                class="text-sm font-semibold text-foreground/75 hover:text-primary"
             >
                 Nuestra carta
             </a>
 
             <a
                 href="{{ route('combos.index') }}"
-                class="text-sm font-semibold text-gray-600 hover:text-[#982E26]"
+                class="text-sm font-semibold text-foreground/75 hover:text-primary"
             >
                 Combos
             </a>
@@ -480,7 +480,7 @@
     ====================================================== --}}
 
     <footer
-        class="mt-14 border-t border-[#EAE0D8] bg-white"
+        class="catalog-surface mt-14 border-t border-border bg-card"
     >
 
         <div
@@ -498,7 +498,7 @@
                              class="h-11 w-11 shrink-0 object-contain">
                     @else
                     <div
-                        class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#982E26] text-sm font-black text-white"
+                        class="flex h-11 w-11 items-center justify-center rounded-none bg-primary text-sm font-black text-primary-foreground"
                         aria-hidden="true"
                     >
                         CM
@@ -507,11 +507,11 @@
 
                     <div>
 
-                        <p class="text-lg font-black text-[#982E26]">
+                        <p class="text-lg font-black text-primary">
                             Chifa Mi Hogar
                         </p>
 
-                        <p class="text-[11px] font-semibold tracking-wide text-[#99857A]">
+                        <p class="text-[11px] font-semibold tracking-wide text-foreground/75">
                             SABOR QUE REÚNE
                         </p>
 
@@ -519,7 +519,7 @@
 
                 </div>
 
-                <p class="mt-5 max-w-sm text-sm leading-7 text-gray-500">
+                <p class="mt-5 max-w-sm text-sm leading-7 text-foreground/75">
                     Disfruta de nuestros platos preparados con
                     dedicación y el auténtico sabor de la casa,
                     directamente en la comodidad de tu hogar.
@@ -531,7 +531,7 @@
 
             <div>
 
-                <h3 class="text-sm font-black uppercase tracking-wide text-gray-900">
+                <h3 class="text-sm font-black uppercase tracking-wide text-foreground">
                     Explora
                 </h3>
 
@@ -539,21 +539,21 @@
 
                     <a
                         href="{{ route('storefront.index') }}"
-                        class="text-sm text-gray-500 transition hover:text-[#982E26]"
+                        class="text-sm text-foreground/75 transition hover:text-primary"
                     >
                         Nuestra carta
                     </a>
 
                     <a
                         href="{{ route('combos.index') }}"
-                        class="text-sm text-gray-500 transition hover:text-[#982E26]"
+                        class="text-sm text-foreground/75 transition hover:text-primary"
                     >
                         Nuestros combos
                     </a>
 
                     <a
                         href="{{ route('cart.index') }}"
-                        class="text-sm text-gray-500 transition hover:text-[#982E26]"
+                        class="text-sm text-foreground/75 transition hover:text-primary"
                     >
                         Mi carrito
                     </a>
@@ -562,14 +562,14 @@
 
                         <a
                             href="{{ route('login') }}"
-                            class="text-sm text-gray-500 transition hover:text-[#982E26]"
+                            class="text-sm text-foreground/75 transition hover:text-primary"
                         >
                             Iniciar sesión
                         </a>
 
                         <a
                             href="{{ route('customer.register') }}"
-                            class="text-sm text-gray-500 transition hover:text-[#982E26]"
+                            class="text-sm text-foreground/75 transition hover:text-primary"
                         >
                             Registrarse
                         </a>
@@ -580,7 +580,7 @@
 
                             <a
                                 href="{{ route($accountRoute) }}"
-                                class="text-sm text-gray-500 transition hover:text-[#982E26]"
+                                class="text-sm text-foreground/75 transition hover:text-primary"
                             >
                                 Mi cuenta
                             </a>
@@ -597,7 +597,7 @@
 
             <div>
 
-                <h3 class="text-sm font-black uppercase tracking-wide text-gray-900">
+                <h3 class="text-sm font-black uppercase tracking-wide text-foreground">
                     Nuestro servicio
                 </h3>
 
@@ -606,7 +606,7 @@
                     <div class="flex items-start gap-3">
 
                         <span
-                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#FFF1EC] text-[#982E26]"
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-accent text-primary"
                             aria-hidden="true"
                         >
                             🛵
@@ -614,11 +614,11 @@
 
                         <div>
 
-                            <p class="text-sm font-bold text-gray-800">
+                            <p class="text-sm font-bold text-foreground">
                                 Delivery a domicilio
                             </p>
 
-                            <p class="mt-1 text-xs leading-5 text-gray-500">
+                            <p class="mt-1 text-xs leading-5 text-foreground/75">
                                 Recibe tus platos en la dirección que elijas.
                             </p>
 
@@ -629,7 +629,7 @@
                     <div class="flex items-start gap-3">
 
                         <span
-                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#FFF1EC] text-[#982E26]"
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-accent text-primary"
                             aria-hidden="true"
                         >
                             🍜
@@ -637,11 +637,11 @@
 
                         <div>
 
-                            <p class="text-sm font-bold text-gray-800">
+                            <p class="text-sm font-bold text-foreground">
                                 Preparado para ti
                             </p>
 
-                            <p class="mt-1 text-xs leading-5 text-gray-500">
+                            <p class="mt-1 text-xs leading-5 text-foreground/75">
                                 Personaliza cada plato con tus adicionales favoritos.
                             </p>
 
@@ -665,18 +665,18 @@
 
         {{-- PARTE INFERIOR --}}
 
-        <div class="border-t border-gray-100">
+        <div class="border-t border-border">
 
             <div
                 class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-center sm:flex-row sm:px-6 sm:text-left"
             >
 
-                <p class="text-xs text-gray-400">
+                <p class="text-xs text-foreground/75">
                     © {{ date('Y') }} Chifa Mi Hogar.
                     Todos los derechos reservados.
                 </p>
 
-                <p class="text-xs font-medium text-gray-400">
+                <p class="text-xs font-medium text-foreground/75">
                     Preparado con sabor, entregado con cariño.
                 </p>
 

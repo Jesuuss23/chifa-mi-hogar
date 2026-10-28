@@ -114,14 +114,14 @@
 
 <section
     id="product-configurator"
-    class="mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:pt-9"
+    class="catalog-surface mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:pt-9"
 >
 
     {{-- Regresar a la carta --}}
 
     <a
         href="{{ route('storefront.index') }}"
-        class="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-[#982E26] transition hover:opacity-75"
+        class="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-primary transition hover:opacity-75"
     >
         <span aria-hidden="true">←</span>
         Todos los productos
@@ -132,7 +132,7 @@
     @if($errors->any())
         <div
             role="alert"
-            class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+            class="mb-6 rounded-none border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
         >
             {{ $errors->first() }}
         </div>
@@ -144,7 +144,7 @@
         id="configurator-error"
         role="alert"
         aria-live="assertive"
-        class="mb-6 hidden rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+        class="mb-6 hidden rounded-none border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
     ></div>
 
     <form
@@ -180,7 +180,7 @@
             <div class="min-w-0">
 
                 <div
-                    class="mx-auto w-full max-w-[530px] overflow-hidden rounded-[22px] bg-[#F4EFE9] lg:mx-0"
+                    class="mx-auto w-full max-w-[530px] overflow-hidden rounded-none bg-accent lg:mx-0"
                 >
                     @if($product->mediaAsset || $product->image_path)
 
@@ -194,7 +194,7 @@
                     @else
 
                         <div
-                            class="flex h-64 items-center justify-center text-sm text-gray-400 sm:h-80"
+                            class="flex h-64 items-center justify-center text-sm text-foreground/75 sm:h-80"
                         >
                             Fotografía próximamente
                         </div>
@@ -209,23 +209,23 @@
             <div class="min-w-0 lg:pt-3">
 
                 <span
-                    class="text-xs font-bold uppercase tracking-[0.15em] text-[#982E26]"
+                    class="text-xs font-bold uppercase tracking-[0.15em] text-primary"
                 >
                     {{ $product->category?->name ?? 'Nuestra carta' }}
                 </span>
 
                 <h1
-                    class="mt-3 text-3xl font-black leading-tight tracking-tight text-[#201E1D] sm:text-4xl"
+                    class="mt-3 text-3xl font-black leading-tight tracking-tight text-foreground sm:text-4xl"
                 >
                     {{ $product->name }}
                 </h1>
 
-                <p class="mt-3 max-w-lg text-sm leading-7 text-gray-500 sm:text-base">
+                <p class="mt-3 max-w-lg text-sm leading-7 text-foreground/75 sm:text-base">
                     {{ $product->description ?: 'Preparado con nuestro sabor especial.' }}
                 </p>
 
                 <p
-                    class="mt-6 text-3xl font-black tracking-tight text-[#982E26]"
+                    class="mt-6 text-3xl font-black tracking-tight text-primary"
                 >
                     S/ {{ number_format((float) $product->price, 2) }}
                 </p>
@@ -233,26 +233,26 @@
                 {{-- Selector de cantidad --}}
 
                 <div
-                    class="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-white px-4 py-4 sm:px-5"
+                    class="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-none border border-border bg-card px-4 py-4 sm:px-5"
                 >
                     <div>
-                        <h2 class="text-sm font-bold text-gray-900">
+                        <h2 class="text-sm font-bold text-foreground">
                             Cantidad total
                         </h2>
 
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-foreground/75">
                             Elige cuántos platos deseas.
                         </p>
                     </div>
 
                     <div
-                        class="inline-flex items-center gap-3 rounded-xl border border-gray-200 bg-[#FAF8F5] p-1.5"
+                        class="inline-flex items-center gap-3 rounded-none border border-border bg-background p-1.5"
                     >
                         <button
                             type="button"
                             data-action="quantity-minus"
                             aria-label="Disminuir cantidad"
-                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-xl font-bold text-gray-700 transition hover:bg-gray-100 disabled:opacity-40"
+                            class="flex h-9 w-9 items-center justify-center rounded-none bg-card text-xl font-bold text-foreground transition hover:bg-accent disabled:opacity-40"
                         >
                             −
                         </button>
@@ -268,7 +268,7 @@
                             type="button"
                             data-action="quantity-plus"
                             aria-label="Aumentar cantidad"
-                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#982E26] text-xl font-bold text-white transition hover:bg-[#B5382E] disabled:opacity-40"
+                            class="flex h-9 w-9 items-center justify-center rounded-none bg-primary text-xl font-bold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-40"
                         >
                             +
                         </button>
@@ -277,7 +277,7 @@
 
                 <p
                     id="quantity-help"
-                    class="mt-3 text-xs leading-5 text-gray-500"
+                    class="mt-3 text-xs leading-5 text-foreground/75"
                 >
                     Puedes añadir tus complementos favoritos más abajo.
                 </p>
@@ -292,27 +292,27 @@
 
         <section
             id="configuration-section"
-            class="mt-10 scroll-mt-24 border-t border-gray-200 pt-8 sm:mt-12"
+            class="mt-10 scroll-mt-24 border-t border-border pt-8 sm:mt-12"
         >
 
             <div class="mb-6">
 
                 <p
-                    class="text-xs font-bold uppercase tracking-[0.16em] text-[#982E26]"
+                    class="text-xs font-bold uppercase tracking-[0.16em] text-primary"
                 >
                     A tu gusto
                 </p>
 
                 <h2
                     id="configuration-heading"
-                    class="mt-2 text-2xl font-black tracking-tight text-[#201E1D]"
+                    class="mt-2 text-2xl font-black tracking-tight text-foreground"
                 >
                     Personaliza tu plato
                 </h2>
 
                 <p
                     id="configuration-description"
-                    class="mt-2 text-sm leading-6 text-gray-500"
+                    class="mt-2 text-sm leading-6 text-foreground/75"
                 >
                     Agrega los complementos que prefieras.
                 </p>
@@ -334,16 +334,16 @@
                         class="mb-5 hidden"
                     >
                         <div
-                            class="overflow-hidden rounded-2xl border border-gray-200 bg-white"
+                            class="overflow-hidden rounded-none border border-border bg-card"
                         >
                             <div
-                                class="border-b border-gray-100 px-4 py-3 sm:px-5"
+                                class="border-b border-border px-4 py-3 sm:px-5"
                             >
-                                <p class="text-sm font-bold text-gray-900">
+                                <p class="text-sm font-bold text-foreground">
                                     Detalles de tus platos
                                 </p>
 
-                                <p class="mt-1 text-xs text-gray-500">
+                                <p class="mt-1 text-xs text-foreground/75">
                                     Selecciona cuál deseas configurar.
                                 </p>
                             </div>
@@ -362,13 +362,13 @@
                     {{-- Editor único que cambia según el plato --}}
 
                     <div
-                        class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+                        class="overflow-hidden rounded-none border border-border bg-card shadow-storefront"
                     >
 
                         {{-- Encabezado del editor --}}
 
                         <div
-                            class="border-b border-gray-100 px-4 py-4 sm:px-5"
+                            class="border-b border-border px-4 py-4 sm:px-5"
                         >
 
                             <div
@@ -379,14 +379,14 @@
 
                                     <h3
                                         id="active-plate-title"
-                                        class="text-base font-black text-gray-900"
+                                        class="text-base font-black text-foreground"
                                     >
                                         Personaliza tu plato
                                     </h3>
 
                                     <p
                                         id="active-plate-description"
-                                        class="mt-1 text-xs leading-5 text-gray-500"
+                                        class="mt-1 text-xs leading-5 text-foreground/75"
                                     >
                                         Configuración original
                                     </p>
@@ -395,7 +395,7 @@
 
                                 <span
                                     id="active-plate-price"
-                                    class="text-lg font-black text-[#982E26]"
+                                    class="text-lg font-black text-primary"
                                 >
                                     S/ {{ number_format((float) $product->price, 2) }}
                                 </span>
@@ -411,7 +411,7 @@
                                 <button
                                     type="button"
                                     data-action="copy-first"
-                                    class="inline-flex items-center gap-2 rounded-lg border border-[#E8D5D0] bg-[#FFF8F5] px-3 py-2.5 text-xs font-bold text-[#982E26] transition hover:bg-[#FCECE7]"
+                                    class="inline-flex items-center gap-2 rounded-none border border-border bg-accent px-3 py-2.5 text-xs font-bold text-primary transition hover:bg-accent"
                                 >
                                     <span aria-hidden="true">⧉</span>
                                     Mantener configuración del Plato 1
@@ -425,16 +425,16 @@
                         ====================================== --}}
 
                         <div
-                            class="border-b border-gray-100 px-4 py-5 sm:px-5"
+                            class="border-b border-border px-4 py-5 sm:px-5"
                         >
 
                             <div class="mb-4">
 
-                                <h4 class="text-sm font-black text-gray-900">
+                                <h4 class="text-sm font-black text-foreground">
                                     Nuestras recomendaciones
                                 </h4>
 
-                                <p class="mt-1 text-xs leading-5 text-gray-500">
+                                <p class="mt-1 text-xs leading-5 text-foreground/75">
                                     Agrega una configuración con un toque.
                                 </p>
 
@@ -453,11 +453,11 @@
                                     data-action="recommendation"
                                     data-recommendation="base"
                                     aria-pressed="true"
-                                    class="recommendation-card flex w-[205px] shrink-0 snap-start items-center gap-3 rounded-xl border-2 border-[#982E26] bg-[#FFF8F5] p-2.5 text-left transition sm:w-[225px]"
+                                    class="recommendation-card flex w-[205px] shrink-0 snap-start items-center gap-3 rounded-none border-2 border-primary bg-accent p-2.5 text-left transition sm:w-[225px]"
                                 >
 
                                     <div
-                                        class="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-[#F1E7DD]"
+                                        class="h-14 w-14 shrink-0 overflow-hidden rounded-none bg-accent"
                                     >
                                         @if($product->mediaAsset || $product->image_path)
 
@@ -482,17 +482,17 @@
                                     <div class="min-w-0 flex-1">
 
                                         <p
-                                            class="text-xs font-bold leading-4 text-gray-900"
+                                            class="text-xs font-bold leading-4 text-foreground"
                                         >
                                             Plato original
                                         </p>
 
-                                        <p class="mt-1 text-[11px] text-gray-500">
+                                        <p class="mt-1 text-[11px] text-foreground/75">
                                             Sin adicionales
                                         </p>
 
                                         <p
-                                            class="mt-1 text-xs font-black text-[#982E26]"
+                                            class="mt-1 text-xs font-black text-primary"
                                         >
                                             S/ {{ number_format((float) $product->price, 2) }}
                                         </p>
@@ -501,7 +501,7 @@
 
                                     <span
                                         data-selection-icon
-                                        class="text-base font-black text-[#982E26]"
+                                        class="text-base font-black text-primary"
                                     >
                                         ✓
                                     </span>
@@ -533,11 +533,11 @@
                                         data-action="recommendation"
                                         data-recommendation="{{ $recommendation->id }}"
                                         aria-pressed="false"
-                                        class="recommendation-card flex w-[205px] shrink-0 snap-start items-center gap-3 rounded-xl border-2 border-gray-200 bg-white p-2.5 text-left transition hover:border-[#982E26] sm:w-[225px]"
+                                        class="recommendation-card flex w-[205px] shrink-0 snap-start items-center gap-3 rounded-none border-2 border-border bg-card p-2.5 text-left transition hover:border-primary sm:w-[225px]"
                                     >
 
                                         <div
-                                            class="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-[#F1E7DD]"
+                                            class="h-14 w-14 shrink-0 overflow-hidden rounded-none bg-accent"
                                         >
 
                                             @if($recommendation->mediaAsset || $recommendation->image_path)
@@ -564,20 +564,20 @@
                                         <div class="min-w-0 flex-1">
 
                                             <p
-                                                class="line-clamp-2 text-xs font-bold leading-4 text-gray-900"
+                                                class="line-clamp-2 text-xs font-bold leading-4 text-foreground"
                                             >
                                                 {{ $recommendation->name }}
                                             </p>
 
                                             <p
-                                                class="mt-1 text-[11px] text-gray-500"
+                                                class="mt-1 text-[11px] text-foreground/75"
                                             >
                                                 {{ $recommendation->extras->count() }}
                                                 complementos
                                             </p>
 
                                             <p
-                                                class="mt-1 text-xs font-black text-[#982E26]"
+                                                class="mt-1 text-xs font-black text-primary"
                                             >
                                                 S/ {{ number_format($recommendationPrice, 2) }}
                                             </p>
@@ -586,7 +586,7 @@
 
                                         <span
                                             data-selection-icon
-                                            class="text-base font-black text-gray-300"
+                                            class="text-base font-black text-foreground/75"
                                         >
                                             ○
                                         </span>
@@ -599,7 +599,7 @@
 
                             <p
                                 id="recommendation-notice"
-                                class="mt-2 text-xs leading-5 text-gray-500"
+                                class="mt-2 text-xs leading-5 text-foreground/75"
                             >
                                 Selecciona una recomendación para añadir sus complementos.
                             </p>
@@ -614,11 +614,11 @@
 
                             <div class="mb-5">
 
-                                <h4 class="text-sm font-black text-gray-900">
+                                <h4 class="text-sm font-black text-foreground">
                                     Adicionales
                                 </h4>
 
-                                <p class="mt-1 text-xs leading-5 text-gray-500">
+                                <p class="mt-1 text-xs leading-5 text-foreground/75">
                                     Aumenta o disminuye la cantidad de cada complemento.
                                 </p>
 
@@ -633,7 +633,7 @@
                                         <section>
 
                                             <h5
-                                                class="mb-3 text-xs font-black uppercase tracking-wide text-[#982E26]"
+                                                class="mb-3 text-xs font-black uppercase tracking-wide text-primary"
                                             >
                                                 {{ $categoryName }}
                                             </h5>
@@ -643,13 +643,13 @@
                                                 @foreach($groupExtras as $extra)
 
                                                     <div
-                                                        class="flex items-center gap-3 rounded-xl border border-gray-100 bg-[#FDFBF9] p-2.5 sm:p-3"
+                                                        class="flex items-center gap-3 rounded-none border border-border bg-card p-2.5 sm:p-3"
                                                     >
 
                                                         {{-- Miniatura compacta --}}
 
                                                         <div
-                                                            class="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#F2E9E0] sm:h-14 sm:w-14"
+                                                            class="h-12 w-12 shrink-0 overflow-hidden rounded-none bg-accent sm:h-14 sm:w-14"
                                                         >
 
                                                             @if($extra->mediaAsset || $extra->image_path)
@@ -678,13 +678,13 @@
                                                         <div class="min-w-0 flex-1">
 
                                                             <p
-                                                                class="text-xs font-bold leading-5 text-gray-900 sm:text-sm"
+                                                                class="text-xs font-bold leading-5 text-foreground sm:text-sm"
                                                             >
                                                                 {{ $extra->name }}
                                                             </p>
 
                                                             <p
-                                                                class="mt-0.5 text-xs font-semibold text-[#982E26]"
+                                                                class="mt-0.5 text-xs font-semibold text-primary"
                                                             >
                                                                 + S/ {{ number_format((float) $extra->price, 2) }}
                                                             </p>
@@ -694,7 +694,7 @@
                                                         {{-- Selector compacto --}}
 
                                                         <div
-                                                            class="flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white p-1"
+                                                            class="flex shrink-0 items-center gap-1 rounded-none border border-border bg-card p-1"
                                                         >
 
                                                             <button
@@ -702,7 +702,7 @@
                                                                 data-action="extra-minus"
                                                                 data-extra-id="{{ $extra->id }}"
                                                                 aria-label="Quitar {{ $extra->name }}"
-                                                                class="flex h-8 w-8 items-center justify-center rounded-md text-lg font-bold text-gray-700 transition hover:bg-gray-100 disabled:opacity-30"
+                                                                class="flex h-8 w-8 items-center justify-center rounded-none text-lg font-bold text-foreground transition hover:bg-accent disabled:opacity-30"
                                                             >
                                                                 −
                                                             </button>
@@ -719,7 +719,7 @@
                                                                 data-action="extra-plus"
                                                                 data-extra-id="{{ $extra->id }}"
                                                                 aria-label="Añadir {{ $extra->name }}"
-                                                                class="flex h-8 w-8 items-center justify-center rounded-md bg-[#982E26] text-lg font-bold text-white transition hover:bg-[#B5382E] disabled:opacity-30"
+                                                                class="flex h-8 w-8 items-center justify-center rounded-none bg-primary text-lg font-bold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-30"
                                                             >
                                                                 +
                                                             </button>
@@ -741,7 +741,7 @@
                             @else
 
                                 <p
-                                    class="rounded-xl bg-gray-50 p-4 text-sm text-gray-500"
+                                    class="rounded-none bg-muted p-4 text-sm text-foreground/75"
                                 >
                                     Este plato no tiene adicionales disponibles.
                                 </p>
@@ -753,12 +753,12 @@
                         {{-- Subtotal del plato activo --}}
 
                         <div
-                            class="flex items-center justify-between gap-4 border-t border-gray-100 bg-[#FFF9F5] px-4 py-4 sm:px-5"
+                            class="flex items-center justify-between gap-4 border-t border-border bg-accent px-4 py-4 sm:px-5"
                         >
 
                             <span
                                 id="active-subtotal-label"
-                                class="text-sm font-semibold text-gray-700"
+                                class="text-sm font-semibold text-foreground"
                             >
                                 Subtotal del plato
                             </span>
@@ -766,7 +766,7 @@
                             <output
                                 id="active-subtotal"
                                 aria-live="polite"
-                                class="text-lg font-black text-[#982E26]"
+                                class="text-lg font-black text-primary"
                             >
                                 S/ {{ number_format((float) $product->price, 2) }}
                             </output>
@@ -784,22 +784,22 @@
                 <aside class="min-w-0 lg:sticky lg:top-24">
 
                     <div
-                        class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+                        class="overflow-hidden rounded-none border border-border bg-card shadow-storefront"
                     >
 
                         <div
-                            class="border-b border-gray-100 px-5 py-4"
+                            class="border-b border-border px-5 py-4"
                         >
 
                             <h2
-                                class="text-lg font-black text-gray-900"
+                                class="text-lg font-black text-foreground"
                             >
                                 Resumen del pedido
                             </h2>
 
                             <p
                                 id="summary-quantity"
-                                class="mt-1 text-xs text-gray-500"
+                                class="mt-1 text-xs text-foreground/75"
                             >
                                 1 plato seleccionado
                             </p>
@@ -818,7 +818,7 @@
                             {{-- Total --}}
 
                             <div
-                                class="mt-5 border-t border-gray-200 pt-5"
+                                class="mt-5 border-t border-border pt-5"
                             >
 
                                 <div
@@ -826,7 +826,7 @@
                                 >
 
                                     <span
-                                        class="font-bold text-gray-900"
+                                        class="font-bold text-foreground"
                                     >
                                         Total
                                     </span>
@@ -834,7 +834,7 @@
                                     <output
                                         id="order-total"
                                         aria-live="polite"
-                                        class="text-2xl font-black text-[#982E26]"
+                                        class="text-2xl font-black text-primary"
                                     >
                                         S/ {{ number_format((float) $product->price, 2) }}
                                     </output>
@@ -842,7 +842,7 @@
                                 </div>
 
                                 <p
-                                    class="mt-2 text-xs leading-5 text-gray-500"
+                                    class="mt-2 text-xs leading-5 text-foreground/75"
                                 >
                                     El delivery se calcula al confirmar tu dirección.
                                 </p>
@@ -855,7 +855,7 @@
                                 id="add-cart-button"
                                 type="submit"
                                 disabled
-                                class="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#982E26] px-4 py-3 text-sm font-black text-white transition hover:bg-[#B5382E] disabled:cursor-not-allowed disabled:opacity-50"
+                                class="mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-none bg-primary px-4 py-3 text-sm font-black text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <span aria-hidden="true">🛒</span>
                                 Agregar al carrito
@@ -863,7 +863,7 @@
 
                             <a
                                 href="{{ route('storefront.index') }}"
-                                class="mt-4 block text-center text-xs font-semibold text-gray-500 transition hover:text-[#982E26]"
+                                class="mt-4 block text-center text-xs font-semibold text-foreground/75 transition hover:text-primary"
                             >
                                 Seguir comprando
                             </a>
@@ -882,7 +882,7 @@
 
     <noscript>
         <div
-            class="mt-5 rounded-xl bg-amber-50 p-4 text-sm text-amber-800"
+            class="mt-5 rounded-none bg-accent p-4 text-sm text-accent-foreground"
         >
             Activa JavaScript para personalizar tus platos.
         </div>
@@ -1343,11 +1343,11 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             button.className =
-                'min-h-10 shrink-0 rounded-lg border px-4 py-2 text-sm font-bold transition ' +
+                'min-h-10 shrink-0 rounded-none border px-4 py-2 text-sm font-bold transition ' +
                 (
                     selected
-                        ? 'border-[#982E26] bg-[#982E26] text-white'
-                        : 'border-gray-200 bg-[#FAF8F5] text-gray-700 hover:border-[#982E26]'
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-border bg-background text-foreground hover:border-primary'
                 );
 
             button.textContent = `Plato ${index + 1}`;
@@ -1429,22 +1429,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
 
                 card.classList.toggle(
-                    'border-[#982E26]',
+                    'border-primary',
                     isSelected
                 );
 
                 card.classList.toggle(
-                    'bg-[#FFF8F5]',
+                    'bg-accent',
                     isSelected
                 );
 
                 card.classList.toggle(
-                    'border-gray-200',
+                    'border-border',
                     !isSelected
                 );
 
                 card.classList.toggle(
-                    'bg-white',
+                    'bg-card',
                     !isSelected
                 );
 
@@ -1457,12 +1457,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         isSelected ? '✓' : '○';
 
                     icon.classList.toggle(
-                        'text-[#982E26]',
+                        'text-primary',
                         isSelected
                     );
 
                     icon.classList.toggle(
-                        'text-gray-300',
+                        'text-foreground/75',
                         !isSelected
                     );
                 }
@@ -1530,7 +1530,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const article = document.createElement('article');
 
             article.className =
-                'border-b border-gray-100 pb-3 last:border-b-0 last:pb-0';
+                'border-b border-border pb-3 last:border-b-0 last:pb-0';
 
             const top = document.createElement('div');
 
@@ -1544,7 +1544,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = document.createElement('p');
 
             name.className =
-                'text-sm font-bold text-gray-900';
+                'text-sm font-bold text-foreground';
 
             name.textContent =
                 plates.length === 1
@@ -1554,7 +1554,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const recommendation = document.createElement('p');
 
             recommendation.className =
-                'mt-1 text-xs leading-5 text-gray-500';
+                'mt-1 text-xs leading-5 text-foreground/75';
 
             recommendation.textContent =
                 plate.type === 'recommendation'
@@ -1564,7 +1564,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const extras = document.createElement('p');
 
             extras.className =
-                'mt-1 text-xs leading-5 text-gray-500';
+                'mt-1 text-xs leading-5 text-foreground/75';
 
             extras.textContent =
                 getPlateExtrasDescription(plate);
@@ -1572,7 +1572,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const price = document.createElement('strong');
 
             price.className =
-                'shrink-0 text-sm font-black text-[#982E26]';
+                'shrink-0 text-sm font-black text-primary';
 
             price.textContent =
                 money(plateTotalCents(plate));
