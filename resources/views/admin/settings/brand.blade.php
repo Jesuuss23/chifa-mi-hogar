@@ -53,6 +53,10 @@
                 Sin un archivo nuevo se conserva el logo actual.
             </p>
         </div>
+        <p class="text-sm text-slate-600">
+            El logo también se usa en la imagen al compartir la carta.
+            <a class="font-semibold underline" href="{{ route('brand.share-image') }}" target="_blank" rel="noopener noreferrer">Ver imagen para compartir</a>
+        </p>
         <button type="submit" class="rounded-xl bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700">
             Guardar identidad
         </button>

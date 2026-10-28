@@ -19,6 +19,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\View::composer([
+            'storefront.index', 'storefront.show',
+            'storefront.combos.index', 'storefront.combos.show',
+        ], function ($view) {
+            $view->with('seo', app(\App\Services\StorefrontSeoService::class)
+                ->forView($view->name(), $view->getData()));
+        });
+
         \Illuminate\Support\Facades\View::composer('layouts.storefront', function ($view) {
             $settings = \App\Models\StoreSetting::current()->load('logo');
             $view->with('brandLogoUrl', $settings->logoUrl());

@@ -12,6 +12,9 @@
 
     <meta name="theme-color" content="#982E26">
 
+    @if(isset($seo))
+        @include('components.storefront-seo')
+    @else
     <meta
         name="description"
         content="@yield('meta-description', 'Chifa Mi Hogar: disfruta deliciosos platos de chifa con delivery en San Juan de Lurigancho, Lima.')"
@@ -20,6 +23,8 @@
     <title>
         @yield('title', 'Chifa Mi Hogar | Sabor auténtico')
     </title>
+
+    @endif
 
     {{-- Metadatos específicos de cada producto --}}
     @stack('head')
