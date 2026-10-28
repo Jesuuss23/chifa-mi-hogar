@@ -147,7 +147,8 @@ class StorefrontSeoTest extends TestCase
         $head = $this->extractHead($this->get(route('storefront.show', $product)));
         $this->meta($head, 'property', 'og:title');
         $this->meta($head, 'property', 'og:description');
-        $this->assertCount(0, $head->query('//script'));
+        $this->assertCount(0, $head->query('//script[not(@type="application/ld+json")]'));
+        $this->assertCount(1, $head->query('//script[@type="application/ld+json"]'));
         $this->assertCount(0, $head->query('//*[@onload]'));
     }
 

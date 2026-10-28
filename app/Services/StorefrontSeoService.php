@@ -76,7 +76,7 @@ class StorefrontSeoService
             $imageAlt = 'Chifa Mi Hogar, dark kitchen de chifa a domicilio';
         }
 
-        return [
+        $seo = [
             'title' => $this->plain($title, 140),
             'description' => $this->plain($description, 160) ?: 'Descubre la carta de Chifa Mi Hogar y pide tu favorito por delivery en SJL.',
             'canonical' => $base.$path.($query ? '?'.http_build_query($query, '', '&', PHP_QUERY_RFC3986) : ''),
@@ -86,6 +86,9 @@ class StorefrontSeoService
             'image_width' => $imageWidth,
             'image_height' => $imageHeight,
         ];
+        $seo['structured_data'] = app(StorefrontStructuredDataService::class)->forPage($view, $seo, $base);
+
+        return $seo;
     }
 
     private function plain(string $value, int $length): string
@@ -94,7 +97,7 @@ class StorefrontSeoService
         return Str::limit(trim(preg_replace('/\\s+/u', ' ', $value) ?? ''), $length);
     }
 
-    private function baseUrl(StoreSetting $settings): string
+    public function baseUrl(StoreSetting $settings): string
     {
         $parts = parse_url((string) $settings->website_url);
         if (!is_array($parts) || ($parts['scheme'] ?? '') !== 'https' || empty($parts['host'])) {
