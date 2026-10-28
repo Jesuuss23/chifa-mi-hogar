@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class StoreSetting extends Model
 {
     protected $fillable = [
+        'legal_address',
+        'privacy_hosting',
+        'privacy_retention',
+        'privacy_database',
+        'legal_pages_published',
         'business_owner',
         'privacy_email',
         'website_url',
@@ -36,6 +41,7 @@ class StoreSetting extends Model
             'kitchen_latitude' => 'decimal:7',
             'kitchen_longitude' => 'decimal:7',
             'accepting_orders' => 'boolean',
+            'legal_pages_published' => 'boolean',
         ];
     }
 
@@ -61,6 +67,18 @@ class StoreSetting extends Model
         return is_file(public_path('images/brand/logo.jpeg'))
             ? asset('images/brand/logo.jpeg')
             : null;
+    }
+
+    public function legalPagesAvailable(): bool
+    {
+        return (bool) $this->legal_pages_published
+            && filled($this->business_owner)
+            && filled($this->privacy_email)
+            && filled($this->website_url)
+            && filled($this->legal_address)
+            && filled($this->privacy_hosting)
+            && filled($this->privacy_retention)
+            && filled($this->privacy_database);
     }
 
     public static function current(): self

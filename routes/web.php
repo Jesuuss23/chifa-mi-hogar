@@ -26,6 +26,14 @@ use App\Http\Controllers\Admin\DeliveryDriverController;
 use App\Http\Controllers\Delivery\AuthController as DeliveryAuthController;
 use App\Http\Controllers\Delivery\OrderController as DeliveryOrderController;
 use App\Http\Controllers\Delivery\LocationController;
+// Páginas informativas: públicas únicamente cuando están completas y publicadas.
+Route::get('/aviso-legal', [\App\Http\Controllers\LegalPageController::class, 'show'])
+    ->defaults('page', 'notice')->name('legal.notice');
+Route::get('/privacidad', [\App\Http\Controllers\LegalPageController::class, 'show'])
+    ->defaults('page', 'privacy')->name('legal.privacy');
+Route::get('/cookies', [\App\Http\Controllers\LegalPageController::class, 'show'])
+    ->defaults('page', 'cookies')->name('legal.cookies');
+
 //rutas publicas
 Route::get('/', [StorefrontController::class, 'index'])
     ->name('storefront.index');
@@ -175,6 +183,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             \App\Http\Controllers\Admin\BrandSettingController::class,
             'update',
         ])->middleware('throttle:10,1')->name('settings.brand.update');
+
+        Route::put('/settings/legal', [
+            \App\Http\Controllers\Admin\LegalSettingController::class, 'update',
+        ])->middleware('throttle:10,1')->name('settings.legal.update');
+        Route::get('/legal/preview/{page}', [
+            \App\Http\Controllers\LegalPageController::class, 'preview',
+        ])->whereIn('page', ['notice', 'privacy', 'cookies'])->name('legal.preview');
 
         // Administración de WhatsApp
         Route::get('/whatsapp', [

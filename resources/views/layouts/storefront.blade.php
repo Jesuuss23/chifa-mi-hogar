@@ -650,6 +650,14 @@
 
         </div>
 
+        @if($legalPagesAvailable)
+            <nav class="mx-auto flex max-w-7xl flex-wrap gap-5 px-4 pb-6 text-sm sm:px-6" aria-label="Información legal">
+                <a class="underline" href="{{ route('legal.notice') }}">Aviso legal</a>
+                <a class="underline" href="{{ route('legal.privacy') }}">Privacidad</a>
+                <a class="underline" href="{{ route('legal.cookies') }}">Cookies</a>
+            </nav>
+        @endif
+
         {{-- PARTE INFERIOR --}}
 
         <div class="border-t border-gray-100">

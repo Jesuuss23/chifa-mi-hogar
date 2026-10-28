@@ -26,6 +26,7 @@
               method="POST"
               class="mt-6 space-y-4">
             @csrf
+            @include('legal.collection-notice')
 
             <div>
                 <label class="block text-sm font-medium">Nombre</label>

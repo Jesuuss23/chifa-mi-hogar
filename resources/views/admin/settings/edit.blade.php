@@ -30,6 +30,7 @@
     @endif
 
     @include('admin.settings.brand')
+    @include('admin.settings.legal')
 
     <form method="POST"
           action="{{ route('admin.settings.update') }}"

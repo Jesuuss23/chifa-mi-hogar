@@ -259,9 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 deliveryMap = L.map(container);
 
                 L.tileLayer(
-                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     {
-                        attribution: '&copy; OpenStreetMap contributors',
+                        referrerPolicy: 'origin',
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer">OpenStreetMap</a> contributors',
                         maxZoom: 19
                     }
                 ).addTo(deliveryMap);

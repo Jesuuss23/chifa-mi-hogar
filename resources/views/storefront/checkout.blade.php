@@ -142,6 +142,7 @@
         class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]"
     >
         @csrf
+            @include('legal.collection-notice')
 
         <input
             type="hidden"
@@ -1156,10 +1157,11 @@ document.addEventListener('DOMContentLoaded', () => {
         );
 
         L.tileLayer(
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             {
                 maxZoom: 19,
-                attribution: '&copy; OpenStreetMap contributors'
+                referrerPolicy: 'origin',
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer">OpenStreetMap</a> contributors'
             }
         ).addTo(map);
 
