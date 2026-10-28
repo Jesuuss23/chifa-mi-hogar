@@ -15,7 +15,7 @@ class StoreSettingController extends Controller
 {
     public function edit(): View
     {
-        $settings = StoreSetting::current()->load('paymentQr');
+        $settings = StoreSetting::current()->load(['paymentQr', 'logo']);
 
         return view('admin.settings.edit', compact('settings'));
     }

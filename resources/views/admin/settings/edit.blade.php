@@ -29,6 +29,8 @@
         </div>
     @endif
 
+    @include('admin.settings.brand')
+
     <form method="POST"
           action="{{ route('admin.settings.update') }}"
           enctype="multipart/form-data"
