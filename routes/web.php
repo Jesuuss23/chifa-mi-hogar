@@ -34,6 +34,9 @@ Route::get('/privacidad', [\App\Http\Controllers\LegalPageController::class, 'sh
 Route::get('/cookies', [\App\Http\Controllers\LegalPageController::class, 'show'])
     ->defaults('page', 'cookies')->name('legal.cookies');
 
+Route::get('/sitemap.xml', \App\Http\Controllers\SitemapController::class)
+    ->middleware('throttle:30,1')->name('sitemap');
+
 //rutas publicas
 Route::get('/', [StorefrontController::class, 'index'])
     ->name('storefront.index');

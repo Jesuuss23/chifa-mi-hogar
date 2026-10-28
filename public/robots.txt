@@ -1,2 +1,4 @@
 User-agent: *
 Disallow:
+
+Sitemap: https://chifamihogar.com/sitemap.xml
