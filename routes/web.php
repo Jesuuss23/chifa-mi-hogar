@@ -82,11 +82,13 @@ Route::get('/carrito/checkout/estado', [CartCheckoutController::class, 'status']
 Route::get('/pedido/seguir/{token}', [OrderTrackingController::class, 'show'])
     ->whereUuid('token')
     ->middleware('throttle:30,1')
+    ->middleware(\App\Http\Middleware\ProtectOrderTrackingResponse::class)
     ->name('orders.tracking.show');
 
 Route::get('/pedido/seguir/{token}/estado', [OrderTrackingController::class, 'status'])
     ->whereUuid('token')
     ->middleware('throttle:30,1')
+    ->middleware(\App\Http\Middleware\ProtectOrderTrackingResponse::class)
     ->name('orders.tracking.status');
 
 Route::get(
@@ -95,6 +97,7 @@ Route::get(
 )
     ->whereUuid('token')
     ->middleware('throttle:15,1')
+    ->middleware(\App\Http\Middleware\ProtectOrderTrackingResponse::class)
     ->name('orders.tracking.route');
 
 

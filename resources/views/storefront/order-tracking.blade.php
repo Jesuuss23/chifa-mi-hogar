@@ -2,6 +2,11 @@
 
 @section('title', 'Seguimiento de pedido | Chifa Mi Hogar')
 
+@push('head')
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+@endpush
+
 @section('content')
 @php
     $labels = [
