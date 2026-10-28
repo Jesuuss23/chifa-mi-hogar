@@ -171,7 +171,14 @@ class OrderWhatsappRetryTest extends TestCase
     #[DataProvider('excludedOrders')]
     public function test_finished_or_old_orders_are_not_sent_or_queued(string $status, int $hours): void
     {
-        $this->order->update(['status' => $status, 'created_at' => now()->subHours($hours)]);
+        $createdAt = now()->subHours($hours)->startOfSecond();
+        // Asignar directamente: created_at no admite asignación masiva.
+        $this->order->status = $status;
+        $this->order->created_at = $createdAt;
+        $this->order->save();
+        $this->order->refresh();
+        $this->assertSame($status, $this->order->status);
+        $this->assertTrue($this->order->created_at->equalTo($createdAt));
         $this->seedNotification();
         $this->service([])->send($this->order);
         Bus::fake();
