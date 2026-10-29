@@ -3,41 +3,41 @@
 @section('title', 'Pedido registrado | Chifa Mi Hogar')
 
 @section('content')
-<section class="mx-auto max-w-2xl px-4 py-12">
+<section class="customer-surface mx-auto max-w-2xl px-4 py-12">
 
-    <div class="rounded-3xl bg-white p-6 shadow-sm sm:p-10">
+    <div class="rounded-none bg-card p-6 shadow-storefront sm:p-10">
 
         <div class="mb-6 text-center">
             <div class="mb-3 text-5xl">✅</div>
 
-            <h1 class="text-3xl font-black text-gray-900">
+            <h1 class="text-3xl font-black text-foreground">
                 ¡Pedido registrado!
             </h1>
 
-            <p class="mt-3 text-gray-600">
+            <p class="mt-3 text-foreground/75">
                 Hemos recibido tu pedido correctamente.
             </p>
         </div>
 
-        <div class="space-y-4 rounded-2xl bg-gray-50 p-5">
+        <div class="space-y-4 rounded-none bg-muted p-5">
 
             <div class="flex flex-wrap justify-between gap-2">
-                <span class="text-gray-600">Código de pedido</span>
+                <span class="text-foreground/75">Código de pedido</span>
                 <strong class="break-all">{{ $order->code }}</strong>
             </div>
 
             <div class="flex justify-between gap-2">
-                <span class="text-gray-600">Cliente</span>
+                <span class="text-foreground/75">Cliente</span>
                 <strong>{{ $order->customer_name }}</strong>
             </div>
 
             <div class="flex justify-between gap-2">
-                <span class="text-gray-600">Productos</span>
+                <span class="text-foreground/75">Productos</span>
                 <strong>S/ {{ number_format((float) $order->subtotal, 2) }}</strong>
             </div>
 
             <div class="flex justify-between gap-2">
-                <span class="text-gray-600">Delivery</span>
+                <span class="text-foreground/75">Delivery</span>
                 <strong>S/ {{ number_format((float) $order->delivery_fee, 2) }}</strong>
             </div>
 
@@ -45,18 +45,18 @@
 
             <div class="flex justify-between gap-2 text-xl">
                 <strong>Total</strong>
-                <strong class="text-[#982E26]">
+                <strong class="text-primary">
                     S/ {{ number_format((float) $order->total, 2) }}
                 </strong>
             </div>
 
             <div class="flex justify-between gap-2">
-                <span class="text-gray-600">Método de pago</span>
+                <span class="text-foreground/75">Método de pago</span>
                 <strong>{{ strtoupper($order->payment_method) }}</strong>
             </div>
 
             <div class="flex justify-between gap-2">
-                <span class="text-gray-600">Estado</span>
+                <span class="text-foreground/75">Estado</span>
                 <strong id="order-status" class="text-amber-700">
                     {{ match($order->status) {
                         'pending' => 'Pedido recibido',
@@ -78,14 +78,14 @@
             {{-- Pago digital pendiente --}}
             <div
                 id="payment-instructions"
-                class="mt-6 rounded-2xl border border-green-200 bg-green-50 p-5"
+                class="mt-6 rounded-none border border-green-200 bg-green-50 p-5"
                 @if($order->payment_status === 'verified') hidden @endif
             >
                 <h2 class="text-lg font-bold text-green-900">
                     Enviar comprobante de pago
                 </h2>
 
-                <p class="mt-2 text-sm text-gray-700">
+                <p class="mt-2 text-sm text-foreground">
                     Si ya realizaste el pago, envía una captura
                     de tu comprobante al WhatsApp comercial.
                     El pago será verificado por el negocio.
@@ -96,18 +96,18 @@
                         href="{{ $whatsappUrl }}"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="mt-4 block rounded-xl bg-green-700 px-5 py-4 text-center font-bold text-white"
+                        class="mt-4 block rounded-none bg-green-700 px-5 py-4 text-center font-bold text-white"
                     >
                         📲 Enviar comprobante por WhatsApp
                     </a>
                 @else
-                    <p class="mt-4 text-sm font-medium text-red-700">
+                    <p class="mt-4 text-sm font-medium text-destructive">
                         El WhatsApp comercial todavía no está configurado.
                         Comunícate con el negocio para verificar tu pago.
                     </p>
                 @endif
 
-                <p class="mt-3 text-xs text-gray-600">
+                <p class="mt-3 text-xs text-foreground/75">
                     WhatsApp abrirá un mensaje preparado.
                     Deberás adjuntar y enviar tu comprobante manualmente.
                 </p>
@@ -116,14 +116,14 @@
             {{-- Pago digital verificado --}}
             <div
                 id="payment-verified"
-                class="mt-6 rounded-2xl border border-green-200 bg-green-50 p-5"
+                class="mt-6 rounded-none border border-green-200 bg-green-50 p-5"
                 @if($order->payment_status !== 'verified') hidden @endif
             >
                 <h2 class="font-bold text-green-900">
                     ✓ Pago verificado
                 </h2>
 
-                <p class="mt-2 text-sm text-gray-700">
+                <p class="mt-2 text-sm text-foreground">
                     Hemos confirmado tu pago correctamente.
                     Puedes seguir el estado de tu pedido a continuación.
                 </p>
@@ -132,13 +132,13 @@
         @elseif($order->payment_method === 'cash')
 
             {{-- Pago en efectivo --}}
-            <div class="mt-6 rounded-2xl bg-amber-50 p-5">
+            <div class="mt-6 rounded-none bg-amber-50 p-5">
 
                 <h2 class="font-bold text-amber-900">
                     Pago en efectivo
                 </h2>
 
-                <p class="mt-2 text-sm text-gray-700">
+                <p class="mt-2 text-sm text-foreground">
                     Tu pedido quedó registrado para pago en efectivo.
                     No necesitas enviar comprobante.
                 </p>
@@ -166,15 +166,15 @@
         @endif
         {{-- SEGUIMIENTO DEL PEDIDO --}}
 
-        <section class="mt-6 rounded-2xl border border-gray-200 bg-white p-5">
+        <section class="mt-6 rounded-none border border-border bg-card p-5">
 
             <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-                <h2 class="text-xl font-bold text-gray-900">
+                <h2 class="text-xl font-bold text-foreground">
                     Seguimiento de tu pedido
                 </h2>
 
                 <span id="tracking-status"
-                    class="rounded-full bg-amber-100 px-3 py-1 text-sm font-bold text-amber-800">
+                    class="rounded-none bg-amber-100 px-3 py-1 text-sm font-bold text-amber-800">
                     {{ match($order->status) {
                         'pending' => 'Recibido',
                         'confirmed' => 'Confirmado',
@@ -201,11 +201,11 @@
                         data-tracking-step="{{ $key }}">
 
                         <span data-step-icon
-                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-muted text-foreground/75">
                             ○
                         </span>
 
-                        <span data-step-label class="text-gray-500">
+                        <span data-step-label class="text-foreground/75">
                             {{ $label }}
                         </span>
 
@@ -216,12 +216,12 @@
             </div>
 
             <div id="tracking-cancelled"
-                class="mt-4 rounded-xl bg-red-50 p-4 text-sm font-medium text-red-700"
+                class="mt-4 rounded-none bg-destructive/10 p-4 text-sm font-medium text-destructive"
                 hidden>
                 Este pedido fue cancelado.
             </div>
 
-            <p class="mt-5 text-xs text-gray-500">
+            <p class="mt-5 text-xs text-foreground/75">
                 El seguimiento se actualiza automáticamente mientras
                 mantengas esta página abierta.
             </p>
@@ -229,20 +229,20 @@
         </section>
         {{-- ENLACE PRIVADO DE SEGUIMIENTO --}}
 
-        <div class="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+        <div class="mt-6 rounded-none border border-border bg-muted p-5">
 
-            <h2 class="text-lg font-bold text-gray-900">
+            <h2 class="text-lg font-bold text-foreground">
                 Guarda el seguimiento de tu pedido
             </h2>
 
-            <p class="mt-2 text-sm text-gray-600">
+            <p class="mt-2 text-sm text-foreground/75">
                 Podrás consultar el estado de tu pedido desde otro
                 dispositivo, sin iniciar sesión.
             </p>
 
             <a
                 href="{{ route('orders.tracking.show', ['token' => $order->tracking_token]) }}"
-                class="mt-4 block rounded-xl bg-[#982E26] px-5 py-3 text-center font-bold text-white"
+                class="mt-4 block rounded-none bg-primary px-5 py-3 text-center font-bold text-primary-foreground"
             >
                 Ver seguimiento de mi pedido
             </a>
@@ -250,13 +250,13 @@
             <button
                 type="button"
                 id="copy-tracking-link"
-                class="mt-3 w-full rounded-xl border border-gray-300 px-5 py-3 font-bold text-gray-800"
+                class="mt-3 w-full rounded-none border border-border px-5 py-3 font-bold text-foreground"
             >
                 Copiar enlace privado
             </button>
 
             <p id="copy-tracking-feedback"
-            class="mt-2 text-center text-xs text-gray-500"
+            class="mt-2 text-center text-xs text-foreground/75"
             aria-live="polite">
                 No compartas este enlace públicamente.
             </p>
@@ -283,7 +283,7 @@
             });
         </script>
         <a href="{{ url('/') }}"
-           class="mt-6 block rounded-xl border border-gray-300 px-5 py-3 text-center font-bold text-gray-800">
+           class="mt-6 block rounded-none border border-border px-5 py-3 text-center font-bold text-foreground">
             Volver a la tienda
         </a>
 
@@ -329,8 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (badge) {
             badge.textContent = labels[status] ?? 'En seguimiento';
             badge.className = cancelled
-                ? 'rounded-full bg-red-100 px-3 py-1 text-sm font-bold text-red-700'
-                : 'rounded-full bg-green-100 px-3 py-1 text-sm font-bold text-green-800';
+                ? 'rounded-none bg-destructive/10 px-3 py-1 text-sm font-bold text-destructive'
+                : 'rounded-none bg-green-100 px-3 py-1 text-sm font-bold text-green-800';
         }
 
         if (cancelledBox) {
@@ -354,16 +354,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 icon.textContent = completed ? '✓' : '○';
 
                 icon.className = completed
-                    ? 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 font-bold text-green-700'
-                    : 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400';
+                    ? 'flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-green-100 font-bold text-green-700'
+                    : 'flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-muted text-foreground/75';
             }
 
             if (label) {
                 label.className = active
                     ? 'font-bold text-green-800'
                     : completed
-                        ? 'font-medium text-gray-900'
-                        : 'text-gray-500';
+                        ? 'font-medium text-foreground'
+                        : 'text-foreground/75';
             }
         });
     }

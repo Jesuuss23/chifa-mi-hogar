@@ -9,19 +9,19 @@
         <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     @endif
 </head>
-<body class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+<body class="storefront-theme customer-surface min-h-screen bg-background flex items-center justify-center p-4">
 
-    <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+    <div class="w-full max-w-md rounded-none bg-card p-8 shadow-storefront">
         <a href="{{ route('storefront.index') }}"
-           class="text-sm text-red-700">
+           class="text-sm text-primary">
             ← Volver al restaurante
         </a>
 
-        <h1 class="mt-5 text-2xl font-bold text-slate-900">
+        <h1 class="mt-5 text-2xl font-bold text-foreground">
             Crear mi cuenta
         </h1>
 
-        <p class="mt-2 text-sm text-slate-500">
+        <p class="mt-2 text-sm text-foreground/75">
             Regístrate para consultar tus pedidos y valorar tus compras.
         </p>
 
@@ -36,9 +36,9 @@
                 <input type="text" name="name" required
                        value="{{ old('name') }}"
                        autocomplete="name"
-                       class="mt-1 w-full rounded-lg border p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
                 @error('name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -47,9 +47,9 @@
                 <input type="email" name="email" required
                        value="{{ old('email') }}"
                        autocomplete="email"
-                       class="mt-1 w-full rounded-lg border p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
                 @error('email')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -58,9 +58,9 @@
                 <input type="password" name="password" required
                        autocomplete="new-password"
                        minlength="8"
-                       class="mt-1 w-full rounded-lg border p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
                 @error('password')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -71,7 +71,7 @@
                 <input type="password" name="password_confirmation" required
                        autocomplete="new-password"
                        minlength="8"
-                       class="mt-1 w-full rounded-lg border p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
             </div>
 
             @if(config('turnstile.enabled'))
@@ -79,24 +79,24 @@
                     <div class="cf-turnstile"
                          data-sitekey="{{ config('turnstile.site_key') }}"
                          data-action="register" data-language="es"></div>
-                    <noscript><p class="text-sm text-red-600">Activa JavaScript para completar la verificación.</p></noscript>
+                    <noscript><p class="text-sm text-destructive">Activa JavaScript para completar la verificación.</p></noscript>
                 @else
-                    <p class="text-sm text-red-600">El registro no está disponible temporalmente. Inténtalo más tarde.</p>
+                    <p class="text-sm text-destructive">El registro no está disponible temporalmente. Inténtalo más tarde.</p>
                 @endif
             @endif
             @error('cf-turnstile-response')
-                <p role="alert" class="text-sm text-red-600">{{ $message }}</p>
+                <p role="alert" class="text-sm text-destructive">{{ $message }}</p>
             @enderror
 
             <button type="submit"
-                    class="w-full rounded-lg bg-red-700 p-3 font-semibold text-white hover:bg-red-800">
+                    class="w-full rounded-none bg-primary p-3 font-semibold text-primary-foreground hover:bg-primary/90">
                 Crear cuenta
             </button>
         </form>
 
         <p class="mt-6 text-center text-sm">
             ¿Ya tienes cuenta?
-            <a href="{{ route('login') }}" class="font-semibold text-red-700">
+            <a href="{{ route('login') }}" class="font-semibold text-primary">
                 Inicia sesión
             </a>
         </p>

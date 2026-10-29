@@ -39,27 +39,27 @@
 
 @section('content')
 
-<section class="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:pt-12">
+<section class="customer-surface mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:pt-12">
 
     {{-- ENCABEZADO --}}
 
     <div class="mb-8">
         <a
             href="{{ route('cart.index') }}"
-            class="text-sm font-semibold text-[#982E26] hover:underline"
+            class="text-sm font-semibold text-primary hover:underline"
         >
             ← Volver al carrito
         </a>
 
-        <p class="mt-7 text-xs font-bold uppercase tracking-[0.16em] text-[#982E26]">
+        <p class="mt-7 text-xs font-bold uppercase tracking-[0.16em] text-primary">
             Último paso
         </p>
 
-        <h1 class="mt-2 text-3xl font-black tracking-tight text-gray-950 sm:text-4xl">
+        <h1 class="mt-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
             Confirmar pedido
         </h1>
 
-        <p class="mt-2 text-sm leading-6 text-gray-500">
+        <p class="mt-2 text-sm leading-6 text-foreground/75">
             Completa tus datos, confirma tu ubicación y elige cómo deseas pagar.
         </p>
     </div>
@@ -69,7 +69,7 @@
     @if($errors->any())
         <div
             role="alert"
-            class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+            class="mb-6 rounded-none border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
         >
             <p class="font-bold">Revisa los siguientes datos:</p>
 
@@ -85,19 +85,19 @@
 
     @if($quote)
         <div
-            class="mb-7 rounded-2xl border border-[#E6DDD1] bg-white p-5 shadow-sm sm:p-6"
+            class="mb-7 rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6"
         >
             <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-700">
+                <div class="flex h-10 w-10 items-center justify-center rounded-none bg-green-50 text-green-700">
                     ✓
                 </div>
 
                 <div>
-                    <h2 class="font-black text-gray-950">
+                    <h2 class="font-black text-foreground">
                         Cotización calculada
                     </h2>
 
-                    <p class="text-xs text-gray-500">
+                    <p class="text-xs text-foreground/75">
                         Importes calculados desde nuestro sistema.
                     </p>
                 </div>
@@ -105,29 +105,29 @@
 
             <div class="mt-5 space-y-3 text-sm">
                 <div class="flex justify-between gap-3">
-                    <span class="text-gray-500">Productos</span>
+                    <span class="text-foreground/75">Productos</span>
                     <span class="font-semibold">
                         S/ {{ number_format((float) $quote['subtotal'], 2) }}
                     </span>
                 </div>
 
                 <div class="flex justify-between gap-3">
-                    <span class="text-gray-500">Delivery</span>
+                    <span class="text-foreground/75">Delivery</span>
                     <span class="font-semibold">
                         S/ {{ number_format((float) $quote['delivery_fee'], 2) }}
                     </span>
                 </div>
 
-                <div class="flex justify-between gap-3 border-t border-gray-100 pt-4">
+                <div class="flex justify-between gap-3 border-t border-border pt-4">
                     <span class="font-black">Total cotizado</span>
 
-                    <strong class="text-2xl text-[#982E26]">
+                    <strong class="text-2xl text-primary">
                         S/ {{ number_format((float) $quote['total'], 2) }}
                     </strong>
                 </div>
             </div>
 
-            <p class="mt-3 text-xs leading-5 text-gray-500">
+            <p class="mt-3 text-xs leading-5 text-foreground/75">
                 Si cambias tu ubicación o tus datos de pago,
                 vuelve a calcular. El total definitivo
                 se verificará al confirmar el pedido.
@@ -163,19 +163,19 @@
                  1. DATOS DEL CLIENTE
             ============================================== --}}
 
-            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <section class="rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6">
 
                 <div class="mb-6 flex items-center gap-3">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#982E26] text-sm font-black text-white">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-none bg-primary text-sm font-black text-primary-foreground">
                         1
                     </span>
 
                     <div>
-                        <h2 class="text-lg font-black text-gray-950">
+                        <h2 class="text-lg font-black text-foreground">
                             Tus datos
                         </h2>
 
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-foreground/75">
                             Información para identificar tu pedido.
                         </p>
                     </div>
@@ -186,7 +186,7 @@
                     <div>
                         <label
                             for="customer_name"
-                            class="mb-2 block text-sm font-semibold text-gray-800"
+                            class="mb-2 block text-sm font-semibold text-foreground"
                         >
                             Nombre completo
                         </label>
@@ -199,7 +199,7 @@
                             maxlength="150"
                             value="{{ old('customer_name') }}"
                             placeholder="Ingresa tu nombre completo"
-                            class="w-full rounded-xl border border-gray-200 bg-[#FDFCFB] px-4 py-3 text-sm outline-none transition focus:border-[#982E26] focus:ring-2 focus:ring-red-100"
+                            class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         >
                     </div>
 
@@ -207,7 +207,7 @@
                         <div>
                             <label
                                 for="customer_phone"
-                                class="mb-2 block text-sm font-semibold text-gray-800"
+                                class="mb-2 block text-sm font-semibold text-foreground"
                             >
                                 Número de celular
                             </label>
@@ -222,17 +222,17 @@
                                 maxlength="9"
                                 value="{{ old('customer_phone') }}"
                                 placeholder="9XXXXXXXX"
-                                class="w-full rounded-xl border border-gray-200 bg-[#FDFCFB] px-4 py-3 text-sm outline-none transition focus:border-[#982E26] focus:ring-2 focus:ring-red-100"
+                                class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                             >
                         </div>
 
                         <div>
                             <label
                                 for="customer_email"
-                                class="mb-2 block text-sm font-semibold text-gray-800"
+                                class="mb-2 block text-sm font-semibold text-foreground"
                             >
                                 Correo electrónico
-                                <span class="font-normal text-gray-400">
+                                <span class="font-normal text-foreground/75">
                                     (opcional)
                                 </span>
                             </label>
@@ -245,7 +245,7 @@
                                 maxlength="150"
                                 value="{{ old('customer_email') }}"
                                 placeholder="correo@ejemplo.com"
-                                class="w-full rounded-xl border border-gray-200 bg-[#FDFCFB] px-4 py-3 text-sm outline-none transition focus:border-[#982E26] focus:ring-2 focus:ring-red-100"
+                                class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                             >
                         </div>
                     </div>
@@ -257,20 +257,20 @@
                  2. ENTREGA
             ============================================== --}}
 
-            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <section class="rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6">
 
                 <div class="mb-5 flex items-center gap-3">
 
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#982E26] text-sm font-black text-white">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-none bg-primary text-sm font-black text-primary-foreground">
                         2
                     </span>
 
                     <div>
-                        <h2 class="text-lg font-black text-gray-950">
+                        <h2 class="text-lg font-black text-foreground">
                             Dirección de entrega
                         </h2>
 
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-foreground/75">
                             Entregamos tus platos a domicilio.
                         </p>
                     </div>
@@ -282,7 +282,7 @@
                     <div>
                         <label
                             for="delivery_address"
-                            class="mb-2 block text-sm font-semibold text-gray-800"
+                            class="mb-2 block text-sm font-semibold text-foreground"
                         >
                             Dirección completa
                         </label>
@@ -295,17 +295,17 @@
                             maxlength="500"
                             value="{{ old('delivery_address') }}"
                             placeholder="Avenida, calle, número y distrito"
-                            class="w-full rounded-xl border border-gray-200 bg-[#FDFCFB] px-4 py-3 text-sm outline-none transition focus:border-[#982E26] focus:ring-2 focus:ring-red-100"
+                            class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         >
                     </div>
 
                     <div>
                         <label
                             for="delivery_reference"
-                            class="mb-2 block text-sm font-semibold text-gray-800"
+                            class="mb-2 block text-sm font-semibold text-foreground"
                         >
                             Referencia
-                            <span class="font-normal text-gray-400">
+                            <span class="font-normal text-foreground/75">
                                 (opcional)
                             </span>
                         </label>
@@ -317,19 +317,19 @@
                             maxlength="500"
                             value="{{ old('delivery_reference') }}"
                             placeholder="Color de puerta, piso, lugar cercano..."
-                            class="w-full rounded-xl border border-gray-200 bg-[#FDFCFB] px-4 py-3 text-sm outline-none transition focus:border-[#982E26] focus:ring-2 focus:ring-red-100"
+                            class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         >
                     </div>
 
                     {{-- MAPA ACTUAL --}}
-                    <div class="rounded-2xl border border-gray-200 p-3 sm:p-4">
+                    <div class="rounded-none border border-border p-3 sm:p-4">
 
                         <div class="mb-4">
-                            <h3 class="text-sm font-black text-gray-950">
+                            <h3 class="text-sm font-black text-foreground">
                                 Confirma tu ubicación en el mapa
                             </h3>
 
-                            <p class="mt-1 text-xs leading-5 text-gray-500">
+                            <p class="mt-1 text-xs leading-5 text-foreground/75">
                                 Usa tu ubicación actual o mueve el marcador hasta
                                 el lugar exacto de entrega.
                             </p>
@@ -340,7 +340,7 @@
                             <button
                                 type="button"
                                 id="btn-current-location"
-                                class="min-h-11 rounded-xl bg-[#982E26] px-3 py-3 text-xs font-bold text-white transition hover:bg-[#B5382E] sm:text-sm"
+                                class="min-h-11 rounded-none bg-primary px-3 py-3 text-xs font-bold text-primary-foreground transition hover:bg-primary/90 sm:text-sm"
                             >
                                 📍 Mi ubicación actual
                             </button>
@@ -348,7 +348,7 @@
                             <button
                                 type="button"
                                 id="btn-select-map"
-                                class="min-h-11 rounded-xl border border-[#E8D2CD] bg-white px-3 py-3 text-xs font-bold text-[#982E26] transition hover:bg-[#FFF6F3] sm:text-sm"
+                                class="min-h-11 rounded-none border border-border bg-card px-3 py-3 text-xs font-bold text-primary transition hover:bg-accent sm:text-sm"
                             >
                                 Elegir en el mapa
                             </button>
@@ -357,7 +357,7 @@
 
                         <div
                             id="delivery-map"
-                            class="relative mt-4 w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-100"
+                            class="relative mt-4 w-full overflow-hidden rounded-none border border-border bg-muted"
                             style="height: 320px; min-height: 320px; width: 100%; z-index: 0;"
                             aria-label="Mapa para seleccionar la ubicación de entrega"
                         ></div>
@@ -380,7 +380,7 @@
                             id="location-status"
                             role="status"
                             aria-live="polite"
-                            class="mt-3 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-5 text-gray-600"
+                            class="mt-3 rounded-none bg-muted px-4 py-3 text-xs leading-5 text-foreground/75"
                         >
                             Selecciona y confirma el punto de entrega.
                         </div>
@@ -388,7 +388,7 @@
                         <button
                             type="button"
                             id="btn-confirm-location"
-                            class="mt-3 min-h-11 w-full rounded-xl border border-green-700 bg-white px-4 py-3 text-sm font-bold text-green-800 transition hover:bg-green-50"
+                            class="mt-3 min-h-11 w-full rounded-none border border-green-700 bg-card px-4 py-3 text-sm font-bold text-green-800 transition hover:bg-green-50"
                         >
                             ✓ Confirmar esta ubicación
                         </button>
@@ -405,21 +405,21 @@
 
             <section
                 id="payment-section"
-                class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
+                class="rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6"
             >
 
                 <div class="mb-6 flex items-center gap-3">
 
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#982E26] text-sm font-black text-white">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-none bg-primary text-sm font-black text-primary-foreground">
                         3
                     </span>
 
                     <div>
-                        <h2 class="text-lg font-black text-gray-950">
+                        <h2 class="text-lg font-black text-foreground">
                             Método de pago
                         </h2>
 
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-foreground/75">
                             Selecciona una de las dos opciones.
                         </p>
                     </div>
@@ -433,7 +433,7 @@
                     {{-- EFECTIVO --}}
                     <label
                         data-payment-card="cash"
-                        class="relative flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 p-4 text-center transition"
+                        class="relative flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-none border-2 p-4 text-center transition"
                     >
                         <input
                             type="radio"
@@ -449,7 +449,7 @@
                             Efectivo
                         </span>
 
-                        <span class="text-[11px] text-gray-500">
+                        <span class="text-[11px] text-foreground/75">
                             Paga al recibir
                         </span>
                     </label>
@@ -457,7 +457,7 @@
                     {{-- YAPE --}}
                     <label
                         data-payment-card="yape"
-                        class="relative flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 p-4 text-center transition {{ !$yapeAvailable ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
+                        class="relative flex min-h-28 flex-col items-center justify-center gap-2 rounded-none border-2 p-4 text-center transition {{ !$yapeAvailable ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' }}"
                     >
                         <input
                             type="radio"
@@ -469,7 +469,7 @@
                         >
 
                         <span
-                            class="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-700 text-lg font-black text-white"
+                            class="flex h-9 w-9 items-center justify-center rounded-none bg-purple-700 text-lg font-black text-white"
                             aria-hidden="true"
                         >
                             Y
@@ -479,7 +479,7 @@
                             Yape
                         </span>
 
-                        <span class="text-[11px] text-gray-500">
+                        <span class="text-[11px] text-foreground/75">
                             Transferencia digital
                         </span>
                     </label>
@@ -489,14 +489,14 @@
                 {{-- PAGO EN EFECTIVO --}}
                 <div
                     id="cash-panel"
-                    class="mt-5 rounded-2xl border border-gray-100 bg-[#FAF8F5] p-4 sm:p-5"
+                    class="mt-5 rounded-none border border-border bg-background p-4 sm:p-5"
                 >
                     <div class="mb-4">
-                        <h3 class="text-sm font-black text-gray-950">
+                        <h3 class="text-sm font-black text-foreground">
                             Pago en efectivo
                         </h3>
 
-                        <p class="mt-1 text-xs leading-5 text-gray-500">
+                        <p class="mt-1 text-xs leading-5 text-foreground/75">
                             Paga al momento de recibir tu pedido.
                         </p>
                     </div>
@@ -504,7 +504,7 @@
                     <div>
                         <label
                             for="cash_payment_type"
-                            class="mb-2 block text-xs font-semibold text-gray-700"
+                            class="mb-2 block text-xs font-semibold text-foreground"
                         >
                             ¿Necesitas vuelto?
                         </label>
@@ -512,7 +512,7 @@
                         <select
                             id="cash_payment_type"
                             name="cash_payment_type"
-                            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:border-[#982E26] focus:outline-none"
+                            class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm focus:border-primary focus:outline-none"
                         >
                             <option
                                 value="exact"
@@ -534,14 +534,14 @@
 
                         <label
                             for="cash_received_amount"
-                            class="mb-2 block text-xs font-semibold text-gray-700"
+                            class="mb-2 block text-xs font-semibold text-foreground"
                         >
                             ¿Con cuánto dinero pagarás?
                         </label>
 
                         <div class="relative">
 
-                            <span class="absolute left-4 top-3 text-sm font-bold text-gray-500">
+                            <span class="absolute left-4 top-3 text-sm font-bold text-foreground/75">
                                 S/
                             </span>
 
@@ -554,12 +554,12 @@
                                 step="0.01"
                                 value="{{ old('cash_received_amount') }}"
                                 placeholder="50.00"
-                                class="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-sm focus:border-[#982E26] focus:outline-none"
+                                class="w-full rounded-none border border-border bg-card py-3 pl-11 pr-4 text-sm focus:border-primary focus:outline-none"
                             >
 
                         </div>
 
-                        <p class="mt-2 text-xs leading-5 text-gray-500">
+                        <p class="mt-2 text-xs leading-5 text-foreground/75">
                             Indica un importe superior al total de tu pedido
                             para que podamos preparar el vuelto.
                         </p>
@@ -570,22 +570,22 @@
                 {{-- PAGO CON YAPE --}}
                 <div
                     id="yape-panel"
-                    class="mt-5 hidden rounded-2xl border border-purple-100 bg-[#FCFAFF] p-4 sm:p-5"
+                    class="mt-5 hidden rounded-none border border-purple-100 bg-[#FCFAFF] p-4 sm:p-5"
                 >
 
                     <div class="mb-5">
 
                         <div class="flex items-center gap-2">
-                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-700 font-black text-white">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-none bg-purple-700 font-black text-white">
                                 Y
                             </span>
 
-                            <h3 class="text-sm font-black text-gray-950">
+                            <h3 class="text-sm font-black text-foreground">
                                 Paga con Yape
                             </h3>
                         </div>
 
-                        <p class="mt-3 text-xs leading-6 text-gray-600">
+                        <p class="mt-3 text-xs leading-6 text-foreground/75">
                             Puedes escanear nuestro QR con otro dispositivo
                             o copiar el número para yapear desde tu celular.
                         </p>
@@ -600,7 +600,7 @@
                             <button
                                 id="open-qr"
                                 type="button"
-                                class="inline-flex flex-col items-center rounded-2xl border border-purple-100 bg-white p-3 shadow-sm transition hover:border-purple-300 hover:shadow-md"
+                                class="inline-flex flex-col items-center rounded-none border border-purple-100 bg-card p-3 shadow-storefront transition hover:border-purple-300 hover:shadow-md"
                                 aria-label="Ampliar código QR de Yape"
                             >
                                 <img
@@ -615,7 +615,7 @@
                                 </span>
                             </button>
 
-                            <p class="mt-2 text-[11px] text-gray-500">
+                            <p class="mt-2 text-[11px] text-foreground/75">
                                 Puedes ampliar el QR y tomar una captura de pantalla.
                             </p>
 
@@ -626,9 +626,9 @@
                     {{-- NÚMERO PARA COPIAR --}}
                     @if($yapeNumber)
 
-                        <div class="rounded-xl border border-purple-100 bg-white p-4">
+                        <div class="rounded-none border border-purple-100 bg-card p-4">
 
-                            <p class="text-xs font-semibold text-gray-500">
+                            <p class="text-xs font-semibold text-foreground/75">
                                 Número de Yape
                             </p>
 
@@ -636,7 +636,7 @@
 
                                 <strong
                                     id="yape-number"
-                                    class="text-xl font-black tracking-wide text-gray-950"
+                                    class="text-xl font-black tracking-wide text-foreground"
                                 >
                                     {{ $yapeNumber }}
                                 </strong>
@@ -644,7 +644,7 @@
                                 <button
                                     id="copy-yape-number"
                                     type="button"
-                                    class="inline-flex min-h-10 items-center justify-center rounded-lg bg-purple-700 px-4 py-2 text-xs font-bold text-white transition hover:bg-purple-800"
+                                    class="inline-flex min-h-10 items-center justify-center rounded-none bg-purple-700 px-4 py-2 text-xs font-bold text-white transition hover:bg-purple-800"
                                 >
                                     Copiar número
                                 </button>
@@ -655,7 +655,7 @@
                                 id="copy-feedback"
                                 role="status"
                                 aria-live="polite"
-                                class="mt-2 text-xs text-gray-500"
+                                class="mt-2 text-xs text-foreground/75"
                             >
                                 Copia el número y pégalo en Yape.
                             </p>
@@ -665,26 +665,26 @@
                     @endif
 
                     {{-- TITULAR --}}
-                    <div class="mt-4 rounded-xl border border-purple-100 bg-white p-4">
+                    <div class="mt-4 rounded-none border border-purple-100 bg-card p-4">
 
-                        <p class="text-xs font-semibold text-gray-500">
+                        <p class="text-xs font-semibold text-foreground/75">
                             Nombre del titular
                         </p>
 
-                        <p class="mt-1 text-base font-black text-gray-950">
+                        <p class="mt-1 text-base font-black text-foreground">
                             {{ $paymentHolder !== ''
                                 ? $paymentHolder
                                 : 'Titular no configurado' }}
                         </p>
 
-                        <p class="mt-2 text-xs leading-5 text-gray-500">
+                        <p class="mt-2 text-xs leading-5 text-foreground/75">
                             Comprueba que el nombre mostrado en tu aplicación
                             coincida antes de transferir.
                         </p>
 
                     </div>
 
-                    <div class="mt-4 rounded-xl bg-purple-50 p-4">
+                    <div class="mt-4 rounded-none bg-purple-50 p-4">
 
                         <p class="text-xs font-bold text-purple-900">
                             Importante
@@ -702,7 +702,7 @@
                 </div>
 
                 @unless($yapeAvailable)
-                    <p class="mt-4 rounded-xl bg-amber-50 p-3 text-xs text-amber-800">
+                    <p class="mt-4 rounded-none bg-amber-50 p-3 text-xs text-amber-800">
                         Yape no está configurado actualmente.
                         Puedes seleccionar pago en efectivo.
                     </p>
@@ -711,19 +711,19 @@
             </section>
 
             {{-- OBSERVACIONES --}}
-            <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+            <section class="rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6">
 
                 <label
                     for="customer_notes"
-                    class="block text-sm font-black text-gray-950"
+                    class="block text-sm font-black text-foreground"
                 >
                     Indicaciones adicionales
-                    <span class="font-normal text-gray-400">
+                    <span class="font-normal text-foreground/75">
                         (opcional)
                     </span>
                 </label>
 
-                <p class="mt-1 text-xs text-gray-500">
+                <p class="mt-1 text-xs text-foreground/75">
                     Puedes añadir una indicación para tu pedido.
                 </p>
 
@@ -733,7 +733,7 @@
                     rows="3"
                     maxlength="1000"
                     placeholder="Escribe aquí tus indicaciones..."
-                    class="mt-4 w-full resize-y rounded-xl border border-gray-200 bg-[#FDFCFB] px-4 py-3 text-sm outline-none transition focus:border-[#982E26] focus:ring-2 focus:ring-red-100"
+                    class="mt-4 w-full resize-y rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 >{{ old('customer_notes') }}</textarea>
 
             </section>
@@ -746,15 +746,15 @@
 
         <aside class="min-w-0 lg:sticky lg:top-24">
 
-            <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div class="overflow-hidden rounded-none border border-border bg-card shadow-storefront">
 
-                <div class="border-b border-gray-100 p-5">
+                <div class="border-b border-border p-5">
 
-                    <p class="text-xs font-bold uppercase tracking-widest text-[#982E26]">
+                    <p class="text-xs font-bold uppercase tracking-widest text-primary">
                         Tu pedido
                     </p>
 
-                    <h2 class="mt-1 text-xl font-black text-gray-950">
+                    <h2 class="mt-1 text-xl font-black text-foreground">
                         Confirmación
                     </h2>
 
@@ -765,23 +765,23 @@
                     <div class="space-y-3 text-sm">
 
                         <div class="flex justify-between gap-3">
-                            <span class="text-gray-500">
+                            <span class="text-foreground/75">
                                 Método de entrega
                             </span>
 
-                            <span class="font-bold text-gray-900">
+                            <span class="font-bold text-foreground">
                                 Delivery
                             </span>
                         </div>
 
                         <div class="flex justify-between gap-3">
-                            <span class="text-gray-500">
+                            <span class="text-foreground/75">
                                 Método de pago
                             </span>
 
                             <span
                                 id="selected-payment-label"
-                                class="font-bold text-gray-900"
+                                class="font-bold text-foreground"
                             >
                                 {{ $selectedPayment === 'yape'
                                     ? 'Yape'
@@ -793,10 +793,10 @@
 
                     @if($quote)
 
-                        <div class="mt-5 space-y-3 border-t border-gray-100 pt-5 text-sm">
+                        <div class="mt-5 space-y-3 border-t border-border pt-5 text-sm">
 
                             <div class="flex justify-between gap-3">
-                                <span class="text-gray-500">
+                                <span class="text-foreground/75">
                                     Productos
                                 </span>
 
@@ -806,7 +806,7 @@
                             </div>
 
                             <div class="flex justify-between gap-3">
-                                <span class="text-gray-500">
+                                <span class="text-foreground/75">
                                     Delivery
                                 </span>
 
@@ -815,13 +815,13 @@
                                 </strong>
                             </div>
 
-                            <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
+                            <div class="flex items-center justify-between gap-3 border-t border-border pt-4">
 
                                 <span class="font-black">
                                     Total cotizado
                                 </span>
 
-                                <strong class="text-xl text-[#982E26]">
+                                <strong class="text-xl text-primary">
                                     S/ {{ number_format((float) $quote['total'], 2) }}
                                 </strong>
 
@@ -831,8 +831,8 @@
 
                     @else
 
-                        <div class="mt-5 rounded-xl bg-[#FFF8F4] p-4">
-                            <p class="text-xs leading-6 text-[#78533D]">
+                        <div class="mt-5 rounded-none bg-accent p-4">
+                            <p class="text-xs leading-6 text-foreground/75">
                                 Calcula la cotización para conocer
                                 el importe del delivery y el total
                                 antes de confirmar.
@@ -847,7 +847,7 @@
                         <button
                             type="submit"
                             id="quote-button"
-                            class="flex min-h-12 w-full items-center justify-center rounded-xl border border-[#982E26] bg-white px-5 py-3 text-center text-sm font-black text-[#982E26] transition hover:bg-[#FFF4F0]"
+                            class="flex min-h-12 w-full items-center justify-center rounded-none border border-primary bg-card px-5 py-3 text-center text-sm font-black text-primary transition hover:bg-accent"
                         >
                             Calcular cotización
                         </button>
@@ -856,21 +856,21 @@
                             type="submit"
                             id="confirm-button"
                             formaction="{{ route('cart.checkout.confirm') }}"
-                            class="flex min-h-12 w-full items-center justify-center rounded-xl bg-[#982E26] px-5 py-3 text-center text-sm font-black text-white transition hover:bg-[#B5382E]"
+                            class="flex min-h-12 w-full items-center justify-center rounded-none bg-primary px-5 py-3 text-center text-sm font-black text-primary-foreground transition hover:bg-primary/90"
                         >
                             Confirmar mi pedido
                         </button>
 
                     </div>
 
-                    <p class="mt-4 text-xs leading-6 text-gray-500">
+                    <p class="mt-4 text-xs leading-6 text-foreground/75">
                         Al confirmar, registraremos tu pedido.
                         Los pagos por Yape requieren verificación.
                     </p>
 
                     <a
                         href="{{ route('cart.index') }}"
-                        class="mt-4 block text-center text-xs font-semibold text-gray-500 hover:text-[#982E26]"
+                        class="mt-4 block text-center text-xs font-semibold text-foreground/75 hover:text-primary"
                     >
                         Volver a mi carrito
                     </a>
@@ -893,16 +893,16 @@
     <dialog
         id="qr-dialog"
         aria-label="Código QR ampliado de Yape"
-        class="m-auto max-h-[95vh] w-[min(92vw,540px)] max-w-none rounded-3xl border-0 bg-white p-4 shadow-2xl backdrop:bg-black/80 sm:p-6"
+        class="m-auto max-h-[95vh] w-[min(92vw,540px)] max-w-none rounded-none border-0 bg-card p-4 shadow-storefront backdrop:bg-black/80 sm:p-6"
     >
         <div class="flex items-center justify-between gap-3">
 
             <div>
-                <h2 class="text-lg font-black text-gray-950">
+                <h2 class="text-lg font-black text-foreground">
                     Código QR de Yape
                 </h2>
 
-                <p class="mt-1 text-xs text-gray-500">
+                <p class="mt-1 text-xs text-foreground/75">
                     Escanea o toma una captura.
                 </p>
             </div>
@@ -911,14 +911,14 @@
                 type="button"
                 id="close-qr"
                 aria-label="Cerrar código QR"
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-xl font-bold text-gray-700"
+                class="flex h-10 w-10 items-center justify-center rounded-none bg-muted text-xl font-bold text-foreground"
             >
                 ×
             </button>
 
         </div>
 
-        <div class="mt-5 flex justify-center rounded-2xl bg-white p-2">
+        <div class="mt-5 flex justify-center rounded-none bg-card p-2">
 
             <img
                 src="{{ $qrUrl }}"
@@ -929,7 +929,7 @@
         </div>
 
         @if($paymentHolder !== '')
-            <p class="mt-4 text-center text-sm font-bold text-gray-800">
+            <p class="mt-4 text-center text-sm font-bold text-foreground">
                 {{ $paymentHolder }}
             </p>
         @endif
@@ -1011,22 +1011,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.dataset.paymentCard === currentPayment();
 
                 card.classList.toggle(
-                    'border-[#982E26]',
+                    'border-primary',
                     selected
                 );
 
                 card.classList.toggle(
-                    'bg-[#FFF8F5]',
+                    'bg-accent',
                     selected
                 );
 
                 card.classList.toggle(
-                    'border-gray-200',
+                    'border-border',
                     !selected
                 );
 
                 card.classList.toggle(
-                    'bg-white',
+                    'bg-card',
                     !selected
                 );
             });
@@ -1175,7 +1175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Ubicación seleccionada. Confirma el punto en el mapa.';
 
             locationStatus.className =
-                'mt-3 rounded-xl bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-800';
+                'mt-3 rounded-none bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-800';
         }
 
         function setPoint(lat, lng, zoom = 17) {
@@ -1283,7 +1283,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 '✓ Ubicación confirmada correctamente.';
 
             locationStatus.className =
-                'mt-3 rounded-xl bg-green-50 px-4 py-3 text-xs font-semibold text-green-700';
+                'mt-3 rounded-none bg-green-50 px-4 py-3 text-xs font-semibold text-green-700';
         });
 
         // Restaurar coordenadas tras validar o cotizar.

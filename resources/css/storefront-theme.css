@@ -126,12 +126,15 @@
     }
 
     .storefront-theme.catalog-surface,
-    .storefront-theme .catalog-surface {
+    .storefront-theme .catalog-surface,
+    .storefront-theme.customer-surface,
+    .storefront-theme .customer-surface {
         font-family: var(--storefront-font);
         letter-spacing: var(--storefront-tracking);
     }
 
-    .catalog-surface :where(input, select, textarea) {
+    .catalog-surface :where(input, select, textarea),
+    .customer-surface :where(input, select, textarea) {
         accent-color: var(--primary);
     }
 }
