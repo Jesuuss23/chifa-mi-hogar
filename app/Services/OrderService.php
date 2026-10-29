@@ -59,8 +59,7 @@ class OrderService
             */
             if (!$settings->accepting_orders) {
                 throw ValidationException::withMessages([
-                    'store' => $settings->closed_message
-                        ?: 'Por el momento no estamos recibiendo pedidos.',
+                    'store' => $settings->closedMessage(),
                 ]);
             }
 
@@ -640,8 +639,7 @@ class OrderService
 
         if (!$settings->accepting_orders) {
             throw ValidationException::withMessages([
-                'store' => $settings->closed_message
-                    ?: 'Por el momento no estamos recibiendo pedidos.',
+                'store' => $settings->closedMessage(),
             ]);
         }
 

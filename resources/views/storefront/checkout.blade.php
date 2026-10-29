@@ -864,12 +864,20 @@
 
                     @endif
 
+                    @if(!$settings->accepting_orders)
+                        <p class="mt-5 text-sm font-semibold text-destructive">
+                            No podemos cotizar ni registrar pedidos nuevos en este momento.
+                            Cuando retomemos la atención, recarga esta página para continuar.
+                        </p>
+                    @endif
+
                     {{-- MANTENER AMBAS RUTAS DEL CHECKOUT --}}
                     <div class="mt-6 space-y-3">
 
                         <button
                             type="submit"
                             id="quote-button"
+                            @disabled(!$settings->accepting_orders)
                             class="flex min-h-12 w-full items-center justify-center rounded-none border border-primary bg-card px-5 py-3 text-center text-sm font-black text-primary transition hover:bg-accent"
                         >
                             Calcular cotización
@@ -878,6 +886,7 @@
                         <button
                             type="submit"
                             id="confirm-button"
+                            @disabled(!$settings->accepting_orders)
                             formaction="{{ route('cart.checkout.confirm') }}"
                             class="flex min-h-12 w-full items-center justify-center rounded-none bg-primary px-5 py-3 text-center text-sm font-black text-primary-foreground transition hover:bg-primary/90"
                         >

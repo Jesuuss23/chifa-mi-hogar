@@ -469,6 +469,8 @@
          CONTENIDO
     ====================================================== --}}
 
+    @include('components.store-availability')
+
     <main id="main-content" class="w-full flex-1">
 
         @yield('content')

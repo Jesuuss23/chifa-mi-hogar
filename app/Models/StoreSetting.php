@@ -45,6 +45,12 @@ class StoreSetting extends Model
         ];
     }
 
+    public function closedMessage(): string
+    {
+        return trim((string) $this->closed_message)
+            ?: 'Por el momento no estamos recibiendo pedidos.';
+    }
+
     public function googleReviewsUrl(): ?string
     {
         $url = trim((string) $this->google_reviews_url);
