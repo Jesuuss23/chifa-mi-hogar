@@ -24,6 +24,8 @@ class OrderRatingController extends Controller
             $order = Order::query()
                 ->whereKey($order->id)
                 ->where('user_id', $request->user()->id)
+                // Serialize submissions for this order before checking its rating.
+                ->lockForUpdate()
                 ->firstOrFail();
 
             if ($order->status !== 'delivered') {
@@ -44,7 +46,7 @@ class OrderRatingController extends Controller
                 'rating' => $data['rating'],
                 'comment' => $data['comment'] ?? null,
             ]);
-        });
+        }, 3);
 
         return redirect()
             ->route('customer.account')
