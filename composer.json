@@ -34,6 +34,7 @@
         }
     },
     "scripts": {
+        "check:autoload": "@composer dump-autoload --optimize --strict-psr --strict-ambiguous",
         "setup": [
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
