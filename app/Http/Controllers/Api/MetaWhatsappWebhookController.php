@@ -172,9 +172,16 @@ class MetaWhatsappWebhookController extends Controller
                 $receivedAt->lte(now()->addMinutes(2)) &&
                 $receivedAt->gt($admin->last_inbound_at ?? now()->subYears(10))
             ) {
-                $admin->update([
-                    'last_inbound_at' => $receivedAt,
-                ]);
+                // Compare against the stored value too: another webhook may
+                // have advanced it since this administrator was loaded.
+                WhatsappAdminNumber::query()
+                    ->whereKey($admin->id)
+                    ->where('is_active', true)
+                    ->where(function ($query) use ($receivedAt) {
+                        $query->whereNull('last_inbound_at')
+                            ->orWhere('last_inbound_at', '<', $receivedAt);
+                    })
+                    ->update(['last_inbound_at' => $receivedAt]);
             }
         }
 
