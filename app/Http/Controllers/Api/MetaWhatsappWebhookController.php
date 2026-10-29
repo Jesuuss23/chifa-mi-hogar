@@ -205,8 +205,25 @@ class MetaWhatsappWebhookController extends Controller
         $result = DB::transaction(function () use (
             $messageId,
             $sender,
-            $command
+            $command,
+            $admin
         ) {
+            // Recheck permissions after locking the current record; the initial
+            // lookup may predate a revocation or a change of phone number.
+            $authorizedAdmin = WhatsappAdminNumber::query()
+                ->whereKey($admin->id)
+                ->where('phone', $sender)
+                ->lockForUpdate()
+                ->first();
+
+            if (
+                !$authorizedAdmin
+                || !$authorizedAdmin->is_active
+                || ($command !== 'ACTIVAR VENTANA' && !$authorizedAdmin->can_control_store)
+            ) {
+                return null;
+            }
+
             $log = WhatsappCommandLog::firstOrCreate(
                 ['meta_message_id' => $messageId],
                 [
