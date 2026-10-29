@@ -1,12 +1,12 @@
 <p>Las cookies son pequeños datos que el navegador guarda para mantener funciones del sitio. Esta aplicación utiliza cookies necesarias para la sesión y la seguridad.</p>
 <div class="overflow-x-auto">
     <table class="w-full border-collapse text-left text-sm">
-        <thead><tr><th class="border p-3">Cookie propia</th><th class="border p-3">Finalidad</th><th class="border p-3">Duración configurada</th></tr></thead>
+        <thead><tr><th class="border border-border p-3">Cookie propia</th><th class="border border-border p-3">Finalidad</th><th class="border border-border p-3">Duración configurada</th></tr></thead>
         <tbody>
             <tr>
-                <td class="border p-3 break-all">{{ config('session.cookie') }}</td>
-                <td class="border p-3">Mantener sesión, carrito y confirmación del pedido.</td>
-                <td class="border p-3">
+                <td class="border border-border p-3 break-all">{{ config('session.cookie') }}</td>
+                <td class="border border-border p-3">Mantener sesión, carrito y confirmación del pedido.</td>
+                <td class="border border-border p-3">
                     @if(config('session.expire_on_close'))
                         Hasta cerrar el navegador; la sesión tiene además un límite de inactividad de {{ (int) config('session.lifetime') }} minutos.
                     @else
@@ -15,9 +15,9 @@
                 </td>
             </tr>
             <tr>
-                <td class="border p-3">XSRF-TOKEN</td>
-                <td class="border p-3">Ayudar a proteger formularios y solicitudes frente a falsificación.</td>
-                <td class="border p-3">{{ (int) config('session.lifetime') }} minutos, renovados con las respuestas del sitio.</td>
+                <td class="border border-border p-3">XSRF-TOKEN</td>
+                <td class="border border-border p-3">Ayudar a proteger formularios y solicitudes frente a falsificación.</td>
+                <td class="border border-border p-3">{{ (int) config('session.lifetime') }} minutos, renovados con las respuestas del sitio.</td>
             </tr>
         </tbody>
     </table>

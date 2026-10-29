@@ -1,4 +1,4 @@
-<dl class="space-y-2 rounded-xl bg-white p-5">
+<dl class="space-y-2 rounded-none bg-card p-5">
     <div><dt class="inline font-semibold">Responsable: </dt><dd class="inline">{{ $settings->business_owner }}</dd></div>
     <div><dt class="inline font-semibold">Domicilio: </dt><dd class="inline">{{ $settings->legal_address ?: 'Pendiente de completar en el borrador.' }}</dd></div>
     @if($settings->business_ruc)

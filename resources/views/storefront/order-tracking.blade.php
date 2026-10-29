@@ -24,40 +24,40 @@
     $steps = array_keys($labels);
 @endphp
 
-<section class="mx-auto max-w-2xl px-4 py-10">
+<section class="customer-surface mx-auto max-w-2xl px-4 py-10">
 
-    <div class="rounded-3xl bg-white p-6 shadow-sm sm:p-10">
+    <div class="rounded-none bg-card p-6 shadow-storefront sm:p-10">
 
         <div class="mb-7 text-center">
-            <h1 class="text-3xl font-black text-gray-900">
+            <h1 class="text-3xl font-black text-foreground">
                 Seguimiento de tu pedido
             </h1>
 
-            <p class="mt-3 text-gray-600">
+            <p class="mt-3 text-foreground/75">
                 Consulta el avance de tu pedido en tiempo real.
             </p>
         </div>
 
-        <div class="rounded-2xl bg-gray-50 p-5">
+        <div class="rounded-none bg-muted p-5">
 
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-foreground/75">
                 Código de pedido
             </p>
 
-            <p class="mt-1 break-all font-bold text-gray-900">
+            <p class="mt-1 break-all font-bold text-foreground">
                 {{ $order->code }}
             </p>
 
             <div class="mt-4 flex items-center justify-between gap-3">
-                <span class="text-gray-600">Total</span>
+                <span class="text-foreground/75">Total</span>
 
-                <strong class="text-xl text-red-800">
+                <strong class="text-xl text-primary">
                     S/ {{ number_format((float) $order->total, 2) }}
                 </strong>
             </div>
 
             <div class="mt-3 flex items-center justify-between gap-3">
-                <span class="text-gray-600">Pago</span>
+                <span class="text-foreground/75">Pago</span>
 
                 <strong id="payment-status">
                     {{ $order->payment_status === 'verified'
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <div class="mt-6 rounded-2xl border border-gray-200 p-5">
+        <div class="mt-6 rounded-none border border-border p-5">
 
             <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
                 <h2 class="text-xl font-bold">
@@ -78,7 +78,7 @@
 
                 <span
                     id="tracking-status"
-                    class="rounded-full bg-green-100 px-3 py-1 text-sm font-bold text-green-800"
+                    class="rounded-none bg-green-100 px-3 py-1 text-sm font-bold text-green-800"
                 >
                     {{ $statusLabels[$order->status] ?? 'En seguimiento' }}
                 </span>
@@ -92,12 +92,12 @@
                     >
                         <span
                             data-step-icon
-                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400"
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-muted text-foreground/75"
                         >
                             ○
                         </span>
 
-                        <span data-step-label class="text-gray-500">
+                        <span data-step-label class="text-foreground/75">
                             {{ $label }}
                         </span>
                     </div>
@@ -106,54 +106,54 @@
 
             <div
                 id="tracking-cancelled"
-                class="mt-5 rounded-xl bg-red-50 p-4 text-sm font-medium text-red-700"
+                class="mt-5 rounded-none bg-destructive/10 p-4 text-sm font-medium text-destructive"
                 @if($order->status !== 'cancelled') hidden @endif
             >
                 Este pedido fue cancelado.
             </div>
 
-            <p class="mt-6 text-xs text-gray-500">
+            <p class="mt-6 text-xs text-foreground/75">
                 Los estados se consultan automáticamente cada 15 segundos.
             </p>
         </div>
 
         <div
             id="delivery-map-placeholder"
-            class="mt-6 rounded-2xl border border-gray-200 bg-white p-5"
+            class="mt-6 rounded-none border border-border bg-card p-5"
             hidden
         >
-            <h2 class="text-lg font-bold text-gray-900">
+            <h2 class="text-lg font-bold text-foreground">
                 Tu pedido está en camino
             </h2>
 
-            <p class="mt-2 text-sm text-gray-600">
+            <p class="mt-2 text-sm text-foreground/75">
                 Tu pedido salió del restaurante.
                 Sigue la ubicación del repartidor y su recorrido por calles.
             </p>
 
             <div
                 id="delivery-route-map"
-                class="mt-4 w-full overflow-hidden rounded-xl bg-gray-100"
+                class="mt-4 w-full overflow-hidden rounded-none bg-muted"
                 style="height: 320px;"
                 aria-label="Mapa de seguimiento del repartidor"
             ></div>
 
             <p
                 id="delivery-route-info"
-                class="mt-3 text-sm text-gray-600"
+                class="mt-3 text-sm text-foreground/75"
                 aria-live="polite"
             >
                 Consultando ruta...
             </p>
 
-            <p class="mt-2 text-xs text-gray-500">
+            <p class="mt-2 text-xs text-foreground/75">
                 La ubicación depende de la señal GPS y la conexión del repartidor.
             </p>
         </div>
 
         <a
             href="{{ url('/') }}"
-            class="mt-6 block rounded-xl border border-gray-300 px-5 py-3 text-center font-bold text-gray-800"
+            class="mt-6 block rounded-none border border-border px-5 py-3 text-center font-bold text-foreground"
         >
             Volver a la tienda
         </a>
@@ -427,8 +427,8 @@ document.addEventListener('DOMContentLoaded', () => {
             badge.textContent = labels[status] ?? 'En seguimiento';
 
             badge.className = cancelled
-                ? 'rounded-full bg-red-100 px-3 py-1 text-sm font-bold text-red-700'
-                : 'rounded-full bg-green-100 px-3 py-1 text-sm font-bold text-green-800';
+                ? 'rounded-none bg-destructive/10 px-3 py-1 text-sm font-bold text-destructive'
+                : 'rounded-none bg-green-100 px-3 py-1 text-sm font-bold text-green-800';
         }
 
         if (cancelledBox) {
@@ -471,16 +471,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 icon.textContent = completed ? '✓' : '○';
 
                 icon.className = completed
-                    ? 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 font-bold text-green-700'
-                    : 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400';
+                    ? 'flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-green-100 font-bold text-green-700'
+                    : 'flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-muted text-foreground/75';
             }
 
             if (label) {
                 label.className = active
                     ? 'font-bold text-green-800'
                     : completed
-                        ? 'font-medium text-gray-900'
-                        : 'text-gray-500';
+                        ? 'font-medium text-foreground'
+                        : 'text-foreground/75';
             }
         });
     }

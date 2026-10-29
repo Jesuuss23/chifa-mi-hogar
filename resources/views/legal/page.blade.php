@@ -10,9 +10,9 @@
 @endif
 
 @section('content')
-<article class="mx-auto max-w-3xl space-y-6 px-4 py-10 text-gray-800">
+<article class="customer-surface leading-7 mx-auto max-w-3xl space-y-6 px-4 py-10 text-foreground">
     @if($preview)
-        <aside class="rounded-xl border border-amber-300 bg-amber-50 p-4">
+        <aside class="rounded-none border border-amber-300 bg-amber-50 p-4">
             Vista previa para administración. Los campos pendientes deben completarse antes de publicar.
             <a class="font-semibold underline" href="{{ route('admin.settings.edit') }}">Volver a Configuración</a>
         </aside>
