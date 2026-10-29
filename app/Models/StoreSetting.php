@@ -45,6 +45,22 @@ class StoreSetting extends Model
         ];
     }
 
+    public function googleReviewsUrl(): ?string
+    {
+        $url = trim((string) $this->google_reviews_url);
+        $parts = parse_url($url);
+
+        // Validar también registros antiguos o editados fuera del formulario.
+        if (strlen($url) > 500 || ! filter_var($url, FILTER_VALIDATE_URL)
+            || ! is_array($parts)
+            || ! in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)
+            || isset($parts['user']) || isset($parts['pass'])) {
+            return null;
+        }
+
+        return $url;
+    }
+
     public function paymentQr(): BelongsTo
     {
         return $this->belongsTo(

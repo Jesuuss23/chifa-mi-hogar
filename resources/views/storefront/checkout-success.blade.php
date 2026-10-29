@@ -282,6 +282,28 @@
                 }
             });
         </script>
+        @if($googleReviewsUrl)
+            <section class="mt-6 border border-border bg-accent p-5" aria-labelledby="google-review-heading">
+                <h2 id="google-review-heading" class="text-lg font-bold text-foreground">
+                    Tu opinión nos ayuda a mejorar
+                </h2>
+                <p class="mt-2 text-sm text-foreground/75">
+                    Cuando hayas disfrutado tu pedido, cuéntanos cómo fue tu experiencia.
+                </p>
+                <a id="google-review-link"
+                   href="{{ $googleReviewsUrl }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   referrerpolicy="no-referrer"
+                   class="mt-4 inline-flex min-h-11 items-center justify-center bg-primary px-5 py-3 text-center font-bold text-primary-foreground hover:bg-primary/90">
+                    Danos tu opinión
+                </a>
+                <p class="mt-2 text-xs text-foreground/75">
+                    Se abrirá Google en una pestaña nueva.
+                </p>
+            </section>
+        @endif
+
         <a href="{{ url('/') }}"
            class="mt-6 block rounded-none border border-border px-5 py-3 text-center font-bold text-foreground">
             Volver a la tienda

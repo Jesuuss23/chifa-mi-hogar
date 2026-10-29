@@ -175,9 +175,12 @@ class CartCheckoutController extends Controller
                 . rawurlencode($message);
         }
 
+        $googleReviewsUrl = $settings->googleReviewsUrl();
+
         return view('storefront.checkout-success', compact(
             'order',
-            'whatsappUrl'
+            'whatsappUrl',
+            'googleReviewsUrl'
         ));
     }
     private function validatedData(Request $request, bool $confirm = false): array
