@@ -18,7 +18,7 @@ class CheckoutQuoteController extends Controller
         $data = $request->validate([
             'delivery_type' => [
                 'required',
-                Rule::in(['pickup', 'delivery']),
+                Rule::in(['delivery']),
             ],
 
             'delivery_latitude' => [

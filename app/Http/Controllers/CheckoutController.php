@@ -24,7 +24,7 @@ class CheckoutController extends Controller
             ],
             'delivery_type' => [
                 'required',
-                Rule::in(['pickup', 'delivery']),
+                Rule::in(['delivery']),
             ],
 
             'delivery_address' => [

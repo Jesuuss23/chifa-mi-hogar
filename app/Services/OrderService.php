@@ -71,9 +71,9 @@ class OrderService
 
             $deliveryType = $data['delivery_type'] ?? null;
 
-            if (!in_array($deliveryType, ['pickup', 'delivery'], true)) {
+            if ($deliveryType !== 'delivery') {
                 throw ValidationException::withMessages([
-                    'delivery_type' => 'Modalidad de entrega no válida.',
+                    'delivery_type' => 'Solo atendemos pedidos por delivery.',
                 ]);
             }
 
@@ -645,9 +645,9 @@ class OrderService
 
         $deliveryType = $data['delivery_type'] ?? null;
 
-        if (!in_array($deliveryType, ['pickup', 'delivery'], true)) {
+        if ($deliveryType !== 'delivery') {
             throw ValidationException::withMessages([
-                'delivery_type' => 'Modalidad de entrega no válida.',
+                'delivery_type' => 'Solo atendemos pedidos por delivery.',
             ]);
         }
 
