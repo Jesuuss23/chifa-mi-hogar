@@ -157,7 +157,7 @@ class ProductRecommendationController extends Controller
                 Rule::exists('extras', 'id')->whereNull('deleted_at'),
             ],
             'image' => [
-                $recommendation?->media_asset_id
+                $recommendation?->media_asset_id || $recommendation?->image_path
                     ? 'nullable' : 'required',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
