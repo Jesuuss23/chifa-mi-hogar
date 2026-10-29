@@ -30,11 +30,14 @@ class LocationController extends Controller
     {
         $this->authorizeOrder($request, $order);
 
-        $result = DB::transaction(function () use ($order) {
+        $result = DB::transaction(function () use ($request, $order) {
             $locked = Order::query()
                 ->whereKey($order->id)
                 ->lockForUpdate()
                 ->firstOrFail();
+
+            // The assignment may have changed after route model binding.
+            $this->authorizeOrder($request, $locked);
 
             if ($locked->status !== 'on_the_way') {
                 return false;
@@ -85,11 +88,14 @@ class LocationController extends Controller
             ], 422);
         }
 
-        $result = DB::transaction(function () use ($order, $data) {
+        $result = DB::transaction(function () use ($request, $order, $data) {
             $locked = Order::query()
                 ->whereKey($order->id)
                 ->lockForUpdate()
                 ->firstOrFail();
+
+            // The assignment may have changed after route model binding.
+            $this->authorizeOrder($request, $locked);
 
             if (
                 $locked->status !== 'on_the_way'
@@ -136,11 +142,14 @@ class LocationController extends Controller
     {
         $this->authorizeOrder($request, $order);
 
-        DB::transaction(function () use ($order) {
+        DB::transaction(function () use ($request, $order) {
             $locked = Order::query()
                 ->whereKey($order->id)
                 ->lockForUpdate()
                 ->firstOrFail();
+
+            // The assignment may have changed after route model binding.
+            $this->authorizeOrder($request, $locked);
 
             $locked->driver_tracking_stopped_at = now();
             $locked->driver_latitude = null;
