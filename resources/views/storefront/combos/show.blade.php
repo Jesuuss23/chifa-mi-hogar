@@ -6,7 +6,7 @@
 
 <section class="catalog-surface mx-auto max-w-6xl px-4 py-10 sm:px-6">
 
-    <a href="{{ route('combos.index') }}"
+    <a href="{{ route('storefront.index') }}#combos"
        class="mb-6 inline-block text-sm font-medium text-primary">
         ← Volver a combos
     </a>

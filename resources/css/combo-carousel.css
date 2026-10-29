@@ -1,0 +1,23 @@
+.combo-carousel__track {
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0 0 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--muted);
+    list-style: none;
+}
+.combo-carousel__card {
+    flex: 0 0 min(82vw, 22rem);
+    min-width: 0;
+    scroll-snap-align: start;
+}
+.combo-carousel__controls { display: flex; }
+.combo-carousel__controls[hidden] { display: none; }
+
+@media (min-width: 1024px) {
+    .combo-carousel__card { flex-basis: calc((100% - 3rem) / 3); }
+}

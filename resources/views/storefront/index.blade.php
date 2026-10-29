@@ -41,6 +41,8 @@
     </div>
 </section>
 
+@include('storefront.partials.combo-carousel')
+
 <!-- CARTA -->
 <section id="carta" class="catalog-surface mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
 

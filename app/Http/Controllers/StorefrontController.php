@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Combo;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -42,10 +43,20 @@ class StorefrontController extends Controller
             ->paginate(12)
             ->withQueryString();
 
+        $combos = Combo::query()
+            ->with(['mediaAsset', 'items.product', 'items.extra'])
+            ->where('is_available', true)
+            ->where('show_in_menu', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->orderBy('id')
+            ->get();
+
         return view('storefront.index', compact(
             'categories',
             'products',
-            'selectedCategory'
+            'selectedCategory',
+            'combos'
         ));
     }
 
