@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Services\CatalogSlugService;
 use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
@@ -45,7 +45,6 @@ class ProductController extends Controller
         $extraIds = $data['extras'] ?? [];
         unset($data['extras'], $data['image']);
 
-        $data['slug'] = Str::slug($data['name']);
         $data['is_available'] = $request->boolean('is_available');
         $data['is_featured'] = $request->boolean('is_featured');
 
@@ -55,7 +54,7 @@ class ProductController extends Controller
         }
 
         DB::transaction(function () use ($data, $extraIds) {
-            $product = Product::create($data);
+            $product = app(CatalogSlugService::class)->create(Product::class, $data);
             $product->extras()->sync($extraIds);
         });
 
@@ -94,7 +93,6 @@ class ProductController extends Controller
         $extraIds = $data['extras'] ?? [];
         unset($data['extras'], $data['image']);
 
-        $data['slug'] = Str::slug($data['name']);
         $data['is_available'] = $request->boolean('is_available');
         $data['is_featured'] = $request->boolean('is_featured');
 

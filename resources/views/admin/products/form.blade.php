@@ -8,6 +8,12 @@
         {{ $editing ? 'Editar plato' : 'Nuevo plato' }}
     </h1>
 
+    @if($editing)
+        <p class="mb-4 text-sm text-slate-600">
+            Puedes cambiar el nombre sin modificar el enlace público existente.
+        </p>
+    @endif
+
     <form method="POST" enctype="multipart/form-data"
           action="{{ $editing ? route('admin.products.update', $product) : route('admin.products.store') }}"
           class="space-y-6 rounded-2xl border bg-white p-6 shadow-sm">

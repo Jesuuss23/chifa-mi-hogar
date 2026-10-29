@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Services\CatalogSlugService;
 use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
@@ -32,7 +32,6 @@ class CategoryController extends Controller
     {
         $data = $this->validated($request);
 
-        $data['slug'] = Str::slug($data['name']);
         $data['is_active'] = $request->boolean('is_active');
 
         unset($data['image']);
@@ -42,7 +41,7 @@ class CategoryController extends Controller
                 ->upload($request->file('image'))->id;
         }
 
-        Category::create($data);
+        app(CatalogSlugService::class)->create(Category::class, $data);
 
         return redirect()
             ->route('admin.categories.index')
@@ -63,7 +62,6 @@ class CategoryController extends Controller
     ) {
         $data = $this->validated($request, $category);
 
-        $data['slug'] = Str::slug($data['name']);
         $data['is_active'] = $request->boolean('is_active');
 
         unset($data['image']);
@@ -99,7 +97,7 @@ class CategoryController extends Controller
     {
         return $request->validate([
             'name' => [
-                'required', 'string', 'max:120',
+                'required', 'string', 'max:100',
                 Rule::unique('categories', 'name')
                     ->ignore($category?->id)
                     ->whereNull('deleted_at'),

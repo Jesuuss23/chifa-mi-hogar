@@ -8,6 +8,12 @@
         {{ $editing ? 'Editar categoría' : 'Nueva categoría' }}
     </h1>
 
+    @if($editing)
+        <p class="mb-4 text-sm text-slate-600">
+            Puedes cambiar el nombre sin modificar el enlace público existente.
+        </p>
+    @endif
+
     <form method="POST"
           enctype="multipart/form-data"
           action="{{ $editing ? route('admin.categories.update', $category) : route('admin.categories.store') }}"
@@ -17,7 +23,7 @@
 
         <div>
             <label class="mb-2 block font-medium">Nombre *</label>
-            <input name="name" type="text" required maxlength="120"
+            <input name="name" type="text" required maxlength="100"
                    value="{{ old('name', $category->name) }}"
                    class="w-full rounded-xl border p-3">
             @error('name') <p class="text-sm text-red-600">{{ $message }}</p> @enderror
