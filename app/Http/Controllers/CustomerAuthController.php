@@ -110,6 +110,8 @@ class CustomerAuthController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('customer.account', compact('orders'));
+        $profile = $request->user()->customerProfile;
+
+        return view('customer.account', compact('orders', 'profile'));
     }
 }

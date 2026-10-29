@@ -4,6 +4,7 @@
     <h2 class="text-xl font-bold">Datos y finalidades</h2>
     <ul class="list-disc space-y-2 pl-5">
         <li>Cuenta: nombre, correo y contraseña protegida mediante hash, para identificarte y mostrar tus pedidos.</li>
+        <li>Perfil de entrega: teléfono y, si decides guardarlos, dirección, referencia y coordenadas, para autocompletar tus próximos pedidos. Puedes editarlos o quitar la dirección desde Mi cuenta; cambiar la entrega de un pedido no actualiza el perfil.</li>
         <li>Pedidos: nombre, teléfono, correo si lo proporcionas, dirección, referencia, coordenadas, productos, importes, notas y datos de pago, para preparar, cobrar y entregar tu compra.</li>
         <li>Comprobantes y comunicaciones: información que envías para verificar pagos y resolver consultas.</li>
         <li>Valoraciones: puntuación y comentario que decidas enviar sobre tus pedidos.</li>

@@ -35,6 +35,12 @@
     $selectedCashType = old('cash_payment_type', 'exact');
 
     $quote = session('checkout_quote');
+    $checkoutDefaults = $checkoutDefaults ?? [];
+    // Una dirección editada es un conjunto: nunca mezclar old() parcial con GPS del perfil.
+    $hasOldDelivery = collect(['delivery_address', 'delivery_reference', 'delivery_latitude', 'delivery_longitude'])
+        ->contains(fn ($field) => session()->hasOldInput($field));
+    $deliveryDefaults = $hasOldDelivery ? [] : $checkoutDefaults;
+    $usingSavedDelivery = !$hasOldDelivery && filled($checkoutDefaults['delivery_address'] ?? null);
 @endphp
 
 @section('content')
@@ -84,7 +90,7 @@
     {{-- COTIZACIÓN DESDE LARAVEL --}}
 
     @if($quote)
-        <div
+        <div id="checkout-quote-summary"
             class="mb-7 rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6"
         >
             <div class="flex items-center gap-3">
@@ -197,7 +203,7 @@
                             type="text"
                             autocomplete="name"
                             maxlength="150"
-                            value="{{ old('customer_name') }}"
+                            value="{{ old('customer_name', $checkoutDefaults['customer_name'] ?? null) }}"
                             placeholder="Ingresa tu nombre completo"
                             class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         >
@@ -220,7 +226,7 @@
                                 autocomplete="tel-national"
                                 pattern="9[0-9]{8}"
                                 maxlength="9"
-                                value="{{ old('customer_phone') }}"
+                                value="{{ old('customer_phone', $checkoutDefaults['customer_phone'] ?? null) }}"
                                 placeholder="9XXXXXXXX"
                                 class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                             >
@@ -243,7 +249,7 @@
                                 type="email"
                                 autocomplete="email"
                                 maxlength="150"
-                                value="{{ old('customer_email') }}"
+                                value="{{ old('customer_email', $checkoutDefaults['customer_email'] ?? null) }}"
                                 placeholder="correo@ejemplo.com"
                                 class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                             >
@@ -279,6 +285,23 @@
 
                 <div class="space-y-4">
 
+                    @if(filled($checkoutDefaults['delivery_address'] ?? null))
+                        <div class="border border-border bg-accent p-4">
+                            <p id="saved-delivery-notice" role="status" class="text-sm">
+                                {{ $usingSavedDelivery
+                                    ? 'Esta es la dirección y ubicación guardadas en tu cuenta. Revísalas antes de pedir.'
+                                    : 'Estás revisando la dirección de este pedido. Tu dirección guardada no cambia.' }}
+                            </p>
+                            <button type="button" id="edit-order-delivery"
+                                    class="mt-3 border border-primary px-3 py-2 text-sm font-bold text-primary">
+                                Actualizar dirección para este pedido
+                            </button>
+                            <p class="mt-2 text-xs text-foreground/75">
+                                Para cambiar la predeterminada, guarda los cambios desde Mi cuenta.
+                            </p>
+                        </div>
+                    @endif
+
                     <div>
                         <label
                             for="delivery_address"
@@ -293,7 +316,7 @@
                             type="text"
                             autocomplete="street-address"
                             maxlength="500"
-                            value="{{ old('delivery_address') }}"
+                            value="{{ old('delivery_address', $deliveryDefaults['delivery_address'] ?? null) }}"
                             placeholder="Avenida, calle, número y distrito"
                             class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         >
@@ -315,7 +338,7 @@
                             name="delivery_reference"
                             type="text"
                             maxlength="500"
-                            value="{{ old('delivery_reference') }}"
+                            value="{{ old('delivery_reference', $deliveryDefaults['delivery_reference'] ?? null) }}"
                             placeholder="Color de puerta, piso, lugar cercano..."
                             class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         >
@@ -366,14 +389,14 @@
                             type="hidden"
                             name="delivery_latitude"
                             id="delivery_latitude"
-                            value="{{ old('delivery_latitude') }}"
+                            value="{{ old('delivery_latitude', $deliveryDefaults['delivery_latitude'] ?? null) }}"
                         >
 
                         <input
                             type="hidden"
                             name="delivery_longitude"
                             id="delivery_longitude"
-                            value="{{ old('delivery_longitude') }}"
+                            value="{{ old('delivery_longitude', $deliveryDefaults['delivery_longitude'] ?? null) }}"
                         >
 
                         <div
@@ -1141,6 +1164,14 @@ document.addEventListener('DOMContentLoaded', () => {
         'btn-confirm-location'
     );
 
+    let restoringLocation = true;
+    const markDeliveryEdited = () => {
+        const notice = document.getElementById('saved-delivery-notice');
+        if (notice) notice.textContent = 'Esta dirección se usará solo para este pedido. Tu cuenta no cambia.';
+        const quoteSummary = document.getElementById('checkout-quote-summary');
+        if (quoteSummary) quoteSummary.hidden = true;
+    };
+
     let confirmedLocation = false;
     let selectedPoint = null;
     let marker = null;
@@ -1166,6 +1197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ).addTo(map);
 
         function clearLocationConfirmation() {
+            if (!restoringLocation) markDeliveryEdited();
             confirmedLocation = false;
 
             latInput.value = '';
@@ -1286,6 +1318,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 'mt-3 rounded-none bg-green-50 px-4 py-3 text-xs font-semibold text-green-700';
         });
 
+        function editOrderAddress() {
+            clearLocationConfirmation();
+            selectedPoint = null;
+            if (marker) map.removeLayer(marker);
+            marker = null;
+            locationStatus.textContent = 'Selecciona y confirma el punto que corresponde a la dirección de este pedido.';
+        }
+        document.getElementById('delivery_address').addEventListener('input', editOrderAddress);
+        document.getElementById('edit-order-delivery')?.addEventListener('click', () => {
+            editOrderAddress();
+            document.getElementById('delivery_address').focus();
+            map.invalidateSize();
+        });
+
         // Restaurar coordenadas tras validar o cotizar.
         const previousLat = Number(latInput.value);
         const previousLng = Number(lngInput.value);
@@ -1306,8 +1352,12 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmedLocation = true;
 
             locationStatus.textContent =
-                '✓ Ubicación restaurada y confirmada.';
+                @json($usingSavedDelivery)
+                    ? '✓ Ubicación guardada en tu cuenta. Puedes actualizarla para este pedido.'
+                    : '✓ Ubicación restaurada para este pedido.';
         }
+
+        restoringLocation = false;
 
         setTimeout(() => {
             map.invalidateSize({

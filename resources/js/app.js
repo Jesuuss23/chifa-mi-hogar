@@ -14,3 +14,5 @@ L.Icon.Default.mergeOptions({
 
 // Disponible para los scripts Blade.
 window.L = L;
+
+import './customer-profile';

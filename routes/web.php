@@ -136,6 +136,9 @@ Route::middleware(['auth', 'customer'])->group(function () {
     Route::get('/mi-cuenta', [CustomerAuthController::class, 'account'])
         ->name('customer.account');
 
+    Route::put('/mi-cuenta/perfil', [\App\Http\Controllers\CustomerProfileController::class, 'update'])
+        ->middleware('throttle:10,1')->name('customer.profile.update');
+
     Route::post('/cerrar-sesion', [CustomerAuthController::class, 'logout'])
         ->name('customer.logout');
     Route::post('/mis-pedidos/{order}/valorar', [OrderRatingController::class, 'store'])

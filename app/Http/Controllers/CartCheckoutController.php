@@ -24,7 +24,9 @@ class CartCheckoutController extends Controller
             'checkout_token',
             $request->session()->get('checkout_token') ?: (string) Str::uuid()
         );
-        return view('storefront.checkout');
+        $checkoutDefaults = app(\App\Services\CustomerCheckoutDefaults::class)->forUser($request->user());
+
+        return view('storefront.checkout', compact('checkoutDefaults'));
         
     }
 

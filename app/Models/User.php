@@ -62,6 +62,11 @@ class User extends Authenticatable
             'delivery_user_id'
         );
     }
+    public function customerProfile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CustomerProfile::class);
+    }
+
     public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Order::class);

@@ -27,6 +27,8 @@
             </form>
         </div>
 
+        @include('customer.profile')
+
         <div class="mt-8 rounded-none bg-card p-6 shadow-storefront">
             <h2 class="text-xl font-bold">Mis pedidos</h2>
 
