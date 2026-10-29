@@ -8,7 +8,7 @@ use App\Models\ProductRecommendation;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Services\CatalogSlugService;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -52,7 +52,6 @@ class ProductRecommendationController extends Controller
         unset($data['extras'], $data['image']);
 
         $data['product_id'] = $product->id;
-        $data['slug'] = Str::slug($data['name']);
         $data['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {
@@ -61,7 +60,7 @@ class ProductRecommendationController extends Controller
         }
 
         DB::transaction(function () use ($data, $extraIds) {
-            $recommendation = ProductRecommendation::create($data);
+            $recommendation = app(CatalogSlugService::class)->create(ProductRecommendation::class, $data);
             $recommendation->extras()->sync($extraIds);
         });
 
@@ -101,7 +100,6 @@ class ProductRecommendationController extends Controller
 
         unset($data['extras'], $data['image']);
 
-        $data['slug'] = Str::slug($data['name']);
         $data['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('image')) {

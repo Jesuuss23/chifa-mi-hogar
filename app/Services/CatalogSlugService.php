@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductRecommendation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Str;
@@ -16,15 +17,23 @@ class CatalogSlugService
         [$limit, $fallback] = match ($modelClass) {
             Category::class => [120, 'categoria'],
             Product::class => [180, 'plato'],
+            ProductRecommendation::class => [180, 'recomendacion'],
             default => throw new \InvalidArgumentException('Modelo de catálogo no admitido.'),
         };
+        if ($modelClass === ProductRecommendation::class && empty($attributes['product_id'])) {
+            throw new \InvalidArgumentException('La recomendación requiere un plato.');
+        }
+        $scope = $modelClass === ProductRecommendation::class
+            ? ['product_id' => $attributes['product_id']]
+            : [];
+
         $model = new $modelClass();
         $connection = $model->getConnection();
         $base = Str::slug($attributes['name']) ?: $fallback;
 
         // Incluir soft deletes: un enlace retirado no debe apuntar a otro artículo.
         $occupied = fn (string $slug) => $connection->table($model->getTable())
-            ->where('slug', $slug)->exists();
+            ->where($scope)->where('slug', $slug)->exists();
 
         for ($attempt = 0; $attempt < 3; $attempt++) {
             $slug = Str::substr($base, 0, $limit);
