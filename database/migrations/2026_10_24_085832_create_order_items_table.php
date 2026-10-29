@@ -11,9 +11,8 @@ return new class extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('order_id')
-                ->constrained('orders')
-                ->cascadeOnDelete();
+            // The orders migration adds the FK after both tables exist.
+            $table->foreignId('order_id');
 
             // product o recommendation.
             $table->string('item_type', 30);

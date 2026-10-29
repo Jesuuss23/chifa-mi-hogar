@@ -64,10 +64,22 @@ return new class extends Migration
             $table->index(['payment_status', 'created_at']);
             $table->index('customer_phone');
         });
+
+        // order_items sorts before orders at the same historical timestamp.
+        Schema::table('order_items', function (Blueprint $table) {
+            $table->foreign('order_id')->references('id')->on('orders')->cascadeOnDelete();
+        });
     }
 
     public function down(): void
     {
+        // Remove the dependency before dropping its parent (also on legacy installs).
+        if (Schema::hasTable('order_items')) {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->dropForeign(['order_id']);
+            });
+        }
+
         Schema::dropIfExists('orders');
     }
 };
