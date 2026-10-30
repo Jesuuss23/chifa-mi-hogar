@@ -1,14 +1,17 @@
 @extends('layouts.admin')
 
+@section('title', 'Reseñas de Google')
+@section('page-title', 'Reseñas de Google')
+
 @section('content')
-<div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+<div class="catalog-surface admin-catalog-surface max-w-6xl mx-auto space-y-6">
 
     <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">
+            <h1 class="text-2xl font-bold text-foreground">
                 Reseñas de Google
             </h1>
-            <p class="text-gray-500 text-sm mt-1">
+            <p class="text-foreground/75 text-sm mt-1">
                 Calificaciones públicas de ChifaMiHogar.
             </p>
         </div>
@@ -16,16 +19,16 @@
     </div>
 
     @if($error)
-        <div class="rounded-xl bg-red-50 text-red-700 p-5">
+        <div role="alert" class="rounded-none bg-destructive/10 text-destructive p-5">
             {{ $error }}
         </div>
     @elseif($business)
-        <div class="bg-white rounded-xl border shadow-sm p-6">
+        <div class="bg-card rounded-none border shadow-storefront p-6">
             <h2 class="text-xl font-bold">
                 {{ $business['name'] }}
             </h2>
 
-            <div class="flex items-center gap-3 mt-4">
+            <div class="flex flex-wrap items-center gap-3 mt-4">
                 <span class="text-5xl font-bold">
                     {{ $business['rating'] ?? '—' }}
                 </span>
@@ -37,7 +40,7 @@
                         @endfor
                     </div>
 
-                    <p class="text-gray-500 text-sm">
+                    <p class="text-foreground/75 text-sm">
                         {{ $business['total_ratings'] }}
                         valoraciones en Google
                     </p>
@@ -48,7 +51,7 @@
                 <a href="{{ $business['write_review_url'] }}"
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="rounded-lg bg-blue-700 text-white px-5 py-3 font-semibold">
+                   class="rounded-none bg-primary text-primary-foreground px-5 py-3 font-semibold">
                     Escribir reseña en Google
                 </a>
 
@@ -56,7 +59,7 @@
                     <a href="{{ $business['google_maps_url'] }}"
                        target="_blank"
                        rel="noopener noreferrer"
-                       class="rounded-lg border px-5 py-3 font-semibold">
+                       class="rounded-none border px-5 py-3 font-semibold">
                         Abrir Google Maps
                     </a>
                 @endif
@@ -69,8 +72,8 @@
             </h2>
 
             @forelse($business['reviews'] as $review)
-                <div class="bg-white rounded-xl border p-5 space-y-3">
-                    <div class="flex justify-between gap-3">
+                <div class="bg-card rounded-none border p-5 space-y-3">
+                    <div class="flex flex-wrap justify-between gap-3">
                         <div>
                             <p class="font-semibold">
                                 {{ $review['author'] ?? 'Usuario de Google' }}
@@ -83,12 +86,12 @@
                             </p>
                         </div>
 
-                        <span class="text-xs text-gray-500">
+                        <span class="text-xs text-foreground/75">
                             {{ $review['relative_time'] ?? '' }}
                         </span>
                     </div>
 
-                    <p class="text-gray-700 whitespace-pre-line">
+                    <p class="text-foreground/75 whitespace-pre-line">
                         {{ $review['comment'] ?? 'Sin comentario de texto.' }}
                     </p>
 
@@ -96,17 +99,17 @@
                         <a href="{{ $review['author_url'] }}"
                            target="_blank"
                            rel="noopener noreferrer"
-                           class="text-blue-700 text-sm">
+                           class="text-primary text-sm">
                             Ver perfil en Google
                         </a>
                     @endif
                 </div>
             @empty
-                <div class="bg-white rounded-xl border p-8 text-center">
-                    <p class="font-semibold text-gray-700">
+                <div class="bg-card rounded-none border p-8 text-center">
+                    <p class="font-semibold text-foreground/75">
                         No hay comentarios disponibles mediante la API.
                     </p>
-                    <p class="text-gray-500 text-sm mt-2">
+                    <p class="text-foreground/75 text-sm mt-2">
                         Google registra las valoraciones, aunque no siempre
                         devuelve comentarios escritos.
                     </p>
@@ -114,7 +117,7 @@
             @endforelse
         </div>
 
-        <p class="text-sm text-gray-500">
+        <p class="text-sm text-foreground/75">
             Información proporcionada por Google Maps.
             Las reseñas pertenecen a sus respectivos autores.
         </p>

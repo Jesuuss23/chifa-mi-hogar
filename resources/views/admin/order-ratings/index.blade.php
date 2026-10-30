@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Valoraciones | Chifa Mi Hogar</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="min-h-screen bg-slate-50 p-6">
+@extends('layouts.admin')
 
-<main class="mx-auto max-w-6xl">
+@section('title', 'Valoraciones de pedidos')
+@section('page-title', 'Valoraciones de pedidos')
+
+@section('content')
+<div class="catalog-surface admin-catalog-surface mx-auto max-w-6xl">
 
     <a href="{{ route('admin.dashboard') }}"
-       class="text-red-700">
+       class="text-primary">
         ← Volver al panel
     </a>
 
@@ -19,31 +15,31 @@
         Valoraciones de clientes
     </h1>
 
-    <p class="mt-2 text-slate-500">
+    <p class="mt-2 text-foreground/75">
         Estadísticas de compras verificadas.
         Las puntuaciones no pueden editarse desde este panel.
     </p>
 
     <div class="mt-6 grid gap-4 sm:grid-cols-3">
-        <div class="rounded-xl bg-white p-5 shadow-sm">
-            <p class="text-sm text-slate-500">Promedio</p>
+        <div class="rounded-none border bg-card p-5 shadow-storefront">
+            <p class="text-sm text-foreground/75">Promedio</p>
             <p class="mt-2 text-3xl font-bold">
                 {{ number_format($average, 2) }} / 5
             </p>
         </div>
 
-        <div class="rounded-xl bg-white p-5 shadow-sm">
-            <p class="text-sm text-slate-500">Valoraciones</p>
+        <div class="rounded-none border bg-card p-5 shadow-storefront">
+            <p class="text-sm text-foreground/75">Valoraciones</p>
             <p class="mt-2 text-3xl font-bold">{{ $total }}</p>
         </div>
 
-        <div class="rounded-xl bg-white p-5 shadow-sm">
-            <p class="text-sm text-slate-500">Clientes</p>
+        <div class="rounded-none border bg-card p-5 shadow-storefront">
+            <p class="text-sm text-foreground/75">Clientes</p>
             <p class="mt-2 text-3xl font-bold">{{ $customers }}</p>
         </div>
     </div>
 
-    <div class="mt-6 rounded-xl bg-white p-6 shadow-sm">
+    <div class="mt-6 rounded-none border bg-card p-6 shadow-storefront">
         <h2 class="text-xl font-bold">Distribución de estrellas</h2>
 
         @for ($star = 5; $star >= 1; $star--)
@@ -55,9 +51,9 @@
             <div class="mt-4 flex items-center gap-3">
                 <span class="w-10">{{ $star }} ★</span>
 
-                <div class="h-3 flex-1 overflow-hidden rounded-full bg-slate-100">
+                <div class="h-3 flex-1 overflow-hidden rounded-none bg-muted">
                     <div
-                        class="h-full rounded-full bg-amber-400"
+                        class="h-full rounded-none bg-amber-400"
                         style="width: {{ $percent }}%"
                     ></div>
                 </div>
@@ -67,17 +63,18 @@
         @endfor
     </div>
 
-    <div class="mt-6 overflow-x-auto rounded-xl bg-white p-6 shadow-sm">
+    <div class="mt-6 overflow-x-auto rounded-none border bg-card p-6 shadow-storefront">
         <h2 class="mb-4 text-xl font-bold">Historial de valoraciones</h2>
 
-        <table class="w-full text-left text-sm">
-            <thead>
+        <table class="w-full min-w-[700px] text-left text-sm">
+            <caption class="sr-only">Valoraciones de pedidos, comentarios y fechas</caption>
+            <thead class="bg-muted">
                 <tr class="border-b">
-                    <th class="p-3">Cliente</th>
-                    <th class="p-3">Pedido</th>
-                    <th class="p-3">Estrellas</th>
-                    <th class="p-3">Comentario</th>
-                    <th class="p-3">Fecha</th>
+                    <th scope="col" class="p-3">Cliente</th>
+                    <th scope="col" class="p-3">Pedido</th>
+                    <th scope="col" class="p-3">Estrellas</th>
+                    <th scope="col" class="p-3">Comentario</th>
+                    <th scope="col" class="p-3">Fecha</th>
                 </tr>
             </thead>
 
@@ -106,7 +103,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="p-6 text-center text-slate-500">
+                        <td colspan="5" class="p-6 text-center text-foreground/75">
                             Todavía no hay valoraciones.
                         </td>
                     </tr>
@@ -115,10 +112,9 @@
         </table>
 
         <div class="mt-5">
-            {{ $ratings->links() }}
+            {{ $ratings->links('pagination.storefront', ['label' => 'Paginación de valoraciones']) }}
         </div>
     </div>
-</main>
+</div>
 
-</body>
-</html>
+@endsection
