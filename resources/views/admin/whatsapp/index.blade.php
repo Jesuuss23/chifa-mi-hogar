@@ -1,25 +1,22 @@
 @extends('layouts.admin')
 
+@section('title', 'WhatsApp Meta')
+@section('page-title', 'WhatsApp Meta')
+
 @section('content')
-<div class="mx-auto max-w-6xl space-y-6 px-4 py-8">
+<div class="catalog-surface admin-catalog-surface mx-auto max-w-6xl space-y-6">
 
     <div>
-        <h1 class="text-3xl font-bold text-slate-900">
+        <h1 class="text-3xl font-bold text-foreground">
             Administración de WhatsApp
         </h1>
-        <p class="mt-2 text-sm text-slate-500">
+        <p class="mt-2 text-sm text-foreground/75">
             Configura quién controla la atención y recibe los pedidos.
         </p>
     </div>
 
-    @if(session('success'))
-        <div class="rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
-
     @if($errors->any())
-        <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+        <div role="alert" class="rounded-none border border-destructive/30 bg-destructive/10 p-4 text-destructive">
             <p class="font-semibold">No se pudieron guardar los cambios:</p>
             <ul class="mt-2 list-inside list-disc text-sm">
                 @foreach($errors->all() as $error)
@@ -30,19 +27,19 @@
     @endif
 
     {{-- INFORMACIÓN DEL NÚMERO TÉCNICO --}}
-    <section class="rounded-2xl border bg-white p-6 shadow-sm">
-        <h2 class="text-xl font-bold text-slate-900">
+    <section class="rounded-none border bg-card p-6 shadow-storefront">
+        <h2 class="text-xl font-bold text-foreground">
             WhatsApp Cloud API de Meta
         </h2>
 
-        <p class="mt-2 text-sm text-slate-500">
+        <p class="mt-2 text-sm text-foreground/75">
             El número técnico envía notificaciones y recibe los comandos.
             Los números registrados debajo son los administradores autorizados.
         </p>
 
         <div class="mt-5 grid gap-4 md:grid-cols-2">
-            <div class="rounded-xl bg-slate-50 p-4">
-                <p class="text-xs font-semibold uppercase text-slate-500">
+            <div class="rounded-none bg-muted p-4">
+                <p class="text-xs font-semibold uppercase text-foreground/75">
                     Identificador del número de Meta
                 </p>
                 <p class="mt-2 break-all font-mono text-sm">
@@ -50,8 +47,8 @@
                 </p>
             </div>
 
-            <div class="rounded-xl bg-slate-50 p-4">
-                <p class="text-xs font-semibold uppercase text-slate-500">
+            <div class="rounded-none bg-muted p-4">
+                <p class="text-xs font-semibold uppercase text-foreground/75">
                     Webhook de recepción
                 </p>
                 <p class="mt-2 break-all font-mono text-sm">
@@ -60,18 +57,18 @@
             </div>
         </div>
 
-        <div class="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">
+        <div class="mt-4 rounded-none bg-amber-50 p-4 text-sm text-amber-800">
             Las credenciales privadas se configuran en el servidor.
             Nunca compartas el token de acceso ni el secreto de Meta.
         </div>
     </section>
 
     {{-- REGISTRAR ADMINISTRADOR --}}
-    <section class="rounded-2xl border bg-white p-6 shadow-sm">
+    <section class="rounded-none border bg-card p-6 shadow-storefront">
         <h2 class="mb-2 text-xl font-bold">
             Agregar administrador
         </h2>
-        <p class="mb-6 text-sm text-slate-500">
+        <p class="mb-6 text-sm text-foreground/75">
             Registra el celular que utilizará WhatsApp para recibir
             notificaciones o controlar la tienda.
         </p>
@@ -83,68 +80,70 @@
 
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
-                    <label class="mb-2 block text-sm font-semibold">
+                    <label for="whatsapp-create-name" class="mb-2 block text-sm font-semibold">
                         Nombre *
                     </label>
                     <input
                         type="text"
+                        id="whatsapp-create-name"
                         name="name"
                         required
                         maxlength="120"
                         value="{{ old('name') }}"
                         placeholder="Ejemplo: Encargado de pedidos"
-                        class="w-full rounded-xl border border-slate-300 p-3">
+                        class="w-full rounded-none border border-input p-3">
                 </div>
 
                 <div>
-                    <label class="mb-2 block text-sm font-semibold">
+                    <label for="whatsapp-create-phone" class="mb-2 block text-sm font-semibold">
                         Número de WhatsApp *
                     </label>
                     <input
                         type="tel"
+                        id="whatsapp-create-phone"
                         name="phone"
                         required
                         value="{{ old('phone') }}"
                         placeholder="51987654321"
-                        class="w-full rounded-xl border border-slate-300 p-3">
-                    <p class="mt-1 text-xs text-slate-500">
+                        class="w-full rounded-none border border-input p-3">
+                    <p class="mt-1 text-xs text-foreground/75">
                         Número peruano con prefijo 51.
                     </p>
                 </div>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-3">
-                <label class="flex items-start gap-3 rounded-xl border p-4">
+                <label class="flex items-start gap-3 rounded-none border p-4">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" value="1"
                            @checked(old('is_active', '1')) class="mt-1">
                     <span>
                         <span class="block font-semibold">Activo</span>
-                        <span class="text-xs text-slate-500">
+                        <span class="text-xs text-foreground/75">
                             Número habilitado
                         </span>
                     </span>
                 </label>
 
-                <label class="flex items-start gap-3 rounded-xl border p-4">
+                <label class="flex items-start gap-3 rounded-none border p-4">
                     <input type="hidden" name="can_control_store" value="0">
                     <input type="checkbox" name="can_control_store" value="1"
                            @checked(old('can_control_store', '0')) class="mt-1">
                     <span>
                         <span class="block font-semibold">Controlar tienda</span>
-                        <span class="text-xs text-slate-500">
+                        <span class="text-xs text-foreground/75">
                             Abrir y cerrar pedidos
                         </span>
                     </span>
                 </label>
 
-                <label class="flex items-start gap-3 rounded-xl border p-4">
+                <label class="flex items-start gap-3 rounded-none border p-4">
                     <input type="hidden" name="receive_orders" value="0">
                     <input type="checkbox" name="receive_orders" value="1"
                            @checked(old('receive_orders', '1')) class="mt-1">
                     <span>
                         <span class="block font-semibold">Recibir pedidos</span>
-                        <span class="text-xs text-slate-500">
+                        <span class="text-xs text-foreground/75">
                             Notificaciones futuras
                         </span>
                     </span>
@@ -152,7 +151,7 @@
             </div>
 
             <button type="submit"
-                    class="rounded-xl bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700">
+                    class="rounded-none bg-primary px-6 py-3 font-semibold text-primary-foreground hover:bg-primary/90">
                 + Registrar administrador
             </button>
         </form>
@@ -167,60 +166,60 @@
         @forelse($admins as $admin)
             <form method="POST"
                   action="{{ route('admin.whatsapp.admins.update', $admin) }}"
-                  class="space-y-5 rounded-2xl border bg-white p-6 shadow-sm">
+                  class="space-y-5 rounded-none border bg-card p-6 shadow-storefront">
                 @csrf
                 @method('PUT')
 
                 <div class="flex flex-wrap items-center justify-between gap-3">
-                    <h3 class="font-bold text-slate-900">
+                    <h3 class="font-bold text-foreground">
                         Administrador #{{ $admin->id }}
                     </h3>
 
-                    <span class="rounded-full px-3 py-1 text-xs font-semibold
+                    <span class="rounded-none px-3 py-1 text-xs font-semibold
                         {{ $admin->is_active
                             ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700' }}">
+                            : 'bg-destructive/10 text-destructive' }}">
                         {{ $admin->is_active ? 'Activo' : 'Desactivado' }}
                     </span>
                 </div>
 
                 <div class="grid gap-4 md:grid-cols-2">
                     <div>
-                        <label class="mb-2 block text-sm font-semibold">
+                        <label for="whatsapp-admin-{{ $admin->id }}-name" class="mb-2 block text-sm font-semibold">
                             Nombre
                         </label>
-                        <input type="text" name="name" required
+                        <input id="whatsapp-admin-{{ $admin->id }}-name" type="text" name="name" required
                                maxlength="120"
                                value="{{ $admin->name }}"
-                               class="w-full rounded-xl border border-slate-300 p-3">
+                               class="w-full rounded-none border border-input p-3">
                     </div>
 
                     <div>
-                        <label class="mb-2 block text-sm font-semibold">
+                        <label for="whatsapp-admin-{{ $admin->id }}-phone" class="mb-2 block text-sm font-semibold">
                             Teléfono
                         </label>
-                        <input type="tel" name="phone" required
+                        <input id="whatsapp-admin-{{ $admin->id }}-phone" type="tel" name="phone" required
                                value="{{ $admin->phone }}"
-                               class="w-full rounded-xl border border-slate-300 p-3">
+                               class="w-full rounded-none border border-input p-3">
                     </div>
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-3">
-                    <label class="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm">
+                    <label class="flex items-center gap-2 rounded-none bg-muted p-3 text-sm">
                         <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" value="1"
                                @checked($admin->is_active)>
                         Activo
                     </label>
 
-                    <label class="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm">
+                    <label class="flex items-center gap-2 rounded-none bg-muted p-3 text-sm">
                         <input type="hidden" name="can_control_store" value="0">
                         <input type="checkbox" name="can_control_store" value="1"
                                @checked($admin->can_control_store)>
                         Controlar tienda
                     </label>
 
-                    <label class="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm">
+                    <label class="flex items-center gap-2 rounded-none bg-muted p-3 text-sm">
                         <input type="hidden" name="receive_orders" value="0">
                         <input type="checkbox" name="receive_orders" value="1"
                                @checked($admin->receive_orders)>
@@ -237,35 +236,36 @@
                     </a>
 
                     <button type="submit"
-                            class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white">
+                            class="rounded-none bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground">
                         Guardar cambios
                     </button>
                 </div>
             </form>
         @empty
-            <div class="rounded-xl border bg-white p-8 text-center text-slate-500">
+            <div class="rounded-none border bg-card p-8 text-center text-foreground/75">
                 No hay administradores registrados.
             </div>
         @endforelse
     </section>
 
     {{-- HISTORIAL --}}
-    <section class="rounded-2xl border bg-white p-6 shadow-sm">
+    <section class="rounded-none border bg-card p-6 shadow-storefront">
         <h2 class="mb-2 text-xl font-bold">
             Historial de comandos
         </h2>
-        <p class="mb-5 text-sm text-slate-500">
+        <p class="mb-5 text-sm text-foreground/75">
             Últimos comandos procesados por el webhook de Meta.
         </p>
 
         <div class="overflow-x-auto">
             <table class="w-full min-w-[600px] text-left text-sm">
-                <thead class="bg-slate-50 text-slate-600">
+                <caption class="sr-only">Últimos comandos de WhatsApp y sus resultados</caption>
+                <thead class="bg-muted text-foreground/75">
                     <tr>
-                        <th class="p-3">Fecha</th>
-                        <th class="p-3">Remitente</th>
-                        <th class="p-3">Comando</th>
-                        <th class="p-3">Resultado</th>
+                        <th scope="col" class="p-3">Fecha</th>
+                        <th scope="col" class="p-3">Remitente</th>
+                        <th scope="col" class="p-3">Comando</th>
+                        <th scope="col" class="p-3">Resultado</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
@@ -292,7 +292,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="p-8 text-center text-slate-500">
+                            <td colspan="4" class="p-8 text-center text-foreground/75">
                                 Todavía no se han recibido comandos.
                             </td>
                         </tr>
@@ -303,29 +303,29 @@
     </section>
 
     {{-- COMANDOS --}}
-    <section class="rounded-2xl border bg-slate-900 p-6 text-white">
+    <section class="rounded-none border bg-card p-6 text-foreground shadow-storefront">
         <h2 class="mb-4 text-xl font-bold">
             Comandos disponibles
         </h2>
 
         <div class="space-y-3 text-sm">
-            <div class="rounded-xl bg-white/10 p-3">
+            <div class="rounded-none bg-accent p-3">
                 <code class="font-bold">ABRIR CHIFA</code>
-                <p class="mt-1 text-slate-300">
+                <p class="mt-1 text-foreground/75">
                     Habilita la recepción de nuevos pedidos.
                 </p>
             </div>
 
-            <div class="rounded-xl bg-white/10 p-3">
+            <div class="rounded-none bg-accent p-3">
                 <code class="font-bold">CERRAR CHIFA</code>
-                <p class="mt-1 text-slate-300">
+                <p class="mt-1 text-foreground/75">
                     Deshabilita la recepción de nuevos pedidos.
                 </p>
             </div>
 
-            <div class="rounded-xl bg-white/10 p-3">
+            <div class="rounded-none bg-accent p-3">
                 <code class="font-bold">ESTADO CHIFA</code>
-                <p class="mt-1 text-slate-300">
+                <p class="mt-1 text-foreground/75">
                     Consulta el estado. La respuesta automática
                     se habilitará al conectar el servicio de envío.
                 </p>
