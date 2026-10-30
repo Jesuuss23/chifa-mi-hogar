@@ -67,6 +67,16 @@
                 Pedidos
             </a>
 
+            {{-- REPARTIDORES --}}
+            <a href="{{ route('admin.delivery-drivers.index') }}"
+               @if(request()->routeIs('admin.delivery-drivers.*')) aria-current="page" @endif
+               class="shrink-0 whitespace-nowrap rounded-none px-4 py-3 text-sm transition
+                      {{ request()->routeIs('admin.delivery-drivers.*')
+                          ? 'bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90'
+                          : 'hover:bg-sidebar-accent' }}">
+                Repartidores
+            </a>
+
             {{-- GESTIÓN DEL CATÁLOGO --}}
             <div class="hidden px-4 pb-1 pt-5 text-xs
                         font-bold uppercase tracking-wider
