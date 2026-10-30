@@ -1,25 +1,22 @@
 @extends('layouts.admin')
 
+@section('title', 'Configuración general')
+@section('page-title', 'Configuración general')
+
 @section('content')
-<div class="mx-auto max-w-5xl px-4 py-8">
+<div class="catalog-surface admin-catalog-surface mx-auto max-w-5xl">
 
     <div class="mb-6">
-        <h1 class="text-3xl font-bold text-slate-900">
+        <h1 class="text-3xl font-bold text-foreground">
             Configuración general
         </h1>
-        <p class="mt-2 text-sm text-slate-500">
+        <p class="mt-2 text-sm text-foreground/75">
             Administra pagos, delivery, ubicación y atención de Chifa Mi Hogar.
         </p>
     </div>
 
-    @if(session('success'))
-        <div class="mb-6 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
-
     @if($errors->any())
-        <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+        <div role="alert" class="mb-6 rounded-none border border-destructive/30 bg-destructive/10 p-4 text-destructive">
             <p class="font-semibold">Revisa los siguientes campos:</p>
             <ul class="mt-2 list-inside list-disc text-sm">
                 @foreach($errors->all() as $error)
@@ -41,12 +38,12 @@
         @method('PUT')
 
         {{-- PAGOS --}}
-        <section class="rounded-2xl border bg-white p-6 shadow-sm">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
             <div class="mb-6">
-                <h2 class="text-xl font-bold text-slate-900">
+                <h2 class="text-xl font-bold text-foreground">
                     📱 Configuración de Yape / Plin
                 </h2>
-                <p class="mt-1 text-sm text-slate-500">
+                <p class="mt-1 text-sm text-foreground/75">
                     Información que verá el cliente para realizar su pago.
                 </p>
             </div>
@@ -64,7 +61,7 @@
                            maxlength="9"
                            value="{{ old('yape_number', $settings->yape_number) }}"
                            placeholder="987654321"
-                           class="w-full rounded-xl border border-slate-300 p-3">
+                           class="w-full rounded-none border border-input p-3">
                 </div>
 
                 <div>
@@ -79,7 +76,7 @@
                            maxlength="9"
                            value="{{ old('plin_number', $settings->plin_number) }}"
                            placeholder="987654321"
-                           class="w-full rounded-xl border border-slate-300 p-3">
+                           class="w-full rounded-none border border-input p-3">
                 </div>
 
                 <div class="md:col-span-2">
@@ -93,7 +90,7 @@
                            maxlength="150"
                            value="{{ old('payment_holder', $settings->payment_holder) }}"
                            placeholder="Nombre que aparece en Yape o Plin"
-                           class="w-full rounded-xl border border-slate-300 p-3">
+                           class="w-full rounded-none border border-input p-3">
                 </div>
             </div>
 
@@ -108,14 +105,14 @@
                         <img
                             src="{{ $settings->paymentQr->detailUrl() }}"
                             alt="QR de pago actual"
-                            class="h-48 w-48 rounded-xl border bg-white object-contain p-2"
+                            class="h-48 w-48 max-w-full rounded-none border bg-white object-contain p-2"
                         >
                         <p class="mt-2 text-xs text-green-700">
                             QR configurado actualmente.
                         </p>
                     </div>
                 @else
-                    <div class="mb-4 flex h-40 w-40 items-center justify-center rounded-xl border border-dashed bg-slate-50 text-center text-sm text-slate-400">
+                    <div class="mb-4 flex h-40 w-40 items-center justify-center rounded-none border border-dashed bg-muted text-center text-sm text-foreground/75">
                         Sin QR configurado
                     </div>
                 @endif
@@ -124,9 +121,9 @@
                        name="payment_qr"
                        type="file"
                        accept="image/jpeg,image/png,image/webp"
-                       class="block w-full rounded-xl border border-slate-300 p-3 text-sm">
+                       class="block w-full rounded-none border border-input p-3 text-sm">
 
-                <p class="mt-2 text-xs text-slate-500">
+                <p class="mt-2 text-xs text-foreground/75">
                     JPG, PNG o WebP. Máximo 5 MB.
                     Si no seleccionas otra imagen, se conserva la actual.
                 </p>
@@ -134,12 +131,12 @@
         </section>
 
         {{-- DELIVERY --}}
-        <section class="rounded-2xl border bg-white p-6 shadow-sm">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
             <div class="mb-6">
-                <h2 class="text-xl font-bold text-slate-900">
+                <h2 class="text-xl font-bold text-foreground">
                     🛵 Delivery y ubicación de la cocina
                 </h2>
-                <p class="mt-1 text-sm text-slate-500">
+                <p class="mt-1 text-sm text-foreground/75">
                     Configura el punto de origen y las tarifas de reparto.
                 </p>
             </div>
@@ -155,9 +152,9 @@
                            type="tel"
                            value="{{ old('orders_whatsapp', $settings->orders_whatsapp) }}"
                            placeholder="51987654321"
-                           class="w-full rounded-xl border border-slate-300 p-3">
+                           class="w-full rounded-none border border-input p-3">
 
-                    <p class="mt-1 text-xs text-slate-500">
+                    <p class="mt-1 text-xs text-foreground/75">
                         Número que se mostrará como contacto comercial.
                         No es necesariamente el número técnico de Meta.
                     </p>
@@ -176,9 +173,9 @@
                                step="0.01"
                                required
                                value="{{ old('free_delivery_km', $settings->free_delivery_km) }}"
-                               class="w-full rounded-xl border border-slate-300 p-3">
+                               class="w-full rounded-none border border-input p-3">
 
-                        <p class="mt-1 text-xs text-slate-500">
+                        <p class="mt-1 text-xs text-foreground/75">
                             Distancia cubierta sin costo adicional.
                         </p>
                     </div>
@@ -195,9 +192,9 @@
                                step="0.01"
                                required
                                value="{{ old('additional_cost_per_km', $settings->additional_cost_per_km) }}"
-                               class="w-full rounded-xl border border-slate-300 p-3">
+                               class="w-full rounded-none border border-input p-3">
 
-                        <p class="mt-1 text-xs text-slate-500">
+                        <p class="mt-1 text-xs text-foreground/75">
                             Tarifa por cada kilómetro que exceda la cobertura gratuita.
                         </p>
                     </div>
@@ -216,7 +213,7 @@
                                required
                                value="{{ old('kitchen_latitude', $settings->kitchen_latitude) }}"
                                placeholder="-11.979883"
-                               class="w-full rounded-xl border border-slate-300 p-3">
+                               class="w-full rounded-none border border-input p-3">
                     </div>
 
                     <div>
@@ -233,11 +230,11 @@
                                required
                                value="{{ old('kitchen_longitude', $settings->kitchen_longitude) }}"
                                placeholder="-76.993542"
-                               class="w-full rounded-xl border border-slate-300 p-3">
+                               class="w-full rounded-none border border-input p-3">
                     </div>
                 </div>
 
-                <div class="rounded-xl bg-blue-50 p-4 text-sm text-blue-800">
+                <div class="rounded-none bg-accent p-4 text-sm text-foreground">
                     <p class="font-semibold">¿Cómo obtener las coordenadas?</p>
                     <p class="mt-1">
                         Abre Google Maps, selecciona la ubicación exacta de tu cocina
@@ -258,8 +255,8 @@
         </section>
 
         {{-- COMUNIDAD --}}
-        <section class="rounded-2xl border bg-white p-6 shadow-sm">
-            <h2 class="mb-5 text-xl font-bold text-slate-900">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
+            <h2 class="mb-5 text-xl font-bold text-foreground">
                 Comunidad de WhatsApp
             </h2>
 
@@ -272,20 +269,20 @@
                    type="url"
                    value="{{ old('whatsapp_group_url', $settings->whatsapp_group_url) }}"
                    placeholder="https://chat.whatsapp.com/..."
-                   class="w-full rounded-xl border border-slate-300 p-3">
+                   class="w-full rounded-none border border-input p-3">
 
-            <p class="mt-2 text-xs text-slate-500">
+            <p class="mt-2 text-xs text-foreground/75">
                 Podremos mostrar este enlace cuando el local esté fuera de atención.
             </p>
         </section>
 
         {{-- ATENCIÓN --}}
-        <section class="rounded-2xl border bg-white p-6 shadow-sm">
-            <h2 class="mb-5 text-xl font-bold text-slate-900">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
+            <h2 class="mb-5 text-xl font-bold text-foreground">
                 🕒 Estado de atención
             </h2>
 
-            <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+            <div class="rounded-none border border-border bg-muted p-5">
                 <input type="hidden" name="accepting_orders" value="0">
 
                 <label class="flex cursor-pointer items-start gap-3">
@@ -293,13 +290,13 @@
                            name="accepting_orders"
                            value="1"
                            @checked(old('accepting_orders', $settings->accepting_orders))
-                           class="mt-1 h-5 w-5 rounded border-slate-300 accent-orange-600">
+                           class="mt-1 h-5 w-5 rounded-none border-input accent-primary">
 
                     <span>
-                        <span class="block font-semibold text-slate-900">
+                        <span class="block font-semibold text-foreground">
                             Local abierto para recibir pedidos
                         </span>
-                        <span class="mt-1 block text-sm text-slate-500">
+                        <span class="mt-1 block text-sm text-foreground/75">
                             Si desactivas esta opción, la tienda seguirá visible,
                             pero no aceptará nuevas confirmaciones de pedidos.
                         </span>
@@ -316,35 +313,36 @@
                           name="closed_message"
                           rows="3"
                           maxlength="1000"
-                          class="w-full rounded-xl border border-slate-300 p-3"
+                          class="w-full rounded-none border border-input p-3"
                           placeholder="Por el momento no estamos recibiendo pedidos.">{{ old('closed_message', $settings->closed_message) }}</textarea>
             </div>
         </section>
         <div class="space-y-2">
-            <label class="block font-semibold">
+            <label for="google_reviews_url" class="block font-semibold">
                 Enlace para recibir reseñas de Google
             </label>
 
             <input
                 type="url"
+                id="google_reviews_url"
                 name="google_reviews_url"
                 value="{{ old('google_reviews_url', $settings->google_reviews_url) }}"
                 placeholder="https://g.page/r/..."
-                class="w-full rounded-lg border-gray-300"
+                class="w-full rounded-none border-input"
             >
 
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-foreground/75">
                 Los clientes podrán abrir Google y dejar una reseña del negocio.
             </p>
         </div>
         <div class="flex flex-wrap items-center justify-end gap-3">
             <a href="{{ route('admin.products.index') }}"
-               class="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-700">
+               class="rounded-none border border-input px-6 py-3 font-medium text-foreground/75">
                 Volver al catálogo
             </a>
 
             <button type="submit"
-                    class="rounded-xl bg-orange-600 px-8 py-3 font-semibold text-white transition hover:bg-orange-700">
+                    class="rounded-none bg-primary px-8 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90">
                 Guardar configuración
             </button>
         </div>
