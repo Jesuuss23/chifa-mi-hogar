@@ -1,0 +1,23 @@
+/* Opt-in controls for categories, products and recommendations only. */
+@layer base {
+    .admin-catalog-surface { overflow-wrap: anywhere; }
+
+    .admin-catalog-surface :where(*) { border-color: var(--border); }
+
+    .admin-catalog-surface :where(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea) {
+        min-height: 2.75rem;
+        min-width: 0;
+        max-width: 100%;
+        border: 1px solid var(--input);
+        border-radius: 0;
+        padding: 0.625rem 0.75rem;
+        background-color: var(--card);
+        color: var(--foreground);
+    }
+
+    .admin-catalog-surface :where(input[type="checkbox"], input[type="radio"]) {
+        accent-color: var(--primary);
+    }
+
+    .admin-catalog-surface textarea { resize: vertical; }
+}
