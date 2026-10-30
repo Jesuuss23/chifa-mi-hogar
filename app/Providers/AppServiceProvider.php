@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
                 ->forView($view->name(), $view->getData()));
         });
 
-        \Illuminate\Support\Facades\View::composer('layouts.storefront', function ($view) {
+        \Illuminate\Support\Facades\View::composer(['layouts.storefront', 'layouts.admin'], function ($view) {
             $settings = \App\Models\StoreSetting::current()->load('logo');
             $view->with('brandLogoUrl', $settings->logoUrl());
             $view->with('legalPagesAvailable', $settings->legalPagesAvailable());

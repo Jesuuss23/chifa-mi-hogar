@@ -1,5 +1,6 @@
-/* Paleta aportada por el negocio. Limitada al storefront; no altera el admin.
-   El tema oscuro queda preparado para la posterior migración de todas las vistas. */
+/* Paleta aportada por el negocio. Se aplica a portales que optan por .storefront-theme.
+   Administración la reutiliza en su estructura; sus vistas internas conservan sus estilos.
+   El tema oscuro queda preparado, sin activación automática. */
 .storefront-theme {
     --background: oklch(0.9555 0.0555 96.1549);
     --foreground: oklch(0.3441 0.0066 48.5229);
