@@ -1,0 +1,27 @@
+/* Styles opt in only on the two order-management views. */
+@layer base {
+    .admin-orders-surface {
+        overflow-wrap: anywhere;
+    }
+
+    .admin-orders-surface :where(*) {
+        border-color: var(--border);
+    }
+
+    .admin-orders-surface :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+        min-height: 2.75rem;
+        border: 1px solid var(--input);
+        border-radius: 0;
+        padding: 0.625rem 0.75rem;
+        background-color: var(--card);
+        color: var(--foreground);
+    }
+
+    .admin-orders-surface :where(input[type="checkbox"], input[type="radio"]) {
+        accent-color: var(--primary);
+    }
+
+    .admin-orders-surface textarea {
+        resize: vertical;
+    }
+}

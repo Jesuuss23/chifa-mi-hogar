@@ -1,33 +1,29 @@
 @extends('layouts.admin')
 
+@section('page-title', 'Detalle del pedido')
+
 @section('content')
-<div class="max-w-6xl mx-auto space-y-6">
+<div class="catalog-surface admin-orders-surface max-w-6xl mx-auto space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
             <a href="{{ route('admin.orders.index') }}"
-               class="text-sm text-red-600 hover:underline">
+               class="text-sm text-primary hover:underline">
                 ← Volver a pedidos
             </a>
             <h1 class="text-2xl font-bold mt-2">
                 Pedido {{ $order->code }}
             </h1>
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-foreground/75">
                 {{ $order->created_at->format('d/m/Y H:i') }}
             </p>
         </div>
-        <div class="rounded-full bg-gray-100 px-4 py-2 font-semibold">
+        <div class="rounded-none bg-accent px-4 py-2 font-semibold">
             {{ $statuses[$order->status] ?? $order->status }}
         </div>
     </div>
 
-    @if(session('success'))
-        <div class="rounded-xl bg-green-50 text-green-800 p-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
     @if($errors->any())
-        <div class="rounded-xl bg-red-50 text-red-800 p-4">
+        <div class="rounded-none bg-destructive/10 text-destructive p-4">
             <ul class="list-disc pl-5">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -38,24 +34,24 @@
 
     <div class="grid lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-6">
-            <section class="rounded-xl bg-white border p-5">
+            <section class="rounded-none bg-card border p-5">
                 <h2 class="text-lg font-bold mb-4">Datos del cliente</h2>
 
                 <dl class="grid sm:grid-cols-2 gap-4 text-sm">
                     <div>
-                        <dt class="text-gray-500">Nombre</dt>
+                        <dt class="text-foreground/75">Nombre</dt>
                         <dd class="font-semibold">{{ $order->customer_name }}</dd>
                     </div>
                     <div>
-                        <dt class="text-gray-500">Teléfono</dt>
+                        <dt class="text-foreground/75">Teléfono</dt>
                         <dd>{{ $order->customer_phone }}</dd>
                     </div>
                     <div>
-                        <dt class="text-gray-500">Correo</dt>
+                        <dt class="text-foreground/75">Correo</dt>
                         <dd>{{ $order->customer_email ?: 'No proporcionado' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-gray-500">Tipo de entrega</dt>
+                        <dt class="text-foreground/75">Tipo de entrega</dt>
                         <dd>{{ $order->delivery_type === 'pickup' ? 'Recojo en local' : 'Delivery' }}</dd>
                     </div>
                 </dl>
@@ -71,7 +67,7 @@
                                 href="https://www.google.com/maps/search/?api=1&query={{ urlencode($order->delivery_latitude . ',' . $order->delivery_longitude) }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-block text-red-600 font-semibold hover:underline"
+                                class="inline-block text-primary font-semibold hover:underline"
                             >
                                 Ver ubicación en Google Maps ↗
                             </a>
@@ -86,7 +82,7 @@
                 @endif
             </section>
 
-            <section class="rounded-xl bg-white border p-5">
+            <section class="rounded-none bg-card border p-5">
                 <h2 class="text-lg font-bold mb-4">Detalle de productos</h2>
 
                 <div class="divide-y">
@@ -97,7 +93,7 @@
                                     <p class="font-semibold">
                                         {{ $item->quantity }} × {{ $item->item_name }}
                                     </p>
-                                    <p class="text-xs text-gray-500">
+                                    <p class="text-xs text-foreground/75">
                                         {{ $item->item_type === 'recommendation' ? 'Recomendación' : 'Producto' }}
                                     </p>
                                 </div>
@@ -107,7 +103,7 @@
                             </div>
 
                             @if($item->extras->isNotEmpty())
-                                <div class="ml-4 mt-2 text-sm text-gray-600">
+                                <div class="ml-4 mt-2 text-sm text-foreground/75">
                                     <p class="font-medium">Extras por unidad:</p>
                                     @foreach($item->extras as $extra)
                                         <p>
@@ -119,7 +115,7 @@
                             @endif
 
                             @if($item->notes)
-                                <p class="text-sm text-gray-500 mt-2">
+                                <p class="text-sm text-foreground/75 mt-2">
                                     Nota: {{ $item->notes }}
                                 </p>
                             @endif
@@ -147,18 +143,18 @@
                 </div>
             </section>
 
-            <section class="rounded-xl bg-white border p-5">
+            <section class="rounded-none bg-card border p-5">
                 <h2 class="text-lg font-bold mb-4">Historial de estados</h2>
 
                 <div class="space-y-4">
                     @forelse($order->statusHistories->sortBy('created_at') as $history)
-                        <div class="border-l-2 border-red-500 pl-4">
+                        <div class="border-l-2 border-primary pl-4">
                             <p class="font-semibold text-sm">
                                 {{ $statuses[$history->from_status] ?? 'Inicio' }}
                                 →
                                 {{ $statuses[$history->to_status] ?? $history->to_status }}
                             </p>
-                            <p class="text-xs text-gray-500">
+                            <p class="text-xs text-foreground/75">
                                 {{ $history->created_at->format('d/m/Y H:i') }}
                                 · {{ $history->changedBy?->name ?? 'Sistema' }}
                             </p>
@@ -167,7 +163,7 @@
                             @endif
                         </div>
                     @empty
-                        <p class="text-sm text-gray-500">
+                        <p class="text-sm text-foreground/75">
                             Aún no hay cambios registrados.
                         </p>
                     @endforelse
@@ -176,7 +172,7 @@
         </div>
 
         <div class="space-y-6">
-            <section class="rounded-xl bg-white border p-5">
+            <section class="rounded-none bg-card border p-5">
                 <h2 class="text-lg font-bold mb-4">Verificación de pago</h2>
 
                 <p class="text-sm mb-2">
@@ -187,7 +183,7 @@
                 </p>
                 @if($order->payment_method === 'cash')
 
-                    <div class="rounded-xl bg-amber-50 p-4 space-y-3">
+                    <div class="rounded-none bg-amber-50 p-4 space-y-3">
                         <h3 class="font-bold text-amber-900">
                             💵 Pago contra entrega
                         </h3>
@@ -217,13 +213,13 @@
 
                         <p class="text-sm">
                             Vuelto a entregar:
-                            <strong class="text-lg text-red-700">
+                            <strong class="text-lg text-primary">
                                 S/ {{ number_format((float) $order->cash_change_amount, 2) }}
                             </strong>
                         </p>
 
                         @if($order->payment_status === 'verified')
-                            <div class="rounded-lg bg-green-100 p-3 text-green-800">
+                            <div class="rounded-none bg-green-100 p-3 text-green-800">
                                 ✓ Efectivo cobrado y registrado.
                             </div>
                         @elseif(in_array($order->status, ['confirmed', 'preparing', 'on_the_way']))
@@ -250,7 +246,7 @@
 
                                 <button
                                     type="submit"
-                                    class="w-full rounded-lg bg-green-700 text-white py-3 font-semibold"
+                                    class="w-full rounded-none bg-green-700 text-white py-3 font-semibold"
                                 >
                                     Registrar efectivo recibido
                                 </button>
@@ -266,7 +262,7 @@
                 @elseif(in_array($order->payment_method, ['yape', 'plin']))
 
                     @if($order->payment_status === 'verified')
-                        <p class="rounded-lg bg-green-50 p-3 text-green-800">
+                        <p class="rounded-none bg-green-50 p-3 text-green-800">
                             ✓ Pago digital verificado.
                         </p>
                     @elseif(!in_array($order->status, ['cancelled', 'delivered']))
@@ -280,8 +276,9 @@
 
                             <select
                                 name="decision"
+                                aria-label="Decisión sobre el pago"
                                 required
-                                class="w-full rounded-lg border-gray-300"
+                                class="w-full rounded-none border-input"
                             >
                                 <option value="">Seleccionar decisión</option>
                                 <option value="verified">Verificar pago</option>
@@ -293,7 +290,7 @@
 
                             <button
                                 type="submit"
-                                class="w-full rounded-lg bg-green-700 text-white py-3"
+                                class="w-full rounded-none bg-green-700 text-white py-3"
                             >
                                 Guardar decisión
                             </button>
@@ -302,7 +299,7 @@
 
                 @endif
 
-                <p class="text-xs text-gray-500 mt-3">
+                <p class="text-xs text-foreground/75 mt-3">
                     Verifica el abono real en Yape o Plin antes de aprobarlo.
                     Un comprobante por sí solo no demuestra que el dinero llegó.
                 </p>
@@ -311,7 +308,7 @@
                 $order->delivery_type === 'delivery'
                 && in_array($order->status, ['confirmed', 'preparing'], true)
             )
-                <section class="rounded-xl bg-white border p-5">
+                <section class="rounded-none bg-card border p-5">
                     <h2 class="text-lg font-bold mb-4">
                         Asignar repartidor
                     </h2>
@@ -326,7 +323,8 @@
 
                         <select
                             name="delivery_user_id"
-                            class="w-full rounded-lg border-gray-300"
+                            aria-label="Repartidor asignado"
+                            class="w-full rounded-none border-input"
                             required>
 
                             <option value="">Seleccionar repartidor</option>
@@ -346,20 +344,20 @@
                         </select>
 
                         @error('delivery_user_id')
-                            <p class="text-sm text-red-600">
+                            <p class="text-sm text-destructive">
                                 {{ $message }}
                             </p>
                         @enderror
 
                         <button
                             type="submit"
-                            class="rounded-lg bg-slate-900 px-5 py-3 text-white">
+                            class="rounded-none bg-primary px-5 py-3 text-primary-foreground">
                             Guardar asignación
                         </button>
                     </form>
                 </section>
             @endif
-            <section class="rounded-xl bg-white border p-5">
+            <section class="rounded-none bg-card border p-5">
                 <h2 class="text-lg font-bold mb-4">Actualizar estado</h2>
 
                 @if(count($nextStatuses) > 0)
@@ -370,11 +368,11 @@
                         @method('PATCH')
 
                         <div>
-                            <label class="block text-sm font-medium mb-1">
+                            <label for="order-status" class="block text-sm font-medium mb-1">
                                 Nuevo estado
                             </label>
                             <select name="status" id="order-status"
-                                    class="w-full rounded-lg border-gray-300"
+                                    class="w-full rounded-none border-input"
                                     required>
                                 <option value="">Seleccionar</option>
                                 @foreach($nextStatuses as $status)
@@ -386,28 +384,28 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-1">
+                            <label for="order-comment" class="block text-sm font-medium mb-1">
                                 Comentario
                             </label>
-                            <textarea name="comment" rows="2"
-                                      class="w-full rounded-lg border-gray-300"></textarea>
+                            <textarea id="order-comment" name="comment" rows="2"
+                                      class="w-full rounded-none border-input"></textarea>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-1">
+                            <label for="order-cancellation-reason" class="block text-sm font-medium mb-1">
                                 Motivo de cancelación (obligatorio al cancelar)
                             </label>
-                            <textarea name="cancellation_reason" rows="3"
-                                      class="w-full rounded-lg border-gray-300"></textarea>
+                            <textarea id="order-cancellation-reason" name="cancellation_reason" rows="3"
+                                      class="w-full rounded-none border-input"></textarea>
                         </div>
 
                         <button type="submit"
-                                class="w-full rounded-lg bg-red-600 text-white py-2 font-semibold">
+                                class="w-full rounded-none bg-primary text-primary-foreground py-2 font-semibold">
                             Actualizar pedido
                         </button>
                     </form>
                 @else
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-foreground/75">
                         Este pedido ya no admite cambios de estado.
                     </p>
                 @endif
