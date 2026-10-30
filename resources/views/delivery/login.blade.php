@@ -10,22 +10,22 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+<body class="storefront-theme min-h-screen bg-background flex items-center justify-center p-4">
 
-    <main class="w-full max-w-md bg-white rounded-2xl shadow-lg p-7 space-y-6">
+    <main class="catalog-surface [overflow-wrap:anywhere] w-full max-w-md border border-border bg-card rounded-none shadow-storefront p-7 space-y-6">
 
         <div class="text-center space-y-2">
-            <h1 class="text-2xl font-bold text-slate-900">
+            <h1 class="text-2xl font-bold text-foreground">
                 Chifa Mi Hogar
             </h1>
 
-            <p class="text-slate-500">
+            <p class="text-foreground/75">
                 Acceso exclusivo para repartidores
             </p>
         </div>
 
         @if($errors->any())
-            <div class="rounded-lg bg-red-50 p-3 text-red-700 text-sm">
+            <div role="alert" class="rounded-none bg-destructive/10 p-3 text-destructive text-sm">
                 {{ $errors->first() }}
             </div>
         @endif
@@ -49,7 +49,7 @@
                     value="{{ old('email') }}"
                     autocomplete="username"
                     required
-                    class="w-full rounded-xl border border-slate-300 p-3"
+                    class="w-full rounded-none border border-input bg-card text-foreground p-3"
                 >
             </div>
 
@@ -64,19 +64,19 @@
                     name="password"
                     autocomplete="current-password"
                     required
-                    class="w-full rounded-xl border border-slate-300 p-3"
+                    class="w-full rounded-none border border-input bg-card text-foreground p-3"
                 >
             </div>
 
             <button
                 type="submit"
-                class="w-full rounded-xl bg-slate-900 text-white py-3 font-semibold"
+                class="w-full rounded-none bg-primary text-primary-foreground py-3 font-semibold"
             >
                 Iniciar sesión
             </button>
         </form>
 
-        <p class="text-xs text-slate-500 text-center">
+        <p class="text-xs text-foreground/75 text-center">
             Tu cuenta debe ser creada por un administrador.
         </p>
 
