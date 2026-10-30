@@ -1,4 +1,4 @@
-/* Opt-in controls for categories, products and recommendations only. */
+/* Opt-in controls for administrative catalog views, including extras. */
 @layer base {
     .admin-catalog-surface { overflow-wrap: anywhere; }
 
