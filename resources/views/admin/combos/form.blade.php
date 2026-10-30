@@ -1,3 +1,9 @@
+@extends('layouts.admin')
+
+@section('title', $combo->exists ? 'Editar combo' : 'Crear combo')
+@section('page-title', $combo->exists ? 'Editar combo' : 'Crear combo')
+
+@section('content')
 @php
     $editing = $combo->exists;
 
@@ -28,18 +34,8 @@
     )->values();
 @endphp
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $editing ? 'Editar' : 'Crear' }} combo</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="min-h-screen bg-slate-50 p-6">
-
-<main class="mx-auto max-w-4xl">
-    <a href="{{ route('admin.combos.index') }}" class="text-red-700">
+<div class="catalog-surface admin-catalog-surface mx-auto max-w-4xl">
+    <a href="{{ route('admin.combos.index') }}" class="text-primary">
         ← Volver a combos
     </a>
 
@@ -48,7 +44,7 @@
     </h1>
 
     @if ($errors->any())
-        <div class="mt-5 rounded-lg bg-red-50 p-4 text-red-700">
+        <div class="mt-5 rounded-none bg-destructive/10 p-4 text-destructive">
             <ul class="list-disc pl-5">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -70,32 +66,35 @@
             @method('PUT')
         @endif
 
-        <section class="rounded-xl bg-white p-6 shadow-sm">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
             <h2 class="mb-4 text-xl font-bold">Información del combo</h2>
 
-            <label class="block text-sm font-medium">Nombre</label>
+            <label for="admin-combo-name" class="block text-sm font-medium">Nombre</label>
             <input
+                id="admin-combo-name"
                 name="name"
                 required
                 maxlength="150"
                 value="{{ old('name', $combo->name) }}"
-                class="mt-1 w-full rounded-lg border p-3"
+                class="mt-1 w-full rounded-none border p-3"
             >
 
-            <label class="mt-4 block text-sm font-medium">Descripción</label>
+            <label for="admin-combo-description" class="mt-4 block text-sm font-medium">Descripción</label>
             <textarea
+                id="admin-combo-description"
                 name="description"
                 rows="3"
-                class="mt-1 w-full rounded-lg border p-3"
+                class="mt-1 w-full rounded-none border p-3"
             >{{ old('description', $combo->description) }}</textarea>
 
-            <label class="mt-4 block text-sm font-medium">Orden en carta</label>
+            <label for="admin-combo-sort_order" class="mt-4 block text-sm font-medium">Orden en carta</label>
             <input
                 type="number"
                 min="0"
+                id="admin-combo-sort_order"
                 name="sort_order"
                 value="{{ old('sort_order', $combo->sort_order ?? 0) }}"
-                class="mt-1 w-full rounded-lg border p-3"
+                class="mt-1 w-full rounded-none border p-3"
             >
 
             <input type="hidden" name="show_in_menu" value="0">
@@ -106,7 +105,7 @@
                     value="1"
                     @checked(old('show_in_menu', $combo->show_in_menu ?? false))
                 >
-                Mostrar en la categoría Combos
+                Mostrar en el carrusel de combos del catálogo
             </label>
 
             @if ($editing)
@@ -122,7 +121,7 @@
                 </label>
             @endif
             <div class="mt-5">
-                <label class="block text-sm font-medium">
+                <label for="admin-combo-image" class="block text-sm font-medium">
                     Imagen del combo
                 </label>
 
@@ -130,27 +129,28 @@
                     <img
                         src="{{ $combo->mediaAsset->cardUrl() }}"
                         alt="{{ $combo->name }}"
-                        class="mt-3 h-40 w-56 rounded-xl object-cover"
+                        class="mt-3 h-40 w-56 rounded-none object-cover"
                     >
                 @endif
 
                 <input
                     type="file"
+                    id="admin-combo-image"
                     name="image"
                     accept="image/jpeg,image/png,image/webp"
-                    class="mt-3 block w-full rounded-lg border p-3"
+                    class="mt-3 block w-full rounded-none border p-3"
                 >
 
-                <p class="mt-2 text-xs text-slate-500">
+                <p class="mt-2 text-xs text-foreground/75">
                     JPG, PNG o WEBP. Máximo 5 MB.
                 </p>
             </div>
         </section>
 
-        <section class="rounded-xl bg-white p-6 shadow-sm">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
             <h2 class="text-xl font-bold">Componentes del combo</h2>
 
-            <p class="mt-1 text-sm text-slate-500">
+            <p class="mt-1 text-sm text-foreground/75">
                 Selecciona platos o adicionales y establece sus cantidades.
             </p>
 
@@ -159,17 +159,17 @@
             <button
                 type="button"
                 id="add-item"
-                class="mt-4 rounded-lg border border-red-700 px-4 py-2 text-red-700"
+                class="mt-4 rounded-none border border-primary px-4 py-2 text-primary"
             >
                 + Agregar componente
             </button>
         </section>
-        <section class="rounded-xl bg-white p-6 shadow-sm">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
             <h2 class="text-xl font-bold">
                 ¿En qué platos recomendar este combo?
             </h2>
 
-            <p class="mt-2 text-sm text-slate-500">
+            <p class="mt-2 text-sm text-foreground/75">
                 Opcional. Puedes seleccionar varios platos.
                 Si no seleccionas ninguno, el combo seguirá existiendo
                 de forma independiente.
@@ -184,7 +184,7 @@
 
             <div class="mt-4 grid gap-3 sm:grid-cols-2">
                 @foreach ($products as $product)
-                    <label class="flex items-center gap-3 rounded-lg border p-3">
+                    <label class="flex items-center gap-3 rounded-none border p-3">
                         <input
                             type="checkbox"
                             name="recommended_product_ids[]"
@@ -194,7 +194,7 @@
 
                         <span>
                             {{ $product->name }}
-                            <small class="block text-slate-500">
+                            <small class="block text-foreground/75">
                                 S/ {{ number_format((float) $product->price, 2) }}
                             </small>
                         </span>
@@ -202,15 +202,15 @@
                 @endforeach
             </div>
         </section>
-        <section class="rounded-xl bg-white p-6 shadow-sm">
+        <section class="rounded-none border bg-card p-6 shadow-storefront">
             <h2 class="mb-4 text-xl font-bold">Configuración de precios</h2>
 
-            <div class="flex justify-between border-b pb-4">
+            <div class="flex flex-wrap justify-between gap-2 border-b pb-4">
                 <span>Precio referencial del catálogo</span>
                 <strong id="reference-price">S/ 0.00</strong>
             </div>
 
-            <label class="mt-4 block text-sm font-medium">
+            <label for="sale-price" class="mt-4 block text-sm font-medium">
                 Precio de venta del combo
             </label>
 
@@ -222,21 +222,21 @@
                 min="0.01"
                 required
                 value="{{ old('price', $combo->price) }}"
-                class="mt-2 w-full rounded-lg border p-3"
+                class="mt-2 w-full rounded-none border p-3"
             >
 
-            <p id="price-difference" class="mt-3 text-sm text-slate-600"></p>
+            <p id="price-difference" class="mt-3 text-sm text-foreground/75"></p>
 
         </section>
 
         <button
             type="submit"
-            class="w-full rounded-xl bg-red-700 px-6 py-4 font-bold text-white"
+            class="w-full rounded-none bg-primary px-6 py-4 font-bold text-primary-foreground"
         >
             {{ $editing ? 'Guardar cambios' : 'Crear combo' }}
         </button>
     </form>
-</main>
+</div>
 
 <script>
     const catalog = @json($catalog);
@@ -271,10 +271,11 @@
 
         items.forEach((item, index) => {
             const row = document.createElement('div');
-            row.className = 'grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_110px_90px]';
+            row.className = 'grid gap-3 rounded-none border p-3 md:grid-cols-[1fr_110px_90px]';
 
             const select = document.createElement('select');
-            select.className = 'w-full rounded-lg border p-2';
+            select.setAttribute('aria-label', `Componente ${index + 1}`);
+            select.className = 'w-full rounded-none border p-2';
 
             catalog.forEach(entry => {
                 const option = document.createElement('option');
@@ -306,11 +307,12 @@
                 renderItems();
             });
             const quantity = document.createElement('input');
+            quantity.setAttribute('aria-label', `Cantidad del componente ${index + 1}`);
             quantity.type = 'number';
             quantity.min = 1;
             quantity.max = 20;
             quantity.value = item.quantity;
-            quantity.className = 'w-full rounded-lg border p-2';
+            quantity.className = 'w-full rounded-none border p-2';
 
             quantity.addEventListener('input', () => {
                 items[index].quantity = Number(quantity.value);
@@ -318,9 +320,10 @@
             });
 
             const remove = document.createElement('button');
+            remove.setAttribute('aria-label', `Quitar componente ${index + 1}`);
             remove.type = 'button';
             remove.textContent = 'Quitar';
-            remove.className = 'rounded-lg bg-red-50 px-3 py-2 text-red-700';
+            remove.className = 'rounded-none bg-destructive/10 px-3 py-2 text-destructive';
 
             remove.addEventListener('click', () => {
                 items.splice(index, 1);
@@ -405,5 +408,4 @@
 
     renderItems();
 </script>
-</body>
-</html>
+@endsection

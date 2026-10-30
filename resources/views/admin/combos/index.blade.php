@@ -1,49 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Combos | Chifa Mi Hogar</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="min-h-screen bg-slate-50 p-6">
+@extends('layouts.admin')
 
-<main class="mx-auto max-w-6xl">
+@section('title', 'Combos')
+@section('page-title', 'Combos')
+
+@section('content')
+<div class="catalog-surface admin-catalog-surface mx-auto max-w-6xl">
 
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
             <a href="{{ route('admin.dashboard') }}"
-               class="text-sm text-red-700">
+               class="text-sm text-primary">
                 ← Volver al panel
             </a>
 
             <h1 class="mt-3 text-3xl font-bold">Gestión de combos</h1>
-            <p class="text-slate-500">
+            <p class="text-foreground/75">
                 Crea ofertas utilizando platos y adicionales existentes.
             </p>
         </div>
 
         <a href="{{ route('admin.combos.create') }}"
-           class="rounded-lg bg-red-700 px-5 py-3 font-semibold text-white">
+           class="rounded-none bg-primary px-5 py-3 font-semibold text-primary-foreground">
             + Crear combo
         </a>
     </div>
 
-    @if (session('success'))
-        <div class="mt-5 rounded-lg bg-green-50 p-4 text-green-800">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="mt-6 overflow-x-auto rounded-xl bg-white shadow-sm">
-        <table class="w-full text-left text-sm">
-            <thead class="bg-slate-100">
+    <div class="mt-6 overflow-x-auto rounded-none border bg-card shadow-storefront">
+        <table class="w-full min-w-[650px] text-left text-sm">
+            <caption class="sr-only">Combos, precios y publicación en el catálogo</caption>
+            <thead class="bg-muted">
                 <tr>
-                    <th class="p-4">Combo</th>
-                    <th class="p-4">Referencial</th>
-                    <th class="p-4">Venta</th>
-                    <th class="p-4">En carta</th>
-                    <th class="p-4">Acciones</th>
+                    <th scope="col" class="p-4">Combo</th>
+                    <th scope="col" class="p-4">Referencial</th>
+                    <th scope="col" class="p-4">Venta</th>
+                    <th scope="col" class="p-4">En carta</th>
+                    <th scope="col" class="p-4">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,7 +42,7 @@
                     <tr class="border-t">
                         <td class="p-4">
                             <p class="font-semibold">{{ $combo->name }}</p>
-                            <p class="text-xs text-slate-500">
+                            <p class="text-xs text-foreground/75">
                                 {{ $combo->items->count() }} componentes
                             </p>
                         </td>
@@ -70,14 +61,14 @@
 
                         <td class="p-4">
                             <a href="{{ route('admin.combos.edit', $combo) }}"
-                               class="font-medium text-red-700">
+                               class="font-medium text-primary">
                                 Editar
                             </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="p-8 text-center text-slate-500">
+                        <td colspan="5" class="p-8 text-center text-foreground/75">
                             Todavía no hay combos registrados.
                         </td>
                     </tr>
@@ -87,9 +78,8 @@
     </div>
 
     <div class="mt-5">
-        {{ $combos->links() }}
+        {{ $combos->links('pagination.storefront', ['label' => 'Paginación de combos']) }}
     </div>
-</main>
+</div>
 
-</body>
-</html>
+@endsection
