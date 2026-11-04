@@ -112,9 +112,9 @@
     };
 @endphp
 
-<body class="min-h-screen bg-[#F7F5F2] text-slate-900 antialiased">
+<body class="storefront-theme min-h-screen bg-background text-foreground antialiased">
 
-<main class="mx-auto max-w-2xl space-y-5 px-4 py-6 sm:py-8">
+<main class="catalog-surface [overflow-wrap:anywhere] mx-auto max-w-2xl space-y-5 px-4 py-6 sm:py-8">
 
     {{-- ===============================================
          ENCABEZADO
@@ -124,28 +124,28 @@
 
         <a
             href="{{ route('delivery.orders.index') }}"
-            class="inline-flex items-center gap-2 text-sm font-semibold text-[#982E26]"
+            class="inline-flex items-center gap-2 text-sm font-semibold text-primary"
         >
             ← Mis entregas
         </a>
 
-        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div class="rounded-none border border-border bg-card p-5 shadow-storefront">
 
-            <p class="text-xs font-bold uppercase tracking-wider text-[#982E26]">
+            <p class="text-xs font-bold uppercase tracking-wider text-primary">
                 Chifa Mi Hogar · Delivery
             </p>
 
-            <h1 class="mt-2 break-all text-xl font-black text-gray-950 sm:text-2xl">
+            <h1 class="mt-2 break-all text-xl font-black text-foreground sm:text-2xl">
                 Pedido {{ $order->code }}
             </h1>
 
             <div class="mt-3 flex flex-wrap items-center gap-2">
 
-                <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+                <span class="rounded-none bg-accent px-3 py-1 text-xs font-bold text-primary">
                     {{ $orderStatusLabel }}
                 </span>
 
-                <span class="text-xs text-gray-500">
+                <span class="text-xs text-foreground/75">
                     Entrega asignada
                 </span>
 
@@ -159,39 +159,39 @@
          DATOS DEL CLIENTE
     ================================================ --}}
 
-    <section class="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <section class="space-y-5 rounded-none border border-border bg-card p-5 shadow-storefront">
 
         <div>
-            <h2 class="text-lg font-black text-gray-950">
+            <h2 class="text-lg font-black text-foreground">
                 Datos del cliente
             </h2>
 
-            <p class="mt-1 text-xs text-gray-500">
+            <p class="mt-1 text-xs text-foreground/75">
                 Información registrada al confirmar el pedido.
             </p>
         </div>
 
-        <dl class="grid gap-4 border-t border-gray-100 pt-5 text-sm sm:grid-cols-2">
+        <dl class="grid gap-4 border-t border-border pt-5 text-sm sm:grid-cols-2">
 
             <div>
-                <dt class="text-xs font-medium text-gray-500">
+                <dt class="text-xs font-medium text-foreground/75">
                     Nombre
                 </dt>
 
-                <dd class="mt-1 font-bold text-gray-900">
+                <dd class="mt-1 font-bold text-foreground">
                     {{ $order->customer_name }}
                 </dd>
             </div>
 
             <div>
-                <dt class="text-xs font-medium text-gray-500">
+                <dt class="text-xs font-medium text-foreground/75">
                     Teléfono
                 </dt>
 
                 <dd class="mt-1">
                     <a
                         href="tel:{{ preg_replace('/\D+/', '', (string) $order->customer_phone) }}"
-                        class="font-bold text-blue-700 hover:underline"
+                        class="font-bold text-primary hover:underline"
                     >
                         {{ $order->customer_phone }}
                     </a>
@@ -199,31 +199,31 @@
             </div>
 
             <div class="sm:col-span-2">
-                <dt class="text-xs font-medium text-gray-500">
+                <dt class="text-xs font-medium text-foreground/75">
                     Dirección de entrega
                 </dt>
 
-                <dd class="mt-1 font-semibold leading-6 text-gray-900">
+                <dd class="mt-1 font-semibold leading-6 text-foreground">
                     {{ $order->delivery_address }}
                 </dd>
             </div>
 
             <div>
-                <dt class="text-xs font-medium text-gray-500">
+                <dt class="text-xs font-medium text-foreground/75">
                     Referencia
                 </dt>
 
-                <dd class="mt-1 text-gray-800">
+                <dd class="mt-1 text-foreground">
                     {{ $order->delivery_reference ?: 'Sin referencia' }}
                 </dd>
             </div>
 
             <div>
-                <dt class="text-xs font-medium text-gray-500">
+                <dt class="text-xs font-medium text-foreground/75">
                     Distancia aproximada
                 </dt>
 
-                <dd class="mt-1 font-semibold text-gray-800">
+                <dd class="mt-1 font-semibold text-foreground">
                     @if($order->delivery_distance_km !== null)
                         {{ number_format(
                             (float) $order->delivery_distance_km,
@@ -241,7 +241,7 @@
 
         @if($order->customer_notes)
 
-            <div class="rounded-xl bg-amber-50 p-4">
+            <div class="rounded-none bg-amber-50 p-4">
 
                 <p class="text-xs font-bold text-amber-900">
                     Observaciones
@@ -261,15 +261,15 @@
          UBICACIÓN EXACTA DEL PEDIDO
     ================================================ --}}
 
-    <section class="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <section class="space-y-5 rounded-none border border-border bg-card p-5 shadow-storefront">
 
         <div>
 
-            <h2 class="text-lg font-black text-gray-950">
+            <h2 class="text-lg font-black text-foreground">
                 Ubicación de entrega
             </h2>
 
-            <p class="mt-1 text-sm leading-6 text-gray-500">
+            <p class="mt-1 text-sm leading-6 text-foreground/75">
                 Este destino se obtiene directamente de las
                 coordenadas registradas en el pedido.
             </p>
@@ -284,7 +284,7 @@
                 href="{{ $googleLocationUrl }}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-blue-600 bg-white px-4 py-3 text-center text-sm font-bold text-blue-700 transition hover:bg-blue-50"
+                class="flex min-h-12 w-full items-center justify-center gap-2 rounded-none border border-primary bg-card px-4 py-3 text-center text-sm font-bold text-primary transition hover:bg-accent"
             >
                 <span aria-hidden="true">📍</span>
                 Ver punto exacto en Google Maps
@@ -296,37 +296,37 @@
                 href="{{ $googleNavigationUrl }}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-blue-700"
+                class="flex min-h-12 w-full items-center justify-center gap-2 rounded-none bg-primary px-4 py-3 text-center text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
             >
                 <span aria-hidden="true">🛵</span>
                 Iniciar navegación
             </a>
 
-            <div class="rounded-xl bg-[#F7F8FA] p-4">
+            <div class="rounded-none bg-muted p-4">
 
-                <p class="text-xs font-bold text-gray-800">
+                <p class="text-xs font-bold text-foreground">
                     Coordenadas del cliente
                 </p>
 
-                <p class="mt-2 break-all font-mono text-sm font-semibold text-blue-700">
+                <p class="mt-2 break-all font-mono text-sm font-semibold text-primary">
                     {{ $destinationCoordinates }}
                 </p>
 
-                <div class="mt-3 border-t border-gray-200 pt-3">
+                <div class="mt-3 border-t border-border pt-3">
 
-                    <p class="text-xs font-bold text-gray-700">
+                    <p class="text-xs font-bold text-foreground/75">
                         Código del pedido
                     </p>
 
-                    <p class="mt-1 break-all text-xs text-gray-600">
+                    <p class="mt-1 break-all text-xs text-foreground/75">
                         {{ $order->code }}
                     </p>
 
-                    <p class="mt-3 text-xs font-bold text-gray-700">
+                    <p class="mt-3 text-xs font-bold text-foreground/75">
                         ID del pedido
                     </p>
 
-                    <p class="mt-1 break-all font-mono text-xs text-gray-500">
+                    <p class="mt-1 break-all font-mono text-xs text-foreground/75">
                         {{ $order->id }}
                     </p>
 
@@ -334,7 +334,7 @@
 
             </div>
 
-            <div class="rounded-xl border border-amber-100 bg-amber-50 p-4">
+            <div class="rounded-none border border-amber-100 bg-amber-50 p-4">
 
                 <p class="text-xs leading-6 text-amber-900">
                     <strong>Importante:</strong>
@@ -348,7 +348,7 @@
 
         @else
 
-            <div class="rounded-xl bg-amber-50 p-4">
+            <div class="rounded-none bg-amber-50 p-4">
 
                 <p class="text-sm font-bold text-amber-900">
                     Ubicación GPS no disponible
@@ -370,17 +370,17 @@
          INFORMACIÓN DEL PAGO
     ================================================ --}}
 
-    <section class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <section class="rounded-none border border-border bg-card p-5 shadow-storefront">
 
-        <h2 class="text-lg font-black text-gray-950">
+        <h2 class="text-lg font-black text-foreground">
             Información de pago
         </h2>
 
         <div class="mt-4 space-y-3 text-sm">
 
-            <div class="flex items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center justify-between gap-3">
 
-                <span class="text-gray-500">
+                <span class="text-foreground/75">
                     Método
                 </span>
 
@@ -395,13 +395,13 @@
 
             </div>
 
-            <div class="flex items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center justify-between gap-3">
 
-                <span class="text-gray-500">
+                <span class="text-foreground/75">
                     Total del pedido
                 </span>
 
-                <strong class="text-lg text-[#982E26]">
+                <strong class="text-lg text-primary">
                     S/ {{ number_format((float) $order->total, 2) }}
                 </strong>
 
@@ -409,10 +409,10 @@
 
             @if($order->payment_method === 'cash')
 
-                <div class="space-y-2 border-t border-gray-100 pt-3">
+                <div class="space-y-2 border-t border-border pt-3">
 
-                    <div class="flex justify-between gap-3">
-                        <span class="text-gray-500">
+                    <div class="flex flex-wrap justify-between gap-3">
+                        <span class="text-foreground/75">
                             El cliente pagará con
                         </span>
 
@@ -424,13 +424,13 @@
                         </strong>
                     </div>
 
-                    <div class="flex justify-between gap-3">
+                    <div class="flex flex-wrap justify-between gap-3">
 
-                        <span class="text-gray-500">
+                        <span class="text-foreground/75">
                             Vuelto
                         </span>
 
-                        <strong class="text-[#982E26]">
+                        <strong class="text-primary">
                             S/ {{ number_format(
                                 (float) $order->cash_change_amount,
                                 2
@@ -452,15 +452,15 @@
          SE CONSERVA EL FLUJO ACTUAL
     ================================================ --}}
 
-    <section class="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <section class="space-y-5 rounded-none border border-border bg-card p-5 shadow-storefront">
 
         <div>
 
-            <h2 class="text-lg font-black text-gray-950">
+            <h2 class="text-lg font-black text-foreground">
                 Seguimiento GPS
             </h2>
 
-            <p class="mt-2 text-sm leading-6 text-gray-500">
+            <p class="mt-2 text-sm leading-6 text-foreground/75">
                 Comparte tu ubicación durante el reparto para que
                 el cliente pueda seguir el avance de su pedido.
             </p>
@@ -471,7 +471,7 @@
             id="gps-status"
             role="status"
             aria-live="polite"
-            class="rounded-xl bg-slate-100 p-4 text-sm leading-6 text-slate-700"
+            class="rounded-none bg-muted p-4 text-sm leading-6 text-foreground/75"
         >
             GPS desactivado.
         </div>
@@ -483,7 +483,7 @@
                 <button
                     type="button"
                     id="gps-start"
-                    class="flex min-h-12 w-full items-center justify-center rounded-xl bg-green-600 px-4 py-3 font-bold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    class="flex min-h-12 w-full items-center justify-center rounded-none bg-green-600 px-4 py-3 font-bold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     Iniciar seguimiento GPS
                 </button>
@@ -492,7 +492,7 @@
                     type="button"
                     id="gps-stop"
                     disabled
-                    class="flex min-h-12 w-full items-center justify-center rounded-xl bg-red-600 px-4 py-3 font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    class="flex min-h-12 w-full items-center justify-center rounded-none bg-red-600 px-4 py-3 font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     Detener seguimiento
                 </button>
@@ -501,7 +501,7 @@
 
         @else
 
-            <div class="rounded-xl bg-amber-50 p-4">
+            <div class="rounded-none bg-amber-50 p-4">
 
                 <p class="text-sm leading-6 text-amber-800">
                     El seguimiento GPS estará disponible
