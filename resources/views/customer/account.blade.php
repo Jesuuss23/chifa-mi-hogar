@@ -28,6 +28,7 @@
         </div>
 
         @include('customer.profile')
+        @include('customer.google-account')
 
         <div class="mt-8 rounded-none bg-card p-6 shadow-storefront">
             <h2 class="text-xl font-bold">Mis pedidos</h2>

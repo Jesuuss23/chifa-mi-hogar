@@ -20,6 +20,9 @@
         <li>WhatsApp / Meta: cuando está configurado, el negocio envía avisos de pedidos a sus destinatarios autorizados. Estos avisos pueden contener nombre, teléfono, dirección, coordenadas, detalle del pedido y notas. También puedes abrir WhatsApp para contactar o enviar comprobantes.</li>
         <li>Geoapify: el servidor consulta rutas con coordenadas de origen y destino cuando se necesita el recorrido del reparto.</li>
         <li>OpenStreetMap: tu navegador solicita imágenes del mapa. El proveedor recibe datos de conexión, como la IP, y la zona del mapa solicitada.</li>
+        @if(\App\Services\GoogleCustomerLogin::enabled())
+            <li>Acceso con Google: si eliges esta opción, tu navegador se conecta con Google y recibimos un identificador de tu cuenta, nombre y correo verificado para identificarte. Guardamos la vinculación, pero no tu contraseña de Google ni sus tokens de acceso. Puedes seguir usando el registro directo.</li>
+        @endif
         <li>Google Places: el servidor consulta reseñas del negocio cuando la función está configurada. Abrir enlaces de Google Maps o reseñas conecta tu navegador con Google.</li>
         @if(config('turnstile.enabled', false))
             <li>Cloudflare Turnstile: comprueba solicitudes de registro con datos técnicos del navegador y una verificación del servidor, incluida la IP. Esta función se utiliza para prevenir registros automatizados.</li>

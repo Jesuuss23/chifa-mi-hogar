@@ -113,6 +113,14 @@ Route::get(
 
 
 
+// Google customer access: POST initiation retains CSRF protection.
+Route::post('/auth/google', [\App\Http\Controllers\CustomerGoogleAuthController::class, 'start'])
+    ->middleware(['guest', 'throttle:5,1'])->name('customer.google.start');
+Route::post('/mi-cuenta/google', [\App\Http\Controllers\CustomerGoogleAuthController::class, 'start'])
+    ->middleware(['auth', 'customer', 'throttle:5,1'])->name('customer.google.link');
+Route::get('/auth/google/callback', [\App\Http\Controllers\CustomerGoogleAuthController::class, 'callback'])
+    ->middleware('throttle:10,1')->name('customer.google.callback');
+
 // Autenticación de clientes.
 Route::middleware('guest')->group(function () {
     Route::get('/registro', [CustomerAuthController::class, 'showRegister'])

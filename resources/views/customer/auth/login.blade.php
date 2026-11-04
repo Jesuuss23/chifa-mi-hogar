@@ -22,14 +22,16 @@
             Ingresa para consultar tus pedidos.
         </p>
 
+        @include('customer.auth.google')
+
         <form action="{{ route('customer.login.store') }}"
               method="POST"
               class="mt-6 space-y-4">
             @csrf
 
             <div>
-                <label class="block text-sm font-medium">Correo electrónico</label>
-                <input type="email" name="email" required
+                <label for="email" class="block text-sm font-medium">Correo electrónico</label>
+                <input id="email" type="email" name="email" required
                        value="{{ old('email') }}"
                        autocomplete="email"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
@@ -39,8 +41,8 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium">Contraseña</label>
-                <input type="password" name="password" required
+                <label for="password" class="block text-sm font-medium">Contraseña</label>
+                <input id="password" type="password" name="password" required
                        autocomplete="current-password"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
             </div>

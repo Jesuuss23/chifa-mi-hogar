@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->hasOne(CustomerProfile::class);
     }
 
+    public function socialAccounts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CustomerSocialAccount::class);
+    }
+
     public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Order::class);

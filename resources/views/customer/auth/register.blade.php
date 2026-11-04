@@ -25,6 +25,8 @@
             Regístrate para consultar tus pedidos y valorar tus compras.
         </p>
 
+        @include('customer.auth.google')
+
         <form action="{{ route('customer.register.store') }}"
               method="POST"
               class="mt-6 space-y-4">
@@ -32,8 +34,8 @@
             @include('legal.collection-notice')
 
             <div>
-                <label class="block text-sm font-medium">Nombre</label>
-                <input type="text" name="name" required
+                <label for="name" class="block text-sm font-medium">Nombre</label>
+                <input id="name" type="text" name="name" required
                        value="{{ old('name') }}"
                        autocomplete="name"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
@@ -43,8 +45,8 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium">Correo electrónico</label>
-                <input type="email" name="email" required
+                <label for="email" class="block text-sm font-medium">Correo electrónico</label>
+                <input id="email" type="email" name="email" required
                        value="{{ old('email') }}"
                        autocomplete="email"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
@@ -54,8 +56,8 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium">Contraseña</label>
-                <input type="password" name="password" required
+                <label for="password" class="block text-sm font-medium">Contraseña</label>
+                <input id="password" type="password" name="password" required
                        autocomplete="new-password"
                        minlength="8"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
@@ -65,10 +67,10 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium">
+                <label for="password_confirmation" class="block text-sm font-medium">
                     Confirmar contraseña
                 </label>
-                <input type="password" name="password_confirmation" required
+                <input id="password_confirmation" type="password" name="password_confirmation" required
                        autocomplete="new-password"
                        minlength="8"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
