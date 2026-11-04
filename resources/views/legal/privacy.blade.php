@@ -23,6 +23,9 @@
         @if(\App\Services\GoogleCustomerLogin::enabled())
             <li>Acceso con Google: si eliges esta opción, tu navegador se conecta con Google y recibimos un identificador de tu cuenta, nombre y correo verificado para identificarte. Guardamos la vinculación, pero no tu contraseña de Google ni sus tokens de acceso. Puedes seguir usando el registro directo.</li>
         @endif
+        @if(\App\Services\FacebookCustomerLogin::enabled())
+            <li>Acceso con Facebook / Meta: si eliges esta opción, recibimos un identificador de tu cuenta para esta aplicación, nombre y correo cuando lo compartas. Guardamos la vinculación para identificarte; no guardamos tokens de Facebook ni recibimos tu contraseña, contactos o fotografías. Puedes usar Google o el registro directo si no se comparte un correo válido.</li>
+        @endif
         <li>Google Places: el servidor consulta reseñas del negocio cuando la función está configurada. Abrir enlaces de Google Maps o reseñas conecta tu navegador con Google.</li>
         @if(config('turnstile.enabled', false))
             <li>Cloudflare Turnstile: comprueba solicitudes de registro con datos técnicos del navegador y una verificación del servidor, incluida la IP. Esta función se utiliza para prevenir registros automatizados.</li>
@@ -41,4 +44,12 @@
     <h2 class="text-xl font-bold">Tus derechos</h2>
     <p>Puedes solicitar acceso, rectificación, cancelación u oposición al tratamiento de tus datos y, cuando corresponda, retirar tu consentimiento. Escribe a {{ $settings->privacy_email }} indicando tu solicitud. Podremos pedir la información necesaria para verificar tu identidad.</p>
     <p>También puedes acudir a la Autoridad Nacional de Protección de Datos Personales. La información sobre cookies se encuentra en la página correspondiente. No se solicita autorización para publicidad al realizar un pedido.</p>
+</section>
+
+<section id="eliminar-datos-facebook" class="space-y-3">
+    <h2 class="text-xl font-bold">Solicitar eliminación de datos de Facebook</h2>
+    <p>Para solicitar la eliminación de los datos recibidos mediante Facebook Login de Chifa Mi Hogar, escribe a {{ $settings->privacy_email }} con el asunto «Eliminar datos de Facebook». Indica el correo de tu cuenta en Chifa Mi Hogar y si deseas eliminar solo la vinculación con Facebook o también la cuenta del restaurante. No envíes contraseñas ni tokens.</p>
+    <p>El responsable verificará tu identidad y te informará sobre la atención de la solicitud. La revisión es manual: visitar esta página o quitar la aplicación de Facebook no elimina automáticamente tu cuenta de Chifa Mi Hogar. Antes de quitar la vinculación, conviene disponer de otro método de acceso.</p>
+    <p>La solicitud comprende el identificador vinculado y los datos de perfil recibidos de Facebook. Los datos de pedidos y otros registros se revisarán según las finalidades y los plazos de conservación descritos arriba. Puedes gestionar también la autorización de Chifa Mi Hogar en la sección de aplicaciones y sitios web de tu cuenta de Facebook.</p>
+    <p><a class="underline" rel="noopener noreferrer" href="https://www.facebook.com/privacy/policy/">Política de privacidad de Facebook</a></p>
 </section>

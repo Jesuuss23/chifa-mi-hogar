@@ -121,6 +121,14 @@ Route::post('/mi-cuenta/google', [\App\Http\Controllers\CustomerGoogleAuthContro
 Route::get('/auth/google/callback', [\App\Http\Controllers\CustomerGoogleAuthController::class, 'callback'])
     ->middleware('throttle:10,1')->name('customer.google.callback');
 
+// Facebook is independently configurable and uses its own OAuth session state.
+Route::post('/auth/facebook', [\App\Http\Controllers\CustomerFacebookAuthController::class, 'start'])
+    ->middleware(['guest', 'throttle:5,1'])->name('customer.facebook.start');
+Route::post('/mi-cuenta/facebook', [\App\Http\Controllers\CustomerFacebookAuthController::class, 'start'])
+    ->middleware(['auth', 'customer', 'throttle:5,1'])->name('customer.facebook.link');
+Route::get('/auth/facebook/callback', [\App\Http\Controllers\CustomerFacebookAuthController::class, 'callback'])
+    ->middleware('throttle:10,1')->name('customer.facebook.callback');
+
 // Autenticación de clientes.
 Route::middleware('guest')->group(function () {
     Route::get('/registro', [CustomerAuthController::class, 'showRegister'])

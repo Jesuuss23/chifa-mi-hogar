@@ -22,7 +22,7 @@
             Ingresa para consultar tus pedidos.
         </p>
 
-        @include('customer.auth.google')
+        @include('customer.auth.social')
 
         <form action="{{ route('customer.login.store') }}"
               method="POST"

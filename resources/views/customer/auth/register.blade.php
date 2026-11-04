@@ -25,7 +25,7 @@
             Regístrate para consultar tus pedidos y valorar tus compras.
         </p>
 
-        @include('customer.auth.google')
+        @include('customer.auth.social')
 
         <form action="{{ route('customer.register.store') }}"
               method="POST"

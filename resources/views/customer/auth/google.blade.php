@@ -14,5 +14,4 @@
         </p>
         @include('legal.collection-notice')
     </form>
-    <p class="mt-5 text-center text-sm text-foreground/75">O continúa con tu correo y contraseña</p>
 @endif
