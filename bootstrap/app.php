@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [\App\Http\Middleware\CheckCustomerPasswordVersion::class]);
         $middleware->alias([
             'admin' => EnsureUserIsAdmin::class,
             'customer' => \App\Http\Middleware\EnsureUserIsCustomer::class,

@@ -129,6 +129,18 @@ Route::post('/mi-cuenta/facebook', [\App\Http\Controllers\CustomerFacebookAuthCo
 Route::get('/auth/facebook/callback', [\App\Http\Controllers\CustomerFacebookAuthController::class, 'callback'])
     ->middleware('throttle:10,1')->name('customer.facebook.callback');
 
+
+Route::get('/recuperar-contrasena', [\App\Http\Controllers\CustomerPasswordController::class, 'request'])
+    ->name('customer.password.request');
+Route::post('/recuperar-contrasena', [\App\Http\Controllers\CustomerPasswordController::class, 'email'])
+    ->middleware('throttle:5,1')->name('customer.password.email');
+Route::get('/restablecer-contrasena/{token}', [\App\Http\Controllers\CustomerPasswordController::class, 'form'])
+    ->middleware('guest')->name('customer.password.reset');
+Route::post('/restablecer-contrasena', [\App\Http\Controllers\CustomerPasswordController::class, 'reset'])
+    ->middleware(['guest', 'throttle:5,1'])->name('customer.password.store');
+Route::put('/mi-cuenta/contrasena', [\App\Http\Controllers\CustomerPasswordController::class, 'update'])
+    ->middleware(['auth', 'customer', 'throttle:5,1'])->name('customer.password.update');
+
 // Autenticación de clientes.
 Route::middleware('guest')->group(function () {
     Route::get('/registro', [CustomerAuthController::class, 'showRegister'])

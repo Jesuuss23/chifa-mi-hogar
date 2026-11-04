@@ -22,6 +22,9 @@
             Ingresa para consultar tus pedidos.
         </p>
 
+        @if(session('password_status'))
+            <p role="status" class="mt-4 border border-border p-3">{{ session('password_status') }}</p>
+        @endif
         @include('customer.auth.social')
 
         <form action="{{ route('customer.login.store') }}"
@@ -52,6 +55,7 @@
                 Iniciar sesión
             </button>
         </form>
+        <a href="{{ route('customer.password.request') }}" class="mt-4 inline-block text-primary underline">Olvidé mi contraseña</a>
 
         <p class="mt-6 text-center text-sm">
             ¿No tienes cuenta?
