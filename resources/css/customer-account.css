@@ -1,0 +1,50 @@
+/* Scoped to Mi cuenta; map markup and initialization remain unchanged. */
+.customer-account { min-height:100vh; }
+.customer-account .account-header,
+.customer-account .account-main { width:min(100% - 2rem, 76rem); margin-inline:auto; }
+.customer-account .account-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-block:1.5rem; border-bottom:1px solid var(--border); }
+.customer-account .account-brand { display:flex; align-items:center; gap:.75rem; font-size:.875rem; font-weight:800; line-height:1.15; letter-spacing:.08em; }
+.customer-account .account-brand img { width:3rem; height:3rem; object-fit:contain; }
+.customer-account .account-shop { font-size:.8rem; text-decoration:underline; text-underline-offset:4px; padding-block:.75rem; }
+.customer-account .account-welcome { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.5rem; padding-block:2rem; }
+.customer-account .account-welcome h1 { margin-top:.5rem; font-size:clamp(2rem, 4vw, 3rem); font-weight:800; letter-spacing:-.05em; line-height:1.15; }
+.customer-account .account-eyebrow { font-size:.7rem; letter-spacing:.1em; font-weight:700; }
+.customer-account .account-logout { min-height:3rem; border:1px solid var(--border); padding:.75rem 1rem; font-size:.875rem; }
+.customer-account .account-logout:hover { background:var(--card); }
+.customer-account .account-grid { display:grid; gap:1.5rem; align-items:start; }
+.customer-account .account-sidebar, .customer-account .account-content { min-width:0; }
+.customer-account .account-content { display:grid; gap:1.5rem; }
+.customer-account .account-nav { display:grid; border:1px solid var(--border); background:var(--card); }
+.customer-account .account-nav a { display:flex; align-items:center; gap:.75rem; min-height:3rem; padding:.875rem 1rem; font-size:.875rem; font-weight:600; }
+.customer-account .account-nav a + a { border-top:1px solid var(--border); }
+.customer-account .account-nav a:hover { background:var(--muted); }
+.customer-account .account-nav span { color:var(--primary); font-size:.7rem; }
+.customer-account .account-summary { padding:1.25rem; background:var(--muted); border:1px solid var(--border); border-top:0; }
+.customer-account .account-summary p { overflow-wrap:anywhere; }
+.customer-account .account-orders,
+.customer-account .account-security { padding:1.5rem; background:var(--card); border:1px solid var(--border); }
+.customer-account :where(#account-profile, #account-orders, #account-security) { scroll-margin-top:1rem; }
+.customer-account .account-section-heading { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; }
+.customer-account .account-section-heading h2 { margin-top:.5rem; }
+.customer-account .account-count { border:1px solid var(--border); padding:.5rem .75rem; font-size:.75rem; }
+.customer-account .account-order { display:grid; gap:1rem; margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border); min-width:0; }
+.customer-account .account-order p { overflow-wrap:anywhere; }
+.customer-account .account-order-status { display:inline-block; margin-top:.5rem; padding:.3rem .5rem; background:var(--muted); font-weight:600; }
+.customer-account .account-order-actions { min-width:0; }
+.customer-account .account-rating-option { display:inline-flex; align-items:center; gap:.35rem; cursor:pointer; min-height:3rem; padding:.5rem; border:1px solid var(--border); background:var(--card); }
+.customer-account .account-content input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]),
+.customer-account .account-content textarea { font-size:1rem; }
+.customer-account .account-content button { min-height:3rem; }
+.customer-account .account-notice { margin-bottom:1.5rem; padding:1rem; border:1px solid var(--border); background:var(--muted); }
+.customer-account .account-footer { padding-block:2rem; font-size:.875rem; text-decoration:underline; text-underline-offset:4px; }
+.customer-account .account-skip { position:absolute; left:1rem; top:0; transform:translateY(-150%); padding:1rem; background:var(--card); z-index:1100; }
+.customer-account .account-skip:focus { transform:translateY(0); }
+@media (min-width:64rem) {
+    .customer-account .account-grid { grid-template-columns:16rem minmax(0, 1fr); gap:2rem; }
+    .customer-account .account-sidebar { position:sticky; top:1rem; }
+    .customer-account .account-order { grid-template-columns:minmax(0, .85fr) minmax(0, 1.15fr); }
+}
+@media (max-width:24rem) {
+    .customer-account .account-orders, .customer-account .account-security { padding:1rem; }
+    .customer-account .account-security > section { padding:1rem; }
+}

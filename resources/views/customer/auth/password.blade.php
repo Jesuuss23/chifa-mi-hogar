@@ -13,7 +13,11 @@
 @csrf
 @if($reset)<input type="hidden" name="token" value="{{ $token }}">@endif
 <div><label for="email" class="block text-sm font-semibold">Correo electrónico</label>
-<input id="email" name="email" type="email" required maxlength="255" autocomplete="email" value="{{ old('email', $email ?? auth()- aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" @if($errors->any()) aria-describedby="password-form-errors" @endif>user()?->email ?? '') }}" class="mt-1 w-full border border-input bg-card p-3 text-foreground"></div>
+<input id="email" name="email" type="email" required maxlength="255" autocomplete="email"
+       value="{{ old('email', $email ?? auth()->user()?->email ?? '') }}"
+       class="mt-1 w-full border border-input bg-card p-3 text-foreground"
+       aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
+       @if($errors->any()) aria-describedby="password-form-errors" @endif></div>
 @if($reset)
 <div><label for="password" class="block text-sm font-semibold">Nueva contraseña</label>
 <input id="password" name="password" type="password" required maxlength="255" minlength="8" autocomplete="new-password"  class="mt-1 w-full border border-input bg-card p-3 text-foreground" aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}" @if($errors->any()) aria-describedby="password-form-errors" @endif></div>

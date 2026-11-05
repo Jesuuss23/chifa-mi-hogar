@@ -3,125 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="referrer" content="no-referrer">
     <title>Mi cuenta | Chifa Mi Hogar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="storefront-theme customer-surface min-h-screen bg-background">
-
-    <main class="mx-auto max-w-5xl p-6">
-        <div class="flex flex-wrap items-center justify-between gap-4">
+<body class="storefront-theme customer-surface customer-account">
+    <a href="#account-profile" class="account-skip">Ir a mis datos</a>
+    <header class="account-header">
+        @php($accountLogo = \App\Models\StoreSetting::current()->logoUrl())
+        <a href="{{ route('storefront.index') }}" class="account-brand">
+            @if($accountLogo)<img src="{{ $accountLogo }}" alt="" width="48" height="48">@endif
+            <span>CHIFA<br>MI HOGAR</span>
+        </a>
+        <a href="{{ route('storefront.index') }}" class="account-shop">← Seguir comprando</a>
+    </header>
+    <main class="account-main">
+        <div class="account-welcome">
             <div>
-                <h1 class="text-3xl font-bold text-foreground">
-                    Mi cuenta
-                </h1>
-                <p class="mt-1 text-foreground/75">
-                    Hola, {{ auth()->user()->name }}
-                </p>
+                <p class="account-eyebrow">TU ESPACIO EN CHIFA MI HOGAR</p>
+                <h1>Mi cuenta</h1>
+                <p class="mt-2">Hola, <strong>{{ auth()->user()->name }}</strong></p>
+                <p class="mt-2 text-sm text-foreground/75">Tus datos para la próxima entrega, tus pedidos y tus formas de entrar.</p>
             </div>
-
             <form method="POST" action="{{ route('customer.logout') }}">
                 @csrf
-                <button class="rounded-none border px-4 py-2 hover:bg-card">
-                    Cerrar sesión
-                </button>
+                <button type="submit" class="account-logout">Cerrar sesión</button>
             </form>
         </div>
 
-        @include('customer.profile')
-        @include('customer.google-account')
-        @include('customer.facebook-account')
-        @include('customer.password-account')
-        @include('customer.social-management')
+        @if(session('success'))
+            <p role="status" class="account-notice">{{ session('success') }}</p>
+        @endif
 
-        <div class="mt-8 rounded-none bg-card p-6 shadow-storefront">
-            <h2 class="text-xl font-bold">Mis pedidos</h2>
-
-            @forelse ($orders as $order)
-                <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-b pb-4">
-                    <div>
-                        <p class="font-semibold">{{ $order->code }}</p>
-                        <p class="text-sm text-foreground/75">
-                            {{ $order->created_at->format('d/m/Y H:i') }}
-                        </p>
-                        <p class="text-sm">
-                            Estado: {{ $order->status }}
-                        </p>
-                    </div>
-
-                    <div class="text-right">
-                        <p class="font-bold">
-                            S/ {{ number_format((float) $order->total, 2) }}
-                        </p>
-
-                    @if ($order->status === 'delivered' && ! $order->rating)
-                        <form
-                            action="{{ route('customer.orders.rate', $order) }}"
-                            method="POST"
-                            class="mt-4 rounded-none border border-amber-200 bg-amber-50 p-4"
-                        >
-                            @csrf
-
-                            <p class="mb-2 font-semibold text-foreground">
-                                ¿Cómo estuvo tu pedido?
-                            </p>
-
-                            <div class="flex flex-wrap gap-3">
-                                @for ($star = 1; $star <= 5; $star++)
-                                    <label class="cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="rating"
-                                            value="{{ $star }}"
-                                            required
-                                            class="accent-amber-500"
-                                        >
-                                        <span class="text-sm">{{ $star }} ★</span>
-                                    </label>
-                                @endfor
-                            </div>
-
-                            <textarea
-                                name="comment"
-                                maxlength="1000"
-                                rows="2"
-                                placeholder="Cuéntanos tu experiencia (opcional)"
-                                class="mt-3 w-full rounded-none border border-input bg-card text-foreground p-3"
-                            >{{ old('comment') }}</textarea>
-
-                            @error('rating')
-                                <p class="mt-2 text-sm text-destructive">{{ $message }}</p>
-                            @enderror
-
-                            <button
-                                type="submit"
-                                class="mt-3 rounded-none bg-primary px-5 py-2 font-semibold text-primary-foreground"
-                            >
-                                Enviar valoración
-                            </button>
-                        </form>
-                    @elseif ($order->rating)
-                        <p class="mt-2 text-sm text-green-700">
-                            Ya valoraste este pedido:
-                            {{ $order->rating->rating }} de 5 estrellas.
-                        </p>
-                    @endif
-                    </div>
+        <div class="account-grid">
+            <aside class="account-sidebar" aria-label="Resumen de tu cuenta">
+                <nav aria-label="Secciones de Mi cuenta" class="account-nav">
+                    <a href="#account-profile"><span aria-hidden="true">01</span> Mis datos y entrega</a>
+                    <a href="#account-orders"><span aria-hidden="true">02</span> Mis pedidos</a>
+                    <a href="#account-security"><span aria-hidden="true">03</span> Acceso y seguridad</a>
+                </nav>
+                <div class="account-summary">
+                    <p class="account-eyebrow">CORREO DE TU CUENTA</p>
+                    <p class="mt-2 text-sm">{{ auth()->user()->email }}</p>
+                    <p class="mt-5 account-eyebrow">PARA TU PRÓXIMO PEDIDO</p>
+                    <p class="mt-2 text-sm">Completa o revisa tu dirección. Puedes utilizar otra al comprar.</p>
+                    <a href="#account-profile" class="mt-3 inline-block underline">Revisar mis datos →</a>
                 </div>
-            @empty
-                <p class="mt-5 text-foreground/75">
-                    Todavía no tienes pedidos vinculados a tu cuenta.
-                </p>
-            @endforelse
+            </aside>
+            <div class="account-content">
+                @include('customer.profile')
 
-            <div class="mt-6">
-                {{ $orders->links('pagination.storefront', ['label' => 'Paginación de mis pedidos']) }}
+                @php
+                    $accountStatusLabels = [
+                        'pending' => 'Pedido recibido',
+                        'confirmed' => 'Pedido confirmado',
+                        'preparing' => 'Preparando tu comida',
+                        'on_the_way' => 'En camino',
+                        'delivered' => 'Pedido entregado',
+                        'cancelled' => 'Pedido cancelado',
+                    ];
+                @endphp
+                @include('customer.account-orders')
+
+                <section id="account-security" class="account-security" aria-labelledby="security-title" tabindex="-1">
+                    <div class="account-section-heading">
+                        <div><p class="account-eyebrow">TÚ CONTROLAS EL ACCESO</p><h2 id="security-title" class="text-xl font-bold">Acceso y seguridad</h2></div>
+                    </div>
+                    <p class="mt-3 text-sm text-foreground/75">Gestiona tu contraseña y las cuentas que usas para iniciar sesión.</p>
+                    @include('customer.password-account')
+                    @include('customer.google-account')
+                    @include('customer.facebook-account')
+                    @include('customer.social-management')
+                </section>
             </div>
         </div>
-
-        <a href="{{ route('storefront.index') }}"
-           class="mt-6 inline-block font-medium text-primary">
-            ← Seguir comprando
-        </a>
+        <footer class="account-footer"><a href="{{ route('storefront.index') }}">Volver a la carta →</a></footer>
     </main>
 </body>
 </html>

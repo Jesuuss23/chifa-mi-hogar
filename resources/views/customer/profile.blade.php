@@ -1,8 +1,10 @@
 @php
+    $profileFields = ['name', 'phone', 'delivery_address', 'delivery_reference', 'delivery_latitude', 'delivery_longitude'];
+    $profileErrors = collect($profileFields)->flatMap(fn ($field) => $errors->get($field));
     $hasOldProfileDelivery = collect(['delivery_address', 'delivery_reference', 'delivery_latitude', 'delivery_longitude'])
         ->contains(fn ($field) => session()->hasOldInput($field));
 @endphp
-<section class="mt-8 border border-border bg-card p-5 sm:p-6" aria-labelledby="profile-title">
+<section id="account-profile" tabindex="-1" class="account-profile border border-border bg-card p-5 sm:p-6" aria-labelledby="profile-title">
     <h2 id="profile-title" class="text-xl font-bold">Mis datos y dirección de entrega</h2>
     <p class="mt-2 text-sm text-foreground/75">
         Completa tus datos para usarlos en tus próximos pedidos. Podrás cambiarlos para cada entrega.
@@ -14,12 +16,12 @@
     @endif
 
     @if(session('profile_saved'))
-        <p role="status" class="mt-4 bg-green-50 p-3 text-green-800">Tus datos se guardaron correctamente.</p>
+        <p role="status" class="mt-4 border border-border bg-muted p-3 text-foreground">Tus datos se guardaron correctamente.</p>
     @endif
-    @if($errors->any())
-        <div role="alert" class="mt-4 bg-destructive/10 p-3 text-destructive">
+    @if($profileErrors->isNotEmpty())
+        <div id="profile-errors" role="alert" class="mt-4 bg-destructive/10 p-3 text-destructive">
             <ul class="list-inside list-disc">
-                @foreach($errors->all() as $error)
+                @foreach($profileErrors as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
@@ -34,14 +36,18 @@
                 <label for="profile-name" class="block text-sm font-semibold">Nombre completo</label>
                 <input id="profile-name" name="name" autocomplete="name" required maxlength="150"
                        value="{{ old('name', auth()->user()->name) }}"
-                       class="mt-1 w-full border border-input bg-background p-3">
+                       class="mt-1 w-full border border-input bg-background p-3"
+                       aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}"
+                       @if($errors->has('name')) aria-describedby="profile-errors" @endif>
             </div>
             <div>
                 <label for="profile-phone" class="block text-sm font-semibold">Celular</label>
                 <input id="profile-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national"
                        required pattern="9[0-9]{8}" maxlength="9"
                        value="{{ old('phone', $profile?->phone) }}"
-                       class="mt-1 w-full border border-input bg-background p-3">
+                       class="mt-1 w-full border border-input bg-background p-3"
+                       aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}"
+                       @if($errors->has('phone')) aria-describedby="profile-errors" @endif>
             </div>
         </div>
         <p class="text-sm text-foreground/75">Correo de tu cuenta: {{ auth()->user()->email }}</p>
@@ -50,13 +56,17 @@
             <label for="profile-address" class="block text-sm font-semibold">Dirección predeterminada (opcional)</label>
             <input id="profile-address" name="delivery_address" autocomplete="street-address" maxlength="500"
                    value="{{ old('delivery_address', $hasOldProfileDelivery ? null : $profile?->delivery_address) }}"
-                   class="mt-1 w-full border border-input bg-background p-3">
+                   class="mt-1 w-full border border-input bg-background p-3"
+                       aria-invalid="{{ $errors->has('delivery_address') ? 'true' : 'false' }}"
+                       @if($errors->has('delivery_address')) aria-describedby="profile-errors" @endif>
         </div>
         <div>
             <label for="profile-reference" class="block text-sm font-semibold">Referencia (opcional)</label>
             <input id="profile-reference" name="delivery_reference" maxlength="500"
                    value="{{ old('delivery_reference', $hasOldProfileDelivery ? null : $profile?->delivery_reference) }}"
-                   class="mt-1 w-full border border-input bg-background p-3">
+                   class="mt-1 w-full border border-input bg-background p-3"
+                       aria-invalid="{{ $errors->has('delivery_reference') ? 'true' : 'false' }}"
+                       @if($errors->has('delivery_reference')) aria-describedby="profile-errors" @endif>
         </div>
 
         <p class="text-sm text-foreground/75">
