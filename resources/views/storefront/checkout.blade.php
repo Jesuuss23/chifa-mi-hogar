@@ -37,6 +37,14 @@
     $selectedCashType = old('cash_payment_type', $checkoutDraft['cash_payment_type'] ?? 'exact');
 
     $quote = session('checkout_quote');
+    $errorTargets = [
+        'customer_name' => 'customer_name', 'customer_phone' => 'customer_phone',
+        'customer_email' => 'customer_email', 'delivery_address' => 'delivery_address',
+        'delivery_reference' => 'delivery_reference',
+        'delivery_latitude' => 'btn-select-map', 'delivery_longitude' => 'btn-select-map',
+        'payment_method' => 'payment-section', 'cash_payment_type' => 'cash_payment_type',
+        'cash_received_amount' => 'cash_received_amount', 'customer_notes' => 'customer_notes',
+    ];
     $checkoutDefaults = $checkoutDefaults ?? [];
     // Una dirección editada es un conjunto: nunca mezclar old() parcial con GPS del perfil.
     $hasOldDelivery = collect(['delivery_address', 'delivery_reference', 'delivery_latitude', 'delivery_longitude'])
@@ -93,14 +101,25 @@
 
     @if($errors->any())
         <div
+            id="checkout-errors"
+            tabindex="-1"
             role="alert"
+            aria-labelledby="checkout-errors-title"
             class="mb-6 rounded-none border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
         >
-            <p class="font-bold">Revisa los siguientes datos:</p>
+            <p id="checkout-errors-title" class="font-bold">Revisa los siguientes datos:</p>
 
             <ul class="mt-2 list-inside list-disc space-y-1">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                @foreach($errors->messages() as $field => $messages)
+                    @foreach($messages as $error)
+                        <li>
+                            @if(isset($errorTargets[$field]))
+                                <a class="underline" href="#{{ $errorTargets[$field] }}" data-checkout-error-target="{{ $errorTargets[$field] }}">{{ $error }}</a>
+                            @else
+                                {{ $error }}
+                            @endif
+                        </li>
+                    @endforeach
                 @endforeach
             </ul>
         </div>
@@ -118,7 +137,7 @@
                 </div>
 
                 <div>
-                    <h2 class="font-black text-foreground">
+                    <h2 id="checkout-quote-title" class="font-black text-foreground">
                         Cotización calculada
                     </h2>
 
@@ -128,7 +147,7 @@
                 </div>
             </div>
 
-            <div class="mt-5 space-y-3 text-sm">
+            <div id="checkout-quote-amounts" class="mt-5 space-y-3 text-sm">
                 <div class="flex justify-between gap-3">
                     <span class="text-foreground/75">Productos</span>
                     <span class="font-semibold">
@@ -152,7 +171,7 @@
                 </div>
             </div>
 
-            <p class="mt-3 text-xs leading-5 text-foreground/75">
+            <p id="checkout-quote-notice" role="status" aria-live="polite" class="mt-3 text-xs leading-5 text-foreground/75">
                 Si cambias tu ubicación o tus datos de pago,
                 vuelve a calcular. El total definitivo
                 se verificará al confirmar el pedido.
@@ -447,6 +466,7 @@
 
             <section
                 id="payment-section"
+                tabindex="-1"
                 class="rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6"
             >
 
@@ -999,6 +1019,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('checkout-form');
 
+
+    // BEGIN checkout feedback
+    const errorSummary = document.getElementById('checkout-errors');
+    if (errorSummary) {
+        errorSummary.focus();
+        errorSummary.querySelectorAll('[data-checkout-error-target]').forEach(link => {
+            link.addEventListener('click', event => {
+                const target = document.getElementById(link.dataset.checkoutErrorTarget);
+                // Hidden/disabled payment fields may belong to a previous selection.
+                const visibleTarget = target && !target.disabled && !target.closest('.hidden')
+                    ? target : document.getElementById('payment-section');
+                if (!visibleTarget) return;
+                event.preventDefault();
+                visibleTarget.focus();
+                visibleTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+    }
+
+    const quoteSummary = document.getElementById('checkout-quote-summary');
+    function invalidateDisplayedQuote() {
+        if (!quoteSummary || quoteSummary.dataset.stale === 'true') return;
+        quoteSummary.dataset.stale = 'true';
+        document.getElementById('checkout-quote-amounts').hidden = true;
+        document.getElementById('checkout-quote-title').textContent = 'Vuelve a calcular el delivery';
+        document.getElementById('checkout-quote-notice').textContent =
+            'Cambiaste la entrega o el pago. Calcula nuevamente para revisar el total actualizado.';
+    }
+    const quoteFields = new Set([
+        'delivery_address', 'delivery_latitude', 'delivery_longitude',
+        'payment_method', 'cash_payment_type', 'cash_received_amount',
+    ]);
+    function handleQuoteEdit(event) {
+        if (quoteFields.has(event.target.name)) invalidateDisplayedQuote();
+    }
+    form.addEventListener('input', handleQuoteEdit);
+    form.addEventListener('change', handleQuoteEdit);
+    // END checkout feedback
+
     const paymentInputs = document.querySelectorAll(
         'input[name="payment_method"]'
     );
@@ -1225,7 +1284,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ).addTo(map);
 
         function clearLocationConfirmation() {
-            if (!restoringLocation) markDeliveryEdited();
+            if (!restoringLocation) {
+                markDeliveryEdited();
+                invalidateDisplayedQuote();
+            }
             confirmedLocation = false;
 
             latInput.value = '';
