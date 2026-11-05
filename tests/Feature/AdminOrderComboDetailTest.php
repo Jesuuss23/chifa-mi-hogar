@@ -49,7 +49,7 @@ class AdminOrderComboDetailTest extends TestCase
             'selected_quantity' => 3, 'additional_quantity' => 2,
             'unit_price' => 2.50, 'additional_total' => 5,
         ]);
-        $before = [$order->getAttributes(), $item->getAttributes(), $component->getAttributes()];
+        $before = [$order->fresh()->getAttributes(), $item->fresh()->getAttributes(), $component->fresh()->getAttributes()];
         $response = $this->actingAs(User::factory()->create(['role' => 'admin']))
             ->get(route('admin.orders.show', $order))->assertOk()
             ->assertSee('Componentes seleccionados por combo')
