@@ -79,7 +79,7 @@
             <div
                 id="payment-instructions"
                 class="mt-6 rounded-none border border-green-200 bg-green-50 p-5"
-                @if($order->payment_status === 'verified') hidden @endif
+                @if($order->payment_status === 'verified' || $order->status === 'cancelled') hidden @endif
             >
                 <h2 class="text-lg font-bold text-green-900">
                     Enviar comprobante de pago
@@ -221,10 +221,13 @@
                 Este pedido fue cancelado.
             </div>
 
-            <p class="mt-5 text-xs text-foreground/75">
-                El seguimiento se actualiza automáticamente mientras
-                mantengas esta página abierta.
+            <p id="confirmation-sync-status" role="status" aria-live="polite" class="mt-5 text-xs text-foreground/75">
+                Mostramos el último estado recibido del pedido.
             </p>
+            <button id="confirmation-retry" type="button" class="mt-3 min-h-11 border border-border px-4 py-2 text-sm font-semibold" hidden>
+                Actualizar estado
+            </button>
+            <noscript><p class="mt-3 text-sm">Recarga la página para consultar cambios o abre el enlace privado de seguimiento.</p></noscript>
 
         </section>
         {{-- ENLACE PRIVADO DE SEGUIMIENTO --}}
@@ -390,56 +393,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function refreshOrderStatus() {
-        if (document.hidden) return;
+    @include('storefront.partials.confirmation-polling')
 
-        try {
-            const response = await fetch(
-                @json(route('cart.checkout.status')),
-                {
-                    headers: { 'Accept': 'application/json' },
-                    credentials: 'same-origin',
-                    cache: 'no-store'
-                }
-            );
-
-            if (!response.ok) return;
-            const order = await response.json();
+    updateTracking(@json($order->status));
+    const retry = document.getElementById('confirmation-retry');
+    retry.hidden = false;
+    createConfirmationPolling({
+        url: @json(route('orders.tracking.status', ['token' => $order->tracking_token])),
+        initialStatus: @json($order->status),
+        feedback: document.getElementById('confirmation-sync-status'),
+        retry,
+        env: {
+            document, window, navigator, fetch: window.fetch.bind(window),
+            AbortController, setTimeout, clearTimeout,
+        },
+        apply(order) {
             updateTracking(order.status);
-            if (statusElement) {
-                statusElement.textContent =
-                    labels[order.status] ?? 'En seguimiento';
-            }
-
+            if (statusElement) statusElement.textContent = labels[order.status];
             const paymentBox = document.getElementById('payment-instructions');
             const verifiedBox = document.getElementById('payment-verified');
-
-            if (order.payment_status === 'verified') {
-                if (paymentBox) {
-                    paymentBox.hidden = true;
-                }
-
-                if (verifiedBox) {
-                    verifiedBox.hidden = false;
-                }
-            } else {
-                if (paymentBox) {
-                    paymentBox.hidden = false;
-                }
-
-                if (verifiedBox) {
-                    verifiedBox.hidden = true;
-                }
-            }
-
-        } catch (error) {
-            console.warn('No se pudo actualizar el seguimiento.');
-        }
-    }
-    updateTracking(@json($order->status));
-    refreshOrderStatus();
-
-    setInterval(refreshOrderStatus, 15000);
+            if (paymentBox) paymentBox.hidden = order.payment_status === 'verified' || order.status === 'cancelled';
+            if (verifiedBox) verifiedBox.hidden = order.payment_status !== 'verified';
+        },
+    });
 });
 </script>
 @endsection
