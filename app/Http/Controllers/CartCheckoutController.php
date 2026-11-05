@@ -16,6 +16,7 @@ class CartCheckoutController extends Controller
     public function show(Request $request, CartCheckoutService $cart)
     {
         if (empty($request->session()->get('cart', []))) {
+            $request->session()->forget(\App\Services\CheckoutAuthDraft::KEY);
             return redirect()->route('cart.index');
         }
 
@@ -26,7 +27,11 @@ class CartCheckoutController extends Controller
         );
         $checkoutDefaults = app(\App\Services\CustomerCheckoutDefaults::class)->forUser($request->user());
 
-        return view('storefront.checkout', compact('checkoutDefaults'));
+        $drafts = app(\App\Services\CheckoutAuthDraft::class);
+        $checkoutDraft = $drafts->restore($request);
+        $draftHasDelivery = $drafts->hasDelivery($checkoutDraft);
+        $checkoutDefaults = $drafts->defaults($checkoutDefaults, $checkoutDraft);
+        return view('storefront.checkout', compact('checkoutDefaults', 'checkoutDraft', 'draftHasDelivery'));
         
     }
 
@@ -35,6 +40,7 @@ class CartCheckoutController extends Controller
         CartCheckoutService $cart,
         OrderService $orders
     ) {
+        $request->session()->forget(\App\Services\CheckoutAuthDraft::KEY);
         $data = $this->validatedData($request);
 
         $data['items'] = $cart->items(
@@ -85,6 +91,7 @@ class CartCheckoutController extends Controller
             $request->session()->forget([
                 'cart',
                 'checkout_token',
+                \App\Services\CheckoutAuthDraft::KEY,
             ]);
 
             return redirect()->route('cart.checkout.success');
@@ -120,6 +127,7 @@ class CartCheckoutController extends Controller
         $request->session()->forget([
             'cart',
             'checkout_token',
+            \App\Services\CheckoutAuthDraft::KEY,
         ]);
 
         // 10. Mostrar la pantalla de confirmación.

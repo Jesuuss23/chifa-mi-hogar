@@ -8,7 +8,7 @@ Carrito y checkout_token permanecen en la sesión al regenerar su identificador.
 
 Los errores de login, cancelación OAuth y cambio entre entrar/registrarse mantienen el contexto para reintentar. Volver a una página de acceso sin parámetro conserva un contexto vigente; un parámetro continue explícito no permitido lo descarta. Un nuevo ingreso desde checkout reinicia el plazo.
 
-No guarda un borrador de campos sin enviar. La pantalla lo advierte y ofrece identificación antes de completar entrega/pago. Al volver, el controlador existente aplica los datos del cliente y el perfil guardado. No cambia cotización, disponibilidad, confirmación/idempotencia, importes ni APIs.
+Los botones del checkout ahora envían los campos a un borrador temporal antes de abrir el acceso. Al volver se combinan con el perfil sin mezclar direcciones y coordenadas. Ver docs/checkout-auth-draft.md. El acceso directo fuera del checkout no crea borradores. No cambia cotización, disponibilidad, confirmación/idempotencia, importes ni APIs.
 
 ## Validación
 
@@ -23,8 +23,8 @@ php artisan view:clear
 
 Sin migraciones ni dependencias nuevas. CustomerCheckoutReturnTest cubre contraseña/registro, ambos proveedores, cancelaciones, vinculación, errores, contexto inválido/vencido, carrito vacío y destino fijo.
 
-En el entorno actual hay Node, pero no PHP/Composer, así que no se ejecutó PHPUnit ni compilación Blade. Revisión estática realizada; los proveedores se simulan en las pruebas y requieren comprobación real. No se realizó una compra en producción.
+En la entrega original había Node, pero no PHP/Composer, así que no se ejecutó PHPUnit ni compilación Blade. Revisión estática realizada; los proveedores se simulan en las pruebas y requieren comprobación real. No se realizó una compra en producción.
 
 Probar con un carrito real de platos/combos: iniciar sesión desde checkout, verificar contenido y datos guardados, editar dirección para este pedido y cotizar. Repetir con Google/Facebook y registro nuevo. Confirmar que el invitado puede seguir sin cuenta. Probar cancelación social y volver sin identificarse. Verificar que iniciar sesión normalmente sigue llevando a Mi cuenta.
 
-Siguiente revisión: continuidad del borrador de entrega y presentación de errores/cotización; esta entrega no promete conservar texto sin enviar.
+La continuidad del borrador se incorpora en docs/checkout-auth-draft.md. Siguiente revisión: presentación de errores y cotización.

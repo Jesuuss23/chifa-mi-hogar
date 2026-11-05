@@ -22,7 +22,9 @@
 
     $yapeAvailable = filled($yapeNumber) || filled($qrUrl);
 
-    $selectedPayment = old('payment_method', 'cash');
+    $checkoutDraft = $checkoutDraft ?? [];
+    $draftHasDelivery = $draftHasDelivery ?? false;
+    $selectedPayment = old('payment_method', $checkoutDraft['payment_method'] ?? 'cash');
 
     if (!in_array($selectedPayment, ['cash', 'yape'], true)) {
         $selectedPayment = 'cash';
@@ -32,7 +34,7 @@
         $selectedPayment = 'cash';
     }
 
-    $selectedCashType = old('cash_payment_type', 'exact');
+    $selectedCashType = old('cash_payment_type', $checkoutDraft['cash_payment_type'] ?? 'exact');
 
     $quote = session('checkout_quote');
     $checkoutDefaults = $checkoutDefaults ?? [];
@@ -40,7 +42,7 @@
     $hasOldDelivery = collect(['delivery_address', 'delivery_reference', 'delivery_latitude', 'delivery_longitude'])
         ->contains(fn ($field) => session()->hasOldInput($field));
     $deliveryDefaults = $hasOldDelivery ? [] : $checkoutDefaults;
-    $usingSavedDelivery = !$hasOldDelivery && filled($checkoutDefaults['delivery_address'] ?? null);
+    $usingSavedDelivery = !$hasOldDelivery && !$draftHasDelivery && filled($checkoutDefaults['delivery_address'] ?? null);
 @endphp
 
 @section('content')
@@ -75,13 +77,17 @@
             <h2 id="checkout-access-title" class="font-bold">¿Ya tienes una cuenta?</h2>
             <p class="mt-2 text-sm text-foreground/75">Antes de completar tus datos, puedes iniciar sesión para usar tu información guardada. Volverás aquí con tu carrito.</p>
             <div class="mt-3 flex flex-wrap gap-3">
-                <a class="inline-flex min-h-12 items-center border border-primary px-4 py-3 font-semibold text-primary" href="{{ route('login', ['continue' => 'checkout']) }}">Iniciar sesión y volver al pedido</a>
-                <a class="inline-flex min-h-12 items-center border border-border px-4 py-3" href="{{ route('customer.register', ['continue' => 'checkout']) }}">Crear cuenta</a>
+                <button class="inline-flex min-h-12 items-center border border-primary px-4 py-3 font-semibold text-primary" type="submit" form="checkout-form" formmethod="POST" formnovalidate data-checkout-auth="true" formaction="{{ route('cart.checkout.access', 'login') }}">Iniciar sesión y volver al pedido</button>
+                <button class="inline-flex min-h-12 items-center border border-border px-4 py-3" type="submit" form="checkout-form" formmethod="POST" formnovalidate data-checkout-auth="true" formaction="{{ route('cart.checkout.access', 'register') }}">Crear cuenta</button>
                 <a class="inline-flex min-h-12 items-center px-4 py-3 underline" href="#checkout-form">Continuar como invitado</a>
             </div>
-            <p class="mt-2 text-xs text-foreground/75">Si ya escribiste datos sin enviarlos, tendrás que completarlos de nuevo al volver.</p>
+            <p class="mt-2 text-xs text-foreground/75">Al continuar guardaremos lo que escribiste durante 30 minutos, solo para este pedido. Revisa los datos y vuelve a cotizar al regresar.</p>
         </section>
     @endguest
+
+    @if($checkoutDraft)
+        <p role="status" class="mb-6 border border-border bg-card p-4 text-sm">Recuperamos los datos que guardaste antes de identificarte. Revisa la dirección y el punto del mapa; vuelve a calcular el delivery antes de confirmar.</p>
+    @endif
 
     {{-- ERRORES --}}
 
@@ -303,7 +309,7 @@
                             <p id="saved-delivery-notice" role="status" class="text-sm">
                                 {{ $usingSavedDelivery
                                     ? 'Esta es la dirección y ubicación guardadas en tu cuenta. Revísalas antes de pedir.'
-                                    : 'Estás revisando la dirección de este pedido. Tu dirección guardada no cambia.' }}
+                                    : 'Estás revisando la dirección de este pedido. Estos cambios no actualizan tu perfil.' }}
                             </p>
                             <button type="button" id="edit-order-delivery"
                                     class="mt-3 border border-primary px-3 py-2 text-sm font-bold text-primary">
@@ -588,7 +594,7 @@
                                 inputmode="decimal"
                                 min="0"
                                 step="0.01"
-                                value="{{ old('cash_received_amount') }}"
+                                value="{{ old('cash_received_amount', $checkoutDraft['cash_received_amount'] ?? null) }}"
                                 placeholder="50.00"
                                 class="w-full rounded-none border border-border bg-card py-3 pl-11 pr-4 text-sm focus:border-primary focus:outline-none"
                             >
@@ -770,7 +776,7 @@
                     maxlength="1000"
                     placeholder="Escribe aquí tus indicaciones..."
                     class="mt-4 w-full resize-y rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                >{{ old('customer_notes') }}</textarea>
+                >{{ old('customer_notes', $checkoutDraft['customer_notes'] ?? null) }}</textarea>
 
             </section>
 
@@ -1402,6 +1408,13 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', event => {
         if (submitting) {
             event.preventDefault();
+            return;
+        }
+
+        if (event.submitter?.dataset.checkoutAuth === 'true') {
+            submitting = true;
+            // Keep enabled so native form submission preserves the button's formaction.
+            event.submitter.textContent = 'Guardando datos...';
             return;
         }
 

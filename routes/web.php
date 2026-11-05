@@ -354,3 +354,7 @@ Route::middleware(['auth', 'customer'])->group(function () {
     Route::delete('/mi-cuenta/foto', [\App\Http\Controllers\CustomerAvatarController::class, 'destroy'])
         ->middleware('throttle:5,1')->name('customer.avatar.destroy');
 });
+
+Route::post('/carrito/checkout/acceso/{destination}', [\App\Http\Controllers\CheckoutAuthDraftController::class, 'store'])
+    ->whereIn('destination', ['login', 'register'])
+    ->middleware(['guest', 'throttle:10,1'])->name('cart.checkout.access');
