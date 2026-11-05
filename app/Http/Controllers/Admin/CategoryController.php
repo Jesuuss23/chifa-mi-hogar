@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
-use App\Services\CatalogSlugService;
+use App\Services\CategoryOrderService;
 use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
@@ -24,7 +24,7 @@ class CategoryController extends Controller
     public function create()
     {
         return view('admin.categories.form', [
-            'category' => new Category(),
+            'category' => new Category(['sort_order' => app(CategoryOrderService::class)->suggestedOrder()]),
         ]);
     }
 
@@ -41,7 +41,7 @@ class CategoryController extends Controller
                 ->upload($request->file('image'))->id;
         }
 
-        app(CatalogSlugService::class)->create(Category::class, $data);
+        app(CategoryOrderService::class)->save($data);
 
         return redirect()
             ->route('admin.categories.index')
@@ -71,7 +71,7 @@ class CategoryController extends Controller
                 ->upload($request->file('image'))->id;
         }
 
-        $category->update($data);
+        app(CategoryOrderService::class)->save($data, $category);
 
         return redirect()
             ->route('admin.categories.index')
@@ -103,7 +103,7 @@ class CategoryController extends Controller
                     ->whereNull('deleted_at'),
             ],
             'description' => ['nullable', 'string', 'max:1000'],
-            'sort_order' => ['required', 'integer', 'min:0'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:2147483647'],
             'is_active' => ['sometimes', 'boolean'],
             'image' => [
                 $category?->media_asset_id ? 'nullable' : 'required',

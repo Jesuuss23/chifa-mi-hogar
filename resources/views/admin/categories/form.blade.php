@@ -54,9 +54,15 @@
 
         <div>
             <label for="admin-categories-sort_order" class="mb-2 block font-medium">Orden</label>
-            <input id="admin-categories-sort_order" name="sort_order" type="number" min="0" required
+            <input id="admin-categories-sort_order" name="sort_order" type="number" min="0" max="2147483647" step="1" required
                    value="{{ old('sort_order', $category->sort_order ?? 0) }}"
+                   aria-describedby="category-order-help"
                    class="w-full rounded-none border p-3">
+            <p id="category-order-help" class="mt-1 text-xs text-foreground/75">
+                Los números menores aparecen primero. Al asignar una posición nueva, elige un número libre;
+                las categorías inactivas también reservan su orden. No se desplazan otras categorías automáticamente.
+            </p>
+            @error('sort_order') <p role="alert" class="mt-1 text-sm text-destructive">{{ $message }}</p> @enderror
         </div>
 
         <input type="hidden" name="is_active" value="0">
