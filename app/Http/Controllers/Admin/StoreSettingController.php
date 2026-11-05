@@ -17,7 +17,12 @@ class StoreSettingController extends Controller
     {
         $settings = StoreSetting::current()->load(['paymentQr', 'logo']);
 
-        return view('admin.settings.edit', compact('settings'));
+        $shareImages = app(\App\Services\BrandShareImageService::class);
+        $brandPreviewUrl = route('brand.share-image', [
+            'v' => $shareImages->version($shareImages->source($settings)),
+        ]);
+
+        return view('admin.settings.edit', compact('settings', 'brandPreviewUrl'));
     }
 
     public function update(

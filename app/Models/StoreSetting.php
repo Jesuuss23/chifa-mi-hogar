@@ -91,16 +91,24 @@ class StoreSetting extends Model
             : null;
     }
 
+    public function missingLegalFields(): array
+    {
+        $fields = [
+            'business_owner' => 'Titular del negocio',
+            'privacy_email' => 'Correo de privacidad y contacto',
+            'website_url' => 'Sitio web oficial',
+            'legal_address' => 'Domicilio del responsable',
+            'privacy_hosting' => 'Alojamiento y otros encargados',
+            'privacy_retention' => 'Conservación y eliminación',
+            'privacy_database' => 'Bancos de datos personales',
+        ];
+
+        return array_filter($fields, fn ($label, $field) => ! filled($this->$field), ARRAY_FILTER_USE_BOTH);
+    }
+
     public function legalPagesAvailable(): bool
     {
-        return (bool) $this->legal_pages_published
-            && filled($this->business_owner)
-            && filled($this->privacy_email)
-            && filled($this->website_url)
-            && filled($this->legal_address)
-            && filled($this->privacy_hosting)
-            && filled($this->privacy_retention)
-            && filled($this->privacy_database);
+        return (bool) $this->legal_pages_published && $this->missingLegalFields() === [];
     }
 
     public static function current(): self

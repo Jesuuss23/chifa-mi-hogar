@@ -1,6 +1,24 @@
 <section class="mb-6 rounded-none border bg-card p-6 shadow-storefront" aria-labelledby="legal-heading">
     <h2 id="legal-heading" class="text-xl font-bold">Aviso legal, privacidad y cookies</h2>
     <p class="mt-2 text-sm text-foreground/75">Completa datos reales del negocio antes de publicar. Puedes guardar un borrador y revisarlo.</p>
+    @php($missingLegalFields = $settings->missingLegalFields())
+    <div id="legal-publication-status" role="status" class="mt-4 border border-border bg-muted p-4">
+        @if($settings->legalPagesAvailable())
+            <p class="font-semibold">Páginas informativas publicadas</p>
+            <p class="mt-1 text-sm">Las tres páginas y sus enlaces están disponibles para los visitantes.</p>
+        @elseif($missingLegalFields)
+            <p class="font-semibold">Páginas informativas no disponibles: faltan datos guardados</p>
+            <ul class="mt-2 list-inside list-disc text-sm">
+                @foreach($missingLegalFields as $field => $label)
+                    <li><a class="underline" href="#{{ $field }}">{{ $label }}</a></li>
+                @endforeach
+            </ul>
+        @else
+            <p class="font-semibold">Borrador completo, pendiente de publicación</p>
+            <p class="mt-1 text-sm">Revisa las vistas previas y los datos reales antes de activar la publicación.</p>
+        @endif
+        <p class="mt-2 text-xs text-foreground/75">Este estado refleja lo guardado, no los cambios que todavía estás escribiendo.</p>
+    </div>
     <nav class="my-4 flex flex-wrap gap-4" aria-label="Vistas previas legales">
         @foreach(['notice' => 'Aviso legal', 'privacy' => 'Privacidad', 'cookies' => 'Cookies'] as $page => $label)
             <a class="font-semibold text-primary underline" href="{{ route('admin.legal.preview', $page) }}">Vista previa: {{ $label }}</a>

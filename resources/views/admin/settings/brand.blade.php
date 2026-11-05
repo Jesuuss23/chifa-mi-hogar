@@ -55,8 +55,16 @@
         </div>
         <p class="text-sm text-foreground/75">
             El logo también se usa en la imagen al compartir la carta.
-            <a class="font-semibold underline" href="{{ route('brand.share-image') }}" target="_blank" rel="noopener noreferrer">Ver imagen para compartir</a>
+            <a class="font-semibold underline" href="{{ $brandPreviewUrl }}" target="_blank" rel="noopener noreferrer">Ver imagen para compartir</a>
         </p>
+        <figure class="border border-border bg-muted p-3">
+            <img src="{{ $brandPreviewUrl }}" alt="Vista previa de la imagen de Chifa Mi Hogar para compartir"
+                 width="1200" height="630" loading="lazy" class="h-auto w-full max-w-xl">
+            <figcaption class="mt-2 text-xs text-foreground/75">
+                Imagen con el logo guardado. Guarda identidad para ver los cambios.
+                Si falta un logo válido, se utiliza la tarjeta de marca predeterminada.
+            </figcaption>
+        </figure>
         <button type="submit" class="rounded-none bg-primary px-6 py-3 font-semibold text-primary-foreground hover:bg-primary/90">
             Guardar identidad
         </button>
