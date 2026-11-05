@@ -27,6 +27,12 @@
                     <a href="{{ route('customer.register') }}" @if(request()->routeIs('customer.register')) aria-current="page" @endif>Crear cuenta</a>
                 </nav>
             @endif
+            @if(app(\App\Services\CustomerCheckoutReturn::class)->active(request()))
+                <div class="mt-4 border border-border bg-muted p-4 text-sm">
+                    <p>Después de ingresar o crear tu cuenta, volverás a tu pedido. Tu carrito se conserva.</p>
+                    <a class="mt-2 inline-block font-semibold underline" href="{{ route('cart.checkout') }}">Volver al pedido sin iniciar sesión</a>
+                </div>
+            @endif
             @yield('content')
         </section>
         <aside class="auth-story" aria-labelledby="auth-story-title">

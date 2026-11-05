@@ -70,6 +70,19 @@
         </p>
     </div>
 
+    @guest
+        <section class="mb-6 border border-border bg-card p-5" aria-labelledby="checkout-access-title">
+            <h2 id="checkout-access-title" class="font-bold">¿Ya tienes una cuenta?</h2>
+            <p class="mt-2 text-sm text-foreground/75">Antes de completar tus datos, puedes iniciar sesión para usar tu información guardada. Volverás aquí con tu carrito.</p>
+            <div class="mt-3 flex flex-wrap gap-3">
+                <a class="inline-flex min-h-12 items-center border border-primary px-4 py-3 font-semibold text-primary" href="{{ route('login', ['continue' => 'checkout']) }}">Iniciar sesión y volver al pedido</a>
+                <a class="inline-flex min-h-12 items-center border border-border px-4 py-3" href="{{ route('customer.register', ['continue' => 'checkout']) }}">Crear cuenta</a>
+                <a class="inline-flex min-h-12 items-center px-4 py-3 underline" href="#checkout-form">Continuar como invitado</a>
+            </div>
+            <p class="mt-2 text-xs text-foreground/75">Si ya escribiste datos sin enviarlos, tendrás que completarlos de nuevo al volver.</p>
+        </section>
+    @endguest
+
     {{-- ERRORES --}}
 
     @if($errors->any())

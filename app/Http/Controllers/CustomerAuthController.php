@@ -13,8 +13,9 @@ use Illuminate\Validation\ValidationException;
 
 class CustomerAuthController extends Controller
 {
-    public function showRegister()
+    public function showRegister(Request $request)
     {
+        app(\App\Services\CustomerCheckoutReturn::class)->capture($request);
         return view('customer.auth.register');
     }
 
@@ -55,11 +56,12 @@ class CustomerAuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('customer.account');
+        return redirect()->route(app(\App\Services\CustomerCheckoutReturn::class)->destination($request) ?? 'customer.account');
     }
 
-    public function showLogin()
+    public function showLogin(Request $request)
     {
+        app(\App\Services\CustomerCheckoutReturn::class)->capture($request);
         return view('customer.auth.login');
     }
 
@@ -89,7 +91,8 @@ class CustomerAuthController extends Controller
 
         $limiter->clear($request, $credentials['email']);
 
-        return redirect()->intended(route('customer.account'));
+        $destination = app(\App\Services\CustomerCheckoutReturn::class)->destination($request);
+        return $destination ? redirect()->route($destination) : redirect()->intended(route('customer.account'));
     }
 
     public function logout(Request $request)

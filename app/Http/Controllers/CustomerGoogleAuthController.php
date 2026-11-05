@@ -73,8 +73,11 @@ class CustomerGoogleAuthController extends Controller
 
         Auth::login($user);
         $request->session()->regenerate();
-        // A fixed local destination avoids accepting return URLs from OAuth input.
-        return $this->privateResponse(redirect()->route('customer.account')
+        // Linking stays in Mi cuenta; checkout returns use server-selected routes only.
+        $destination = $pending['user_id'] === null
+            ? (app(\App\Services\CustomerCheckoutReturn::class)->destination($request) ?? 'customer.account')
+            : 'customer.account';
+        return $this->privateResponse(redirect()->route($destination)
             ->with('google_status', $pending['user_id'] === null
                 ? 'Ingresaste con Google. Completa tus datos de entrega para tu próximo pedido.'
                 : 'Tu cuenta de Google quedó vinculada.'));
