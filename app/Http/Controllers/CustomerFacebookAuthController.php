@@ -31,6 +31,7 @@ class CustomerFacebookAuthController extends Controller
         $request->session()->put('facebook_login', [
             'state' => $state,
             'created_at' => now()->timestamp, 'user_id' => $linkUserId,
+            'access_version' => $request->user() ? (int) $request->user()->password_version : null,
         ]);
 
         return $this->privateResponse(redirect()->away($facebook->authorizationUrl($state)));
@@ -61,7 +62,8 @@ class CustomerFacebookAuthController extends Controller
 
         try {
             $profile = $facebook->profile($code);
-            $user = $facebook->resolve($profile, $pending['user_id']);
+            $user = $facebook->resolve($profile, $pending['user_id'],
+                $pending['access_version'] ?? ($request->user() ? (int) $request->user()->password_version : null));
         } catch (ValidationException $error) {
             return $failure($error->errors()['facebook'][0]);
         } catch (UniqueConstraintViolationException) {

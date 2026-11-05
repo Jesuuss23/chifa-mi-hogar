@@ -32,6 +32,7 @@ class CustomerGoogleAuthController extends Controller
         $request->session()->put('google_login', [
             'state' => $state, 'verifier' => $verifier,
             'created_at' => now()->timestamp, 'user_id' => $linkUserId,
+            'access_version' => $request->user() ? (int) $request->user()->password_version : null,
         ]);
 
         return $this->privateResponse(redirect()->away($google->authorizationUrl($state, $verifier)));
@@ -62,7 +63,8 @@ class CustomerGoogleAuthController extends Controller
 
         try {
             $profile = $google->profile($code, $pending['verifier']);
-            $user = $google->resolve($profile, $pending['user_id']);
+            $user = $google->resolve($profile, $pending['user_id'],
+                $pending['access_version'] ?? ($request->user() ? (int) $request->user()->password_version : null));
         } catch (ValidationException $error) {
             return $failure($error->errors()['google'][0]);
         } catch (UniqueConstraintViolationException) {

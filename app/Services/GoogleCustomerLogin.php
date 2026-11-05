@@ -75,15 +75,19 @@ class GoogleCustomerLogin
         }
     }
 
-    public function resolve(array $profile, ?int $linkUserId): User
+    public function resolve(array $profile, ?int $linkUserId, ?int $accessVersion = null): User
     {
-        return DB::transaction(function () use ($profile, $linkUserId) {
+        return DB::transaction(function () use ($profile, $linkUserId, $accessVersion) {
             $identity = DB::table('customer_social_accounts')
                 ->where('provider', 'google')->where('provider_id', $profile['id'])->first();
 
             if ($identity) {
                 $user = User::query()->lockForUpdate()->find($identity->user_id);
                 if (! $user || $user->role !== 'customer'
+                    || ($linkUserId !== null && $accessVersion !== null && (int) $user->password_version !== $accessVersion)
+                    || ! DB::table('customer_social_accounts')->where('id', $identity->id)
+                        ->where('user_id', $user->id)->where('provider', 'google')
+                        ->where('provider_id', $profile['id'])->exists()
                     || ($linkUserId !== null && $user->id !== $linkUserId)) {
                     $this->reject();
                 }
@@ -93,6 +97,7 @@ class GoogleCustomerLogin
             if ($linkUserId !== null) {
                 $user = User::query()->lockForUpdate()->find($linkUserId);
                 if (! $user || $user->role !== 'customer'
+                    || ($linkUserId !== null && $accessVersion !== null && (int) $user->password_version !== $accessVersion)
                     || Str::lower($user->email) !== $profile['email']
                     || DB::table('customer_social_accounts')->where('user_id', $user->id)
                         ->where('provider', 'google')->exists()) {

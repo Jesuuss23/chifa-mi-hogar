@@ -31,6 +31,7 @@
         @include('customer.google-account')
         @include('customer.facebook-account')
         @include('customer.password-account')
+        @include('customer.social-management')
 
         <div class="mt-8 rounded-none bg-card p-6 shadow-storefront">
             <h2 class="text-xl font-bold">Mis pedidos</h2>

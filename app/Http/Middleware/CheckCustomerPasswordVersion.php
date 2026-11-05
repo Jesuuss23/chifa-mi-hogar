@@ -21,7 +21,7 @@ class CheckCustomerPasswordVersion
             if ($cart !== null) {
                 $request->session()->put('cart', $cart);
             }
-            return redirect()->route('login')->with('password_status', 'Tu contraseña cambió. Inicia sesión nuevamente.');
+            return redirect()->route('login')->with('password_status', 'Los métodos de acceso de tu cuenta cambiaron. Inicia sesión nuevamente.');
         }
 
         $response = $next($request);

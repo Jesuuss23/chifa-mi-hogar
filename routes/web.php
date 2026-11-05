@@ -342,3 +342,6 @@ Route::prefix('repartidor')
             ->name('gps.stop');
         });
     });
+Route::delete('/mi-cuenta/accesos/{provider}', [\App\Http\Controllers\CustomerSocialAccountController::class, 'destroy'])
+    ->whereIn('provider', ['google', 'facebook'])
+    ->middleware(['auth', 'customer', 'throttle:5,1'])->name('customer.social.destroy');
