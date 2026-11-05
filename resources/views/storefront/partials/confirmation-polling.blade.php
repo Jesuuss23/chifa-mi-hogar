@@ -1,4 +1,4 @@
-function createConfirmationPolling({ url, initialStatus, apply, feedback, retry, env }) {
+function createConfirmationPolling({ url, initialStatus, apply, feedback, retry, env, onUnavailable = () => {} }) {
     const { document, window, navigator, fetch, AbortController, setTimeout, clearTimeout } = env;
     const statuses = ['pending', 'confirmed', 'preparing', 'on_the_way', 'delivered', 'cancelled'];
     let status = initialStatus;
@@ -22,6 +22,7 @@ function createConfirmationPolling({ url, initialStatus, apply, feedback, retry,
         stopped = true;
         clearTimeout(timer);
         timer = null;
+        onUnavailable();
         request?.abort();
         retry.hidden = true;
     }
@@ -30,6 +31,7 @@ function createConfirmationPolling({ url, initialStatus, apply, feedback, retry,
         clearTimeout(timer);
         timer = null;
         if (navigator.onLine === false) {
+            onUnavailable();
             message('Sin conexión. Conservamos el último estado; actualizaremos cuando vuelvas a conectarte.');
             return;
         }
@@ -66,6 +68,7 @@ function createConfirmationPolling({ url, initialStatus, apply, feedback, retry,
             }
         } catch (error) {
             if (!stopped) {
+                onUnavailable();
                 failures = Math.min(failures + 1, 3);
                 message('No pudimos actualizar. Conservamos el último estado y volveremos a intentarlo.');
             }
@@ -80,6 +83,7 @@ function createConfirmationPolling({ url, initialStatus, apply, feedback, retry,
     retry.addEventListener('click', refresh);
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
+            onUnavailable();
             clearTimeout(timer);
             timer = null;
         } else {
@@ -88,6 +92,7 @@ function createConfirmationPolling({ url, initialStatus, apply, feedback, retry,
     });
     window.addEventListener('online', refresh);
     window.addEventListener('offline', () => {
+        onUnavailable();
         clearTimeout(timer);
         timer = null;
         if (!stopped) message('Sin conexión. Conservamos el último estado; actualizaremos cuando vuelvas a conectarte.');
