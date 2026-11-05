@@ -14,39 +14,48 @@ class OrderRatingController extends Controller
 {
     public function store(Request $request, Order $order): RedirectResponse
     {
-        $data = $request->validate([
-            'rating' => ['required', 'integer', 'between:1,5'],
-            'comment' => ['nullable', 'string', 'max:1000'],
-        ]);
+        // Bind validation feedback to the route order, never to a submitted identifier.
+        $request->merge(['rating_order_id' => (string) $order->id]);
 
-        DB::transaction(function () use ($request, $order, $data) {
-
-            $order = Order::query()
-                ->whereKey($order->id)
-                ->where('user_id', $request->user()->id)
-                // Serialize submissions for this order before checking its rating.
-                ->lockForUpdate()
-                ->firstOrFail();
-
-            if ($order->status !== 'delivered') {
-                throw ValidationException::withMessages([
-                    'rating' => 'Solo puedes valorar pedidos entregados.',
-                ]);
-            }
-
-            if ($order->rating()->exists()) {
-                throw ValidationException::withMessages([
-                    'rating' => 'Este pedido ya fue valorado.',
-                ]);
-            }
-
-            OrderRating::create([
-                'user_id' => $request->user()->id,
-                'order_id' => $order->id,
-                'rating' => $data['rating'],
-                'comment' => $data['comment'] ?? null,
+        try {
+            $data = $request->validate([
+                'rating' => ['required', 'integer', 'between:1,5'],
+                'comment' => ['nullable', 'string', 'max:1000'],
             ]);
-        }, 3);
+
+            DB::transaction(function () use ($request, $order, $data) {
+
+                $order = Order::query()
+                    ->whereKey($order->id)
+                    ->where('user_id', $request->user()->id)
+                    // Serialize submissions for this order before checking its rating.
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                if ($order->status !== 'delivered') {
+                    throw ValidationException::withMessages([
+                        'rating' => 'Solo puedes valorar pedidos entregados.',
+                    ]);
+                }
+
+                if ($order->rating()->exists()) {
+                    throw ValidationException::withMessages([
+                        'rating' => 'Este pedido ya fue valorado.',
+                    ]);
+                }
+
+                OrderRating::create([
+                    'user_id' => $request->user()->id,
+                    'order_id' => $order->id,
+                    'rating' => $data['rating'],
+                    'comment' => $data['comment'] ?? null,
+                ]);
+            }, 3);
+
+        } catch (ValidationException $exception) {
+            $exception->errorBag = 'orderRating'.$order->id;
+            throw $exception;
+        }
 
         return redirect()
             ->route('customer.account')

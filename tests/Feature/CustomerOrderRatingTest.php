@@ -119,6 +119,90 @@ class CustomerOrderRatingTest extends TestCase
         $this->assertDatabaseCount('order_ratings', 0);
     }
 
+
+    public function test_failed_rating_restores_only_the_route_order_and_its_errors(): void
+    {
+        $this->withoutVite();
+        $customer = User::factory()->create(['role' => 'customer']);
+        $order = $this->order($customer);
+        $otherOrder = $this->order($customer);
+        $comment = str_repeat('x', 1001);
+
+        $this->actingAs($customer)->from(route('customer.account'))
+            ->post(route('customer.orders.rate', $order), [
+                'rating' => 4, 'comment' => $comment,
+                'rating_order_id' => $otherOrder->id,
+            ])->assertRedirect(route('customer.account'))
+            ->assertSessionHasErrors(['comment'], null, 'orderRating'.$order->id)
+            ->assertSessionHas('_old_input.rating_order_id', (string) $order->id);
+
+        $html = $this->get(route('customer.account'))->assertOk()->getContent();
+        $xpath = $this->ratingDom($html);
+        $target = '//*[@id="account-order-'.$order->id.'"]';
+        $other = '//*[@id="account-order-'.$otherOrder->id.'"]';
+        $this->assertSame($comment, $xpath->query($target.'//textarea')->item(0)->textContent);
+        $this->assertSame('', $xpath->query($other.'//textarea')->item(0)->textContent);
+        $this->assertCount(1, $xpath->query($target.'//input[@name="rating" and @value="4" and @checked]'));
+        $this->assertCount(0, $xpath->query($other.'//input[@checked]'));
+        $this->assertCount(1, $xpath->query($target.'//*[@role="alert"]'));
+        $this->assertCount(0, $xpath->query($other.'//*[@role="alert"]'));
+        $this->assertDatabaseCount('order_ratings', 0);
+    }
+
+    public function test_array_feedback_renders_validation_errors_without_breaking_account(): void
+    {
+        $this->withoutVite();
+        $customer = User::factory()->create(['role' => 'customer']);
+        $order = $this->order($customer);
+        $this->actingAs($customer)->from(route('customer.account'))
+            ->post(route('customer.orders.rate', $order), [
+                'rating' => ['bad'], 'comment' => ['bad'],
+            ])->assertSessionHasErrors(['rating', 'comment'], null, 'orderRating'.$order->id);
+        $html = $this->get(route('customer.account'))->assertOk()->getContent();
+        $xpath = $this->ratingDom($html);
+        $this->assertSame('', $xpath->query('//textarea[@name="comment"]')->item(0)->textContent);
+        $this->assertCount(0, $xpath->query('//input[@name="rating" and @checked]'));
+        $this->assertDatabaseCount('order_ratings', 0);
+    }
+
+    public function test_rating_error_remains_visible_if_order_was_already_rated(): void
+    {
+        $this->withoutVite();
+        $customer = User::factory()->create(['role' => 'customer']);
+        $order = $this->order($customer);
+        OrderRating::create(['order_id' => $order->id, 'user_id' => $customer->id, 'rating' => 5]);
+        $this->actingAs($customer)->from(route('customer.account'))
+            ->post(route('customer.orders.rate', $order), ['rating' => 1])
+            ->assertSessionHasErrors(['rating'], null, 'orderRating'.$order->id);
+        $this->get(route('customer.account'))->assertOk()
+            ->assertSee('Este pedido ya fue valorado.')
+            ->assertSee('5 de 5 estrellas.');
+        $this->assertDatabaseCount('order_ratings', 1);
+    }
+
+    public function test_comment_from_another_form_is_not_copied_to_ratings(): void
+    {
+        $this->withoutVite();
+        $customer = User::factory()->create(['role' => 'customer']);
+        $this->order($customer);
+        $html = $this->actingAs($customer)->withSession([
+            '_old_input' => ['comment' => 'Texto de otro formulario', 'rating' => 5],
+        ])->get(route('customer.account'))->assertOk()->getContent();
+        $xpath = $this->ratingDom($html);
+        $this->assertSame('', $xpath->query('//textarea[@name="comment"]')->item(0)->textContent);
+        $this->assertCount(0, $xpath->query('//input[@name="rating" and @checked]'));
+    }
+
+    private function ratingDom(string $html): \DOMXPath
+    {
+        $doc = new \DOMDocument();
+        $previous = libxml_use_internal_errors(true);
+        $doc->loadHTML('<?xml encoding="utf-8" ?>'.$html);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        return new \DOMXPath($doc);
+    }
+
     private function order(?User $customer, array $overrides = []): Order
     {
         return Order::create(array_replace([

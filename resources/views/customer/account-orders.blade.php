@@ -2,7 +2,14 @@
             <div class="account-section-heading"><div><p class="account-eyebrow">TU HISTORIAL</p><h2 id="orders-title" class="text-xl font-bold">Mis pedidos</h2></div><span class="account-count">{{ $orders->total() }} en total</span></div>
 
             @forelse ($orders as $order)
-                <div class="account-order">
+                @php
+                    $ratingBag = 'orderRating'.$order->id;
+                    $ratingContext = old('rating_order_id');
+                    $restoreRating = is_scalar($ratingContext) && (string) $ratingContext === (string) $order->id;
+                    $previousRating = $restoreRating && is_scalar(old('rating')) ? (string) old('rating') : '';
+                    $previousComment = $restoreRating && is_string(old('comment')) ? old('comment') : '';
+                @endphp
+                <div class="account-order" id="account-order-{{ $order->id }}">
                     <div>
                         <p class="font-semibold">{{ $order->code }}</p>
                         <p class="text-sm text-foreground/75">
@@ -35,6 +42,7 @@
                                             type="radio"
                                             name="rating"
                                             value="{{ $star }}"
+                                            @checked($previousRating === (string) $star)
                                             required
                                             class="accent-primary"
                                         >
@@ -51,14 +59,7 @@
                                 rows="2"
                                 placeholder="Cuéntanos tu experiencia (opcional)"
                                 class="mt-3 w-full rounded-none border border-input bg-card text-foreground p-3"
-                            >{{ old('comment') }}</textarea>
-
-                            @error('rating')
-                                <p role="alert" class="mt-2 text-sm text-destructive">{{ $message }}</p>
-                            @enderror
-                            @error('comment')
-                                <p role="alert" class="mt-2 text-sm text-destructive">{{ $message }}</p>
-                            @enderror
+                            >{{ $previousComment }}</textarea>
 
                             <button
                                 type="submit"
@@ -73,6 +74,12 @@
                             {{ $order->rating->rating }} de 5 estrellas.
                         </p>
                     @endif
+                    @error('rating', $ratingBag)
+                        <p role="alert" class="mt-2 text-sm text-destructive">{{ $message }}</p>
+                    @enderror
+                    @error('comment', $ratingBag)
+                        <p role="alert" class="mt-2 text-sm text-destructive">{{ $message }}</p>
+                    @enderror
                     </div>
                 </div>
             @empty
