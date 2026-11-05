@@ -94,7 +94,7 @@ class CategoryOrderTest extends TestCase
             'original_size' => 100, 'width' => 10, 'height' => 10,
         ]);
         $category->update(['media_asset_id' => $asset->id]);
-        $before = $category->getAttributes();
+        $before = $category->fresh()->getAttributes();
         $this->actingAs(User::factory()->create(['role' => 'admin']))
             ->from(route('admin.categories.edit', $category))
             ->put(route('admin.categories.update', $category), [

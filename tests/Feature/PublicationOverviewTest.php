@@ -74,7 +74,7 @@ class PublicationOverviewTest extends TestCase
         }
         $settings->legal_pages_published = $published;
         $settings->save();
-        $before = $settings->getAttributes();
+        $before = $settings->fresh()->getAttributes();
         $this->actingAs(User::factory()->create(['role' => 'admin']));
         $response = $this->get(route('admin.settings.edit'))->assertOk()->assertSee($message);
         if (! $complete) {

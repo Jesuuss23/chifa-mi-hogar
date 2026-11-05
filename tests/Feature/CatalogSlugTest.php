@@ -46,9 +46,10 @@ class CatalogSlugTest extends TestCase
         ], $overrides));
     }
 
-    private function categoryData(string $name): array
+    private function categoryData(string $name, ?int $sortOrder = null): array
     {
-        return ['name' => $name, 'sort_order' => 0, 'is_active' => true,
+        static $order = 0;
+        return ['name' => $name, 'sort_order' => $sortOrder ?? ++$order, 'is_active' => true,
             'image' => UploadedFile::fake()->image('category.jpg', 10, 10)];
     }
 
