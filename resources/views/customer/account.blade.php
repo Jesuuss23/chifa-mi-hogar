@@ -11,7 +11,9 @@
 <body class="storefront-theme customer-surface customer-account">
     <a href="#account-profile" class="account-skip">Ir a mis datos</a>
     <header class="account-header">
-        @php($accountLogo = \App\Models\StoreSetting::current()->logoUrl())
+        @php
+            $accountLogo = \App\Models\StoreSetting::current()->logoUrl();
+        @endphp
         <a href="{{ route('storefront.index') }}" class="account-brand">
             @if($accountLogo)<img src="{{ $accountLogo }}" alt="" width="48" height="48">@endif
             <span>CHIFA<br>MI HOGAR</span>

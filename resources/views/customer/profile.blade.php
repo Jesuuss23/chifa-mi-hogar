@@ -1,4 +1,5 @@
 @php
+    $profile = $profile ?? auth()->user()->fresh()?->customerProfile;
     $profileFields = ['name', 'phone', 'delivery_address', 'delivery_reference', 'delivery_latitude', 'delivery_longitude'];
     $profileErrors = collect($profileFields)->flatMap(fn ($field) => $errors->get($field));
     $hasOldProfileDelivery = collect(['delivery_address', 'delivery_reference', 'delivery_latitude', 'delivery_longitude'])
