@@ -46,12 +46,14 @@
                 <div class="account-summary">
                     <p class="account-eyebrow">CORREO DE TU CUENTA</p>
                     <p class="mt-2 text-sm">{{ auth()->user()->email }}</p>
+                    <a href="#account-avatar" class="mt-3 inline-block text-sm underline">Mi foto de perfil →</a>
                     <p class="mt-5 account-eyebrow">PARA TU PRÓXIMO PEDIDO</p>
                     <p class="mt-2 text-sm">Completa o revisa tu dirección. Puedes utilizar otra al comprar.</p>
                     <a href="#account-profile" class="mt-3 inline-block underline">Revisar mis datos →</a>
                 </div>
             </aside>
             <div class="account-content">
+                @include('customer.avatar')
                 @include('customer.profile')
 
                 @php

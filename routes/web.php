@@ -345,3 +345,12 @@ Route::prefix('repartidor')
 Route::delete('/mi-cuenta/accesos/{provider}', [\App\Http\Controllers\CustomerSocialAccountController::class, 'destroy'])
     ->whereIn('provider', ['google', 'facebook'])
     ->middleware(['auth', 'customer', 'throttle:5,1'])->name('customer.social.destroy');
+
+Route::middleware(['auth', 'customer'])->group(function () {
+    Route::get('/mi-cuenta/foto', [\App\Http\Controllers\CustomerAvatarController::class, 'show'])
+        ->name('customer.avatar.show');
+    Route::put('/mi-cuenta/foto', [\App\Http\Controllers\CustomerAvatarController::class, 'update'])
+        ->middleware('throttle:5,1')->name('customer.avatar.update');
+    Route::delete('/mi-cuenta/foto', [\App\Http\Controllers\CustomerAvatarController::class, 'destroy'])
+        ->middleware('throttle:5,1')->name('customer.avatar.destroy');
+});
