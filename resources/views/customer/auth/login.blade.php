@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Iniciar sesión | Chifa Mi Hogar</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="storefront-theme customer-surface min-h-screen bg-background flex items-center justify-center p-4">
-
-    <div class="w-full max-w-md rounded-none bg-card p-8 shadow-storefront">
-        <a href="{{ route('storefront.index') }}"
-           class="text-sm text-primary">
-            ← Volver al restaurante
-        </a>
-
-        <h1 class="mt-5 text-2xl font-bold text-foreground">
+@extends('customer.auth.layout')
+@section('title', 'Iniciar sesión')
+@section('content')
+        <h1 id="auth-title" class="mt-5 text-2xl font-bold text-foreground">
             Bienvenido nuevamente
         </h1>
 
@@ -37,9 +24,11 @@
                 <input id="email" type="email" name="email" required
                        value="{{ old('email') }}"
                        autocomplete="email"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
+                       aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
+                       @if($errors->has('email')) aria-describedby="email-error" @endif>
                 @error('email')
-                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
+                    <p id="email-error" role="alert" class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -47,8 +36,14 @@
                 <label for="password" class="block text-sm font-medium">Contraseña</label>
                 <input id="password" type="password" name="password" required
                        autocomplete="current-password"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
+                       aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                       @if($errors->has('password')) aria-describedby="password-error" @endif>
             </div>
+
+            @error('password')
+                <p id="password-error" role="alert" class="text-sm text-destructive">{{ $message }}</p>
+            @enderror
 
             <button type="submit"
                     class="w-full rounded-none bg-primary p-3 font-semibold text-primary-foreground hover:bg-primary/90">
@@ -64,6 +59,5 @@
                 Regístrate
             </a>
         </p>
-    </div>
-</body>
-</html>
+
+@endsection

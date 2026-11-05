@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './storefront-theme.css';
+@import './customer-auth.css';
 @import './combo-carousel.css';
 @import './admin-orders.css';
 @import './admin-catalog.css';

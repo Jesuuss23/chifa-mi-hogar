@@ -1,23 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Crear cuenta | Chifa Mi Hogar</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@extends('customer.auth.layout')
+@section('title', 'Crear cuenta')
+@push('auth-head')
     @if(config('turnstile.enabled') && config('turnstile.site_key'))
         <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     @endif
-</head>
-<body class="storefront-theme customer-surface min-h-screen bg-background flex items-center justify-center p-4">
-
-    <div class="w-full max-w-md rounded-none bg-card p-8 shadow-storefront">
-        <a href="{{ route('storefront.index') }}"
-           class="text-sm text-primary">
-            ← Volver al restaurante
-        </a>
-
-        <h1 class="mt-5 text-2xl font-bold text-foreground">
+@endpush
+@section('content')
+        <h1 id="auth-title" class="mt-5 text-2xl font-bold text-foreground">
             Crear mi cuenta
         </h1>
 
@@ -35,34 +24,41 @@
 
             <div>
                 <label for="name" class="block text-sm font-medium">Nombre</label>
-                <input id="name" type="text" name="name" required
+                <input id="name" type="text" name="name" required maxlength="150"
                        value="{{ old('name') }}"
                        autocomplete="name"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
+                       aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}"
+                       @if($errors->has('name')) aria-describedby="name-error" @endif>
                 @error('name')
-                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
+                    <p id="name-error" role="alert" class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
                 <label for="email" class="block text-sm font-medium">Correo electrónico</label>
-                <input id="email" type="email" name="email" required
+                <input id="email" type="email" name="email" required maxlength="255"
                        value="{{ old('email') }}"
                        autocomplete="email"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
+                       aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
+                       @if($errors->has('email')) aria-describedby="email-error" @endif>
                 @error('email')
-                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
+                    <p id="email-error" role="alert" class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
             <div>
+                <p id="password-guidance" class="text-sm text-foreground/75">Usa al menos 8 caracteres. Después podrás completar tu teléfono y dirección en Mi cuenta.</p>
                 <label for="password" class="block text-sm font-medium">Contraseña</label>
                 <input id="password" type="password" name="password" required
                        autocomplete="new-password"
                        minlength="8"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
+                       aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                       aria-describedby="password-guidance{{ $errors->has('password') ? ' password-error' : '' }}">
                 @error('password')
-                    <p class="mt-1 text-sm text-destructive">{{ $message }}</p>
+                    <p id="password-error" role="alert" class="mt-1 text-sm text-destructive">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -73,14 +69,16 @@
                 <input id="password_confirmation" type="password" name="password_confirmation" required
                        autocomplete="new-password"
                        minlength="8"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3">
+                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
+                       aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                       aria-describedby="password-guidance{{ $errors->has('password') ? ' password-error' : '' }}">
             </div>
 
             @if(config('turnstile.enabled'))
                 @if(config('turnstile.site_key'))
                     <div class="cf-turnstile"
                          data-sitekey="{{ config('turnstile.site_key') }}"
-                         data-action="register" data-language="es"></div>
+                         data-action="register" data-language="es" data-size="compact"></div>
                     <noscript><p class="text-sm text-destructive">Activa JavaScript para completar la verificación.</p></noscript>
                 @else
                     <p class="text-sm text-destructive">El registro no está disponible temporalmente. Inténtalo más tarde.</p>
@@ -102,6 +100,5 @@
                 Inicia sesión
             </a>
         </p>
-    </div>
-</body>
-</html>
+
+@endsection

@@ -1,0 +1,46 @@
+/* Only the customer access screens opt in; no changes to other portals. */
+.customer-auth { min-height: 100vh; }
+.customer-auth .auth-header,
+.customer-auth .auth-shell,
+.customer-auth .auth-footer { width: min(100% - 2rem, 72rem); margin-inline: auto; }
+.customer-auth .auth-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-block:1.5rem; }
+.customer-auth .auth-brand { display:flex; align-items:center; gap:.75rem; font-size:.875rem; font-weight:800; line-height:1.15; letter-spacing:.08em; }
+.customer-auth .auth-brand img { width:3rem; height:3rem; object-fit:contain; }
+.customer-auth .auth-back { font-size:.8rem; padding-block:.75rem; text-decoration:underline; text-underline-offset:4px; }
+.customer-auth .auth-shell { display:grid; align-items:start; border:1px solid var(--border); background:var(--card); }
+.customer-auth .auth-panel { min-width:0; padding:1.5rem; order:0; }
+.customer-auth .auth-panel h1 { line-height:1.2; font-size:clamp(1.65rem, 3vw, 2.25rem); letter-spacing:-.04em; }
+.customer-auth .auth-tabs { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border); }
+.customer-auth .auth-tabs a { text-align:center; display:grid; place-items:center; min-height:3rem; padding:.5rem; font-size:.875rem; border:1px solid var(--border); }
+.customer-auth .auth-tabs [aria-current="page"] { background:var(--foreground); color:var(--background); border-color:var(--foreground); font-weight:700; }
+.customer-auth .auth-panel input:not([type="hidden"]):not([type="checkbox"]) { min-height:3rem; font-size:1rem; }
+.customer-auth .auth-panel input[aria-invalid="true"] { border-color:var(--destructive); }
+.customer-auth .auth-panel button { min-height:3rem; }
+.customer-auth .auth-panel p,
+.customer-auth .auth-panel li { overflow-wrap:anywhere; }
+.customer-auth .auth-story { order:1; padding:1.5rem; background:var(--muted); border-top:1px solid var(--border); }
+.customer-auth .auth-eyebrow { font-size:.7rem; letter-spacing:.12em; font-weight:700; }
+.customer-auth .auth-story h2 { margin-block:1.5rem; font-size:clamp(2rem, 4vw, 3.5rem); line-height:1.05; letter-spacing:-.06em; font-weight:800; }
+.customer-auth .auth-story h2 span { color:var(--primary); }
+.customer-auth .auth-story > p:not(.auth-eyebrow) { font-size:.875rem; line-height:1.7; }
+.customer-auth .auth-benefits { list-style:none; margin-block:2rem; padding:0; display:grid; gap:1.5rem; }
+.customer-auth .auth-benefits li { display:flex; gap:1rem; align-items:start; }
+.customer-auth .auth-benefits li > span { border:1px solid var(--border); padding:.4rem; font-size:.75rem; color:var(--primary); }
+.customer-auth .auth-benefits strong { font-size:.875rem; }
+.customer-auth .auth-benefits p { margin-top:.35rem; font-size:.8rem; line-height:1.6; }
+.customer-auth .auth-guest { padding-top:1.5rem; border-top:1px solid var(--border); }
+.customer-auth .auth-guest a { display:inline-block; padding-block:.5rem; text-decoration:underline; text-underline-offset:4px; font-weight:700; }
+.customer-auth .auth-footer { display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; padding-block:1.5rem; font-size:.75rem; }
+.customer-auth .auth-footer nav { display:flex; flex-wrap:wrap; gap:1rem; }
+.customer-auth .auth-footer a { text-decoration:underline; text-underline-offset:4px; }
+.customer-auth .auth-skip { position:absolute; left:1rem; top:0; transform:translateY(-150%); padding:1rem; background:var(--card); z-index:20; }
+.customer-auth .auth-skip:focus { transform:translateY(0); }
+@media (min-width: 56rem) {
+    .customer-auth .auth-shell { grid-template-columns:minmax(0, 1fr) minmax(0, 1.1fr); }
+    .customer-auth .auth-story { order:0; align-self:stretch; border-top:0; border-right:1px solid var(--border); padding:3rem; }
+    .customer-auth .auth-panel { order:1; padding:2.5rem; }
+}
+@media (max-width: 24rem) {
+    .customer-auth .auth-panel, .customer-auth .auth-story { padding:1rem; }
+    .customer-auth .auth-header { align-items:start; }
+}
