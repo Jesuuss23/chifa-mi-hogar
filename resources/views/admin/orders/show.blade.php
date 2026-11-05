@@ -94,13 +94,19 @@
                                         {{ $item->quantity }} × {{ $item->item_name }}
                                     </p>
                                     <p class="text-xs text-foreground/75">
-                                        {{ $item->item_type === 'recommendation' ? 'Recomendación' : 'Producto' }}
+                                        {{ match($item->item_type) {
+                                            'combo' => 'Combo',
+                                            'recommendation' => 'Recomendación',
+                                            default => 'Producto',
+                                        } }}
                                     </p>
                                 </div>
                                 <p class="font-semibold">
                                     S/ {{ number_format((float) $item->line_total, 2) }}
                                 </p>
                             </div>
+
+                            @include('admin.orders.combo-detail', ['item' => $item])
 
                             @if($item->extras->isNotEmpty())
                                 <div class="ml-4 mt-2 text-sm text-foreground/75">

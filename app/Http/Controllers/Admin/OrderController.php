@@ -76,6 +76,7 @@ class OrderController extends Controller
     {
         $order->load([
             'items.extras',
+            'items.comboComponents',
             'statusHistories.changedBy',
             'paymentReceipt',
             'paymentVerifier',
