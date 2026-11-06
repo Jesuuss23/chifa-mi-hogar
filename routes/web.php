@@ -185,6 +185,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('login.submit');
     });
     Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])
+            ->name('customers.index');
+        Route::get('/customers/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])
+            ->whereNumber('customer')->name('customers.show');
+
         Route::patch(
             '/orders/{order}/assign-driver',
             [OrderController::class, 'assignDriver']
