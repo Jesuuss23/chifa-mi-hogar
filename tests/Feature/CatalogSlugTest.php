@@ -53,11 +53,12 @@ class CatalogSlugTest extends TestCase
             'image' => UploadedFile::fake()->image('category.jpg', 10, 10)];
     }
 
-    private function productData(Category $category, string $name): array
+    private function productData(Category $category, string $name, ?int $sortOrder = null): array
     {
+        static $productOrder = 0;
         return [
             'category_id' => $category->id, 'name' => $name, 'price' => 20,
-            'sort_order' => 0, 'is_available' => true,
+            'sort_order' => $sortOrder ?? ++$productOrder, 'is_available' => true,
             'image' => UploadedFile::fake()->image('plate.jpg', 10, 10),
         ];
     }
