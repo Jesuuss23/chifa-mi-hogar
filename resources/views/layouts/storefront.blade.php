@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1"
     >
 
-    <meta name="theme-color" content="#af3a03">
+    <meta name="theme-color" content="#6a0a17">
 
     @if(isset($seo))
         @include('components.storefront-seo')
@@ -91,7 +91,7 @@
     );
 @endphp
 
-<body class="storefront-theme flex min-h-screen flex-col bg-background text-foreground antialiased">
+<body data-theme="formal" class="storefront-theme flex min-h-screen flex-col bg-background text-foreground antialiased">
 
     {{-- =====================================================
          BARRA SUPERIOR

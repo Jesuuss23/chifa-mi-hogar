@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('auth-head')
 </head>
-<body class="storefront-theme customer-surface customer-auth">
+<body data-theme="formal" class="storefront-theme customer-surface customer-auth">
     <a href="#auth-content" class="auth-skip">Ir al formulario</a>
     <header class="auth-header">
         @php($authLogo = \App\Models\StoreSetting::current()->logoUrl())

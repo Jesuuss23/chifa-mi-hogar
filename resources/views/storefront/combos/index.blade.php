@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="storefront-theme catalog-surface min-h-screen bg-background">
+<body data-theme="formal" class="storefront-theme catalog-surface min-h-screen bg-background">
 
 @include('components.store-availability')
 
