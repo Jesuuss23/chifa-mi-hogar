@@ -44,3 +44,28 @@
     .customer-auth .auth-panel, .customer-auth .auth-story { padding:1rem; }
     .customer-auth .auth-header { align-items:start; }
 }
+
+
+/* Provider identity remains recognizable independently of the storefront palette. */
+.customer-auth .auth-social-button {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.75rem;
+    width:100%;
+    min-height:3rem;
+    padding:.75rem 1rem;
+    border:1px solid transparent;
+    border-radius:.75rem;
+    font-family:Arial, ui-sans-serif, sans-serif;
+    font-size:.9375rem;
+    font-weight:600;
+    line-height:1.5;
+    cursor:pointer;
+}
+.customer-auth .auth-social-button svg { flex:none; width:20px; height:20px; }
+.customer-auth .auth-social-google { background:#fff; color:#1f1f1f; border-color:#747775; }
+.customer-auth .auth-social-google:hover { background:#f5f7fa; }
+.customer-auth .auth-social-facebook { background:#0866ff; color:#fff; border-color:#0866ff; }
+.customer-auth .auth-social-facebook:hover { background:#0759df; border-color:#0759df; }
+.customer-auth .auth-social-button:focus-visible { outline:3px solid var(--ring); outline-offset:3px; }
