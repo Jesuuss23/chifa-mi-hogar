@@ -49,7 +49,6 @@
             </div>
 
             <div>
-                <p id="password-guidance" class="text-sm text-foreground/75">Usa al menos 8 caracteres. Después podrás completar tu teléfono y dirección en Mi cuenta.</p>
                 <label for="password" class="block text-sm font-medium">Contraseña</label>
                 <input id="password" type="password" name="password" required
                        autocomplete="new-password"
