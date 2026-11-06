@@ -83,7 +83,7 @@ class AdminCustomerDirectoryTest extends TestCase
             'delivery_reference' => 'Puerta azul', 'delivery_latitude' => -12.0123456,
             'delivery_longitude' => -77.0123456,
         ]);
-        $before = $profile->getAttributes();
+        $before = $profile->fresh()->getAttributes();
         $response = $this->actingAs($this->admin())->get(route('admin.customers.show', $customer->id))->assertOk()
             ->assertSee('987654321')->assertSee('Puerta azul')
             ->assertSee('-12.0123456')->assertSee('-77.0123456')
