@@ -1,6 +1,6 @@
 <section id="account-avatar" class="border border-border bg-card p-5 sm:p-6" aria-labelledby="avatar-title">
     <h2 id="avatar-title" class="text-xl font-bold">Foto de perfil (opcional)</h2>
-    <p class="mt-2 text-sm text-foreground/75">Personaliza tu cuenta. La foto se muestra solo en tu espacio privado; puedes reemplazarla o quitarla cuando quieras.</p>
+    <p class="mt-2 text-sm text-foreground/75">Personaliza tu cuenta. La foto se muestra en tu cuenta y en el encabezado mientras tienes la sesión iniciada; puedes reemplazarla o quitarla cuando quieras.</p>
     <div class="mt-4 flex flex-wrap items-center gap-4">
         @if(auth()->user()->avatar_path)
             <img src="{{ route('customer.avatar.show') }}" alt="Tu foto de perfil" width="96" height="96"
