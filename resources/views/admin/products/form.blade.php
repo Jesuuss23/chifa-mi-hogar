@@ -62,9 +62,15 @@
 
             <div>
                 <label for="admin-products-sort_order" class="mb-2 block font-medium">Orden</label>
-                <input id="admin-products-sort_order" name="sort_order" type="number" min="0" required
+                <input id="admin-products-sort_order" name="sort_order" type="number" min="0" max="2147483647" step="1" required
+                       aria-describedby="product-order-help"
                        value="{{ old('sort_order', $product->sort_order ?? 0) }}"
                        class="w-full rounded-none border p-3">
+                <p id="product-order-help" class="mt-1 text-xs text-foreground/75">
+                    Orden general de platos: elige una posición libre, incluso entre categorías distintas.
+                    Los platos no disponibles también reservan su orden. Los destacados siguen apareciendo primero.
+                </p>
+                @error('sort_order') <p role="alert" class="mt-1 text-sm text-destructive">{{ $message }}</p> @enderror
             </div>
         </div>
 

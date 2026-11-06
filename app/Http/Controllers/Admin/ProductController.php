@@ -7,9 +7,8 @@ use App\Models\Category;
 use App\Models\Extra;
 use App\Models\Product;
 use App\Services\ImageService;
+use App\Services\ProductOrderService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Services\CatalogSlugService;
 use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
@@ -27,7 +26,7 @@ class ProductController extends Controller
     public function create()
     {
         return view('admin.products.form', [
-            'product' => new Product(),
+            'product' => new Product(['sort_order' => app(ProductOrderService::class)->suggestedOrder()]),
             'categories' => Category::where('is_active', true)
                 ->orderBy('sort_order')
                 ->get(),
@@ -53,10 +52,7 @@ class ProductController extends Controller
                 ->upload($request->file('image'))->id;
         }
 
-        DB::transaction(function () use ($data, $extraIds) {
-            $product = app(CatalogSlugService::class)->create(Product::class, $data);
-            $product->extras()->sync($extraIds);
-        });
+        app(ProductOrderService::class)->save($data, $extraIds);
 
         return redirect()
             ->route('admin.products.index')
@@ -101,10 +97,7 @@ class ProductController extends Controller
                 ->upload($request->file('image'))->id;
         }
 
-        DB::transaction(function () use ($product, $data, $extraIds) {
-            $product->update($data);
-            $product->extras()->sync($extraIds);
-        });
+        app(ProductOrderService::class)->save($data, $extraIds, $product);
 
         return redirect()
             ->route('admin.products.index')
@@ -131,7 +124,7 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string', 'max:2000'],
             'price' => ['required', 'numeric', 'min:0', 'decimal:0,2'],
-            'sort_order' => ['required', 'integer', 'min:0'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:2147483647'],
             'is_available' => ['sometimes', 'boolean'],
             'is_featured' => ['sometimes', 'boolean'],
             'extras' => ['nullable', 'array'],
