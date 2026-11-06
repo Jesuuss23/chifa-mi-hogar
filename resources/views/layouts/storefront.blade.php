@@ -49,6 +49,10 @@
 
     $userRole = $currentUser?->role;
 
+    $showCustomerAvatar = $userRole === 'customer'
+        && app(\App\Services\CustomerAvatarService::class)->ownsPath($currentUser->avatar_path, $currentUser->id)
+        && \Illuminate\Support\Facades\Storage::disk('local')->exists($currentUser->avatar_path);
+
     /*
     |--------------------------------------------------------------------------
     | RUTAS SEGÚN EL ROL
@@ -238,15 +242,11 @@
 
                             <a
                                 href="{{ route($accountRoute) }}"
+                                aria-label="{{ $userRole === 'customer' ? 'Mi cuenta' : 'Mi panel' }}"
                                 class="flex items-center gap-2 rounded-none px-3 py-2.5 text-sm font-semibold text-foreground transition hover:bg-accent hover:text-primary"
                             >
 
-                                <span
-                                    class="flex h-8 w-8 items-center justify-center rounded-none bg-accent text-xs font-black text-primary"
-                                    aria-hidden="true"
-                                >
-                                    {{ mb_strtoupper(mb_substr($currentUser->name, 0, 1)) }}
-                                </span>
+                                @include('storefront.account-avatar')
 
                                 <span class="hidden xl:inline">
                                     {{ $userRole === 'customer' ? 'Mi cuenta' : 'Mi panel' }}
@@ -404,8 +404,9 @@
 
                                 <a
                                     href="{{ route($accountRoute) }}"
-                                    class="block rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
+                                    class="flex items-center gap-2 rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent"
                                 >
+                                    @include('storefront.account-avatar')
                                     {{ $userRole === 'customer' ? 'Mi cuenta' : 'Mi panel' }}
                                 </a>
 
