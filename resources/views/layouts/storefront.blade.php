@@ -195,16 +195,7 @@
                     Nuestra carta
                 </a>
 
-                <a
-                    href="{{ request()->routeIs('storefront.index') ? '#combos' : route('storefront.index').'#combos' }}"
-                    @class([
-                        'rounded-none px-4 py-2.5 text-sm font-semibold transition',
-                        'bg-accent text-primary' => request()->routeIs('combos.*'),
-                        'text-foreground/75 hover:bg-accent hover:text-primary' => !request()->routeIs('combos.*'),
-                    ])
-                >
-                    Combos
-                </a>
+                
 
             </nav>
 
@@ -356,12 +347,7 @@
                             Nuestra carta
                         </a>
 
-                        <a
-                            href="{{ request()->routeIs('storefront.index') ? '#combos' : route('storefront.index').'#combos' }}"
-                            class="block rounded-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-accent hover:text-primary"
-                        >
-                            Combos
-                        </a>
+                        
 
                         <a
                             href="{{ route('cart.index') }}"
@@ -454,12 +440,7 @@
                 Nuestra carta
             </a>
 
-            <a
-                href="{{ request()->routeIs('storefront.index') ? '#combos' : route('storefront.index').'#combos' }}"
-                class="text-sm font-semibold text-foreground/75 hover:text-primary"
-            >
-                Combos
-            </a>
+            
 
         </nav>
 

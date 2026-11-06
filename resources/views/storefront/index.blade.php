@@ -4,47 +4,36 @@
 
 @section('content')
 
-<!-- HERO -->
-<section class="catalog-surface relative isolate overflow-hidden bg-muted text-foreground">
-
-    <div class="absolute inset-0 bg-gradient-to-r
-                from-muted via-muted/95 to-background/70">
-    </div>
-
-    <div class="relative mx-auto flex min-h-[340px] max-w-7xl
-                flex-col justify-center px-4 py-16 sm:px-6 lg:py-24">
-
-        <p class="mb-4 text-xs font-bold uppercase tracking-[0.3em]
-                  text-primary">
-            Bienvenido a Chifa Mi Hogar
-        </p>
-
-        <h1 class="max-w-2xl text-4xl font-black leading-tight
-                   sm:text-5xl lg:text-6xl">
-            El sabor que te hace volver
-        </h1>
-
-        <p class="mt-5 max-w-lg text-base leading-7 text-foreground/75">
-            Disfruta nuestros platos preparados al momento.
-            Elige tus favoritos y recíbelos por delivery.
-        </p>
-
-        <div class="mt-8">
-            <a href="#carta"
-               class="inline-flex items-center justify-center
-                      rounded-none bg-primary px-7 py-3
-                      font-bold text-primary-foreground transition
-                      hover:bg-primary/90">
-                Explorar carta ↓
-            </a>
+<div class="storefront-home">
+@php
+    $heroProduct = $products->first(fn ($product) => $product->mediaAsset || $product->image_path);
+    $heroImage = $heroProduct ? app(\App\Services\CatalogImageService::class)->url($heroProduct, 'card') : null;
+@endphp
+<section class="catalog-surface home-hero" aria-labelledby="home-title">
+    <div class="home-hero__inner {{ $heroImage ? 'home-hero__inner--with-image' : '' }}">
+        <div>
+            <p class="home-eyebrow">CHIFA MI HOGAR · SOLO DELIVERY</p>
+            <h1 id="home-title">El sabor que<br>te hace volver.</h1>
+            <p class="home-hero__description">Tu plato favorito, preparado al momento y a tu gusto. Elige, personaliza y disfruta en casa.</p>
+            <a href="#carta" class="home-hero__cta">Explorar carta <span aria-hidden="true">↓</span></a>
+            <p class="home-hero__note">Platos y combos · Adicionales a tu elección</p>
         </div>
+        @if($heroImage)
+            <a href="{{ route('storefront.show', $heroProduct->slug) }}" class="home-hero__feature" aria-label="Ver plato: {{ $heroProduct->name }}">
+                <img src="{{ $heroImage }}" alt="" width="640" height="480" fetchpriority="high" decoding="async">
+                <span class="home-hero__caption">
+                    <span><span class="home-eyebrow">DE NUESTRA CARTA</span><strong>{{ $heroProduct->name }}</strong></span>
+                    <span class="home-hero__price">S/ {{ number_format((float) $heroProduct->price, 2) }}</span>
+                </span>
+            </a>
+        @endif
     </div>
 </section>
 
 @include('storefront.partials.combo-carousel')
 
 <!-- CARTA -->
-<section id="carta" class="catalog-surface mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
+<section id="carta" class="home-menu catalog-surface mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
 
     <div class="mb-8">
         <p class="mb-2 text-xs font-bold uppercase
@@ -63,9 +52,10 @@
 
     <!-- CATEGORÍAS -->
     <nav aria-label="Categorías"
-         class="mb-9 flex gap-3 overflow-x-auto pb-3">
+         class="home-categories mb-9 flex gap-3 overflow-x-auto pb-3">
 
         <a href="{{ route('storefront.index') }}#carta"
+           @if(!$selectedCategory) aria-current="page" @endif
            class="shrink-0 rounded-none px-6 py-3 text-sm font-bold
                   {{ !$selectedCategory
                       ? 'bg-primary text-primary-foreground'
@@ -73,8 +63,14 @@
             Todos
         </a>
 
+        @if($combos->isNotEmpty())
+            <a href="#combos" class="home-combos-link shrink-0 rounded-none border border-border bg-card px-6 py-3 text-sm font-bold text-primary"
+               aria-label="Combos: ir al carrusel">Combos <span aria-hidden="true">↗</span></a>
+        @endif
+
         @foreach($categories as $category)
             <a href="{{ route('storefront.index', ['categoria' => $category->slug]) }}#carta"
+               @if($selectedCategory?->id === $category->id) aria-current="page" @endif
                class="shrink-0 rounded-none px-6 py-3 text-sm font-bold
                       {{ $selectedCategory?->id === $category->id
                           ? 'bg-primary text-primary-foreground'
@@ -88,13 +84,13 @@
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
         @forelse($products as $product)
-            <article class="group flex h-full flex-col overflow-hidden
+            <article class="home-product group flex h-full flex-col overflow-hidden
                             rounded-none border border-border bg-card
                             shadow-storefront transition duration-300
-                            hover:-translate-y-1 hover:shadow-storefront">
+                            hover:shadow-storefront">
 
                 <a href="{{ route('storefront.show', $product->slug) }}"
-                   class="relative block overflow-hidden">
+                   class="home-product__image relative block overflow-hidden">
 
                     @if($product->mediaAsset || $product->image_path)
                         <x-catalog-image
@@ -169,4 +165,5 @@
 
 </section>
 
+</div>
 @endsection
