@@ -67,6 +67,15 @@
                 Pedidos
             </a>
 
+            <a href="{{ route('admin.customers.index') }}"
+               @if(request()->routeIs('admin.customers.*')) aria-current="page" @endif
+               class="shrink-0 whitespace-nowrap rounded-none px-4 py-3 text-sm transition
+                      {{ request()->routeIs('admin.customers.*')
+                          ? 'bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90'
+                          : 'hover:bg-sidebar-accent' }}">
+                Clientes registrados
+            </a>
+
             {{-- REPARTIDORES --}}
             <a href="{{ route('admin.delivery-drivers.index') }}"
                @if(request()->routeIs('admin.delivery-drivers.*')) aria-current="page" @endif
