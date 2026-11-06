@@ -6,24 +6,7 @@
 ])
 
 @php
-    // Obtener la imagen optimizada asociada al registro
-    $media = $item->mediaAsset;
-
-    // Seleccionar el tamaño de imagen solicitado
-    $path = match ($variant) {
-        'thumbnail' => $media?->thumbnail_path,
-        'detail' => $media?->detail_path,
-        default => $media?->card_path,
-    };
-
-    // Generar la URL pública de la imagen
-    $src = $path
-        ? asset('storage/' . $path)
-        : (
-            $item->image_path
-                ? asset('storage/' . $item->image_path)
-                : null
-        );
+    $src = app(\App\Services\CatalogImageService::class)->url($item, $variant);
 
     // Texto alternativo para accesibilidad
     $alt = $item->name ?? $item->title ?? 'Imagen del catálogo';

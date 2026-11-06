@@ -7,6 +7,7 @@ use App\Models\Combo;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class StorefrontComboCarouselTest extends TestCase
@@ -58,6 +59,8 @@ class StorefrontComboCarouselTest extends TestCase
 
     public function test_combo_items_and_legacy_image_are_shown(): void
     {
+        Storage::fake('public');
+        Storage::disk('public')->put('combos/legacy.jpg', 'test fixture');
         $category = Category::create(['name' => 'Arroces', 'slug' => 'arroces', 'is_active' => true]);
         $product = Product::create([
             'category_id' => $category->id, 'name' => 'Chaufa especial',
@@ -68,7 +71,7 @@ class StorefrontComboCarouselTest extends TestCase
 
         $this->get(route('storefront.index'))->assertOk()
             ->assertSee('2 × Chaufa especial')
-            ->assertSee(asset('storage/combos/legacy.jpg'), false);
+            ->assertSee(Storage::disk('public')->url('combos/legacy.jpg'), false);
     }
 
     public function test_category_filter_and_product_pagination_remain_independent(): void
