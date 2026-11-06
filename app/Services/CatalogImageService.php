@@ -41,7 +41,7 @@ class CatalogImageService
         return null;
     }
 
-    private function publicPath(mixed $value): ?string
+    public function publicPath(mixed $value): ?string
     {
         if (! is_string($value) || $value === '') {
             return null;

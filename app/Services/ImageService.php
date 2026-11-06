@@ -10,6 +10,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Encoders\WebpEncoder;
 use Throwable;
+use RuntimeException;
 
 class ImageService
 {
@@ -38,13 +39,14 @@ class ImageService
 
         try {
             // El original se guarda en un disco privado.
-            Storage::disk('local')->putFileAs(
+            $originalSaved = true;
+            if (Storage::disk('local')->putFileAs(
                 'originals',
                 $file,
                 "{$id}.{$extension}"
-            );
-
-            $originalSaved = true;
+            ) === false) {
+                throw new RuntimeException('No se pudo guardar el original de la imagen.');
+            }
 
             $image = $this->manager->decodePath($file->getRealPath());
 
@@ -67,12 +69,13 @@ class ImageService
                     new WebpEncoder(quality: 85)
                 );
 
-                Storage::disk('public')->put(
+                $writtenPublicPaths[] = $paths[$variant];
+                if (! Storage::disk('public')->put(
                     $paths[$variant],
                     (string) $encoded
-                );
-
-                $writtenPublicPaths[] = $paths[$variant];
+                )) {
+                    throw new RuntimeException('No se pudo guardar una variante de la imagen.');
+                }
             }
 
             return MediaAsset::create([
