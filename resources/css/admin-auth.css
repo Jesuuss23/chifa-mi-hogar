@@ -1,0 +1,27 @@
+/* Scoped to administrative login; reuse the business palette without changing other portals. */
+.admin-auth { min-height:100vh; display:flex; flex-direction:column; }
+.admin-auth .admin-auth-header,
+.admin-auth .admin-auth-main,
+.admin-auth .admin-auth-footer { width:min(100% - 2rem, 72rem); margin-inline:auto; }
+.admin-auth .admin-auth-header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; padding-block:1.5rem; }
+.admin-auth .admin-auth-brand { display:flex; align-items:center; gap:.75rem; font-weight:800; font-size:.875rem; line-height:1.15; letter-spacing:.08em; }
+.admin-auth .admin-auth-brand img { width:3rem; height:3rem; object-fit:contain; }
+.admin-auth .admin-auth-back { font-size:.8rem; padding-block:.75rem; text-decoration:underline; text-underline-offset:4px; }
+.admin-auth .admin-auth-main { display:grid; place-items:center; flex:1; padding-block:1rem 2rem; }
+.admin-auth .admin-auth-panel { width:min(100%, 32rem); min-width:0; padding:clamp(1.25rem, 5vw, 3rem); border:1px solid var(--border); border-top:4px solid var(--primary); background:var(--card); }
+.admin-auth .admin-auth-eyebrow { font-size:.7rem; font-weight:700; letter-spacing:.12em; color:var(--primary); }
+.admin-auth h1 { margin-top:1.25rem; font-size:clamp(1.75rem, 5vw, 2.5rem); font-weight:800; line-height:1.15; letter-spacing:-.04em; }
+.admin-auth .admin-auth-intro { margin-top:1rem; font-size:.875rem; line-height:1.7; }
+.admin-auth .admin-auth-form { display:grid; gap:1.25rem; margin-top:2rem; }
+.admin-auth .admin-auth-form label { display:block; margin-bottom:.5rem; font-size:.875rem; font-weight:600; }
+.admin-auth .admin-auth-form input { display:block; width:100%; min-width:0; min-height:3rem; border:1px solid var(--input); border-radius:0; padding:.75rem; background:var(--background); color:var(--foreground); font-size:1rem; }
+.admin-auth .admin-auth-form input[aria-invalid="true"] { border-color:var(--destructive); }
+.admin-auth .admin-auth-form button { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:3rem; padding:.875rem 1rem; border-radius:0; background:var(--primary); color:var(--primary-foreground); font-weight:700; cursor:pointer; }
+.admin-auth .admin-auth-form button:hover { text-decoration:underline; text-underline-offset:4px; }
+.admin-auth .admin-auth-errors { margin-top:1.5rem; padding:1rem; border:1px solid var(--destructive); color:var(--destructive); font-size:.875rem; }
+.admin-auth .admin-auth-field-error { margin-top:.5rem; color:var(--destructive); font-size:.8rem; }
+.admin-auth .admin-auth-panel :where(p, li) { overflow-wrap:anywhere; }
+.admin-auth .admin-auth-notice { margin-top:1.5rem; border-top:1px solid var(--border); padding-top:1.25rem; font-size:.75rem; line-height:1.6; }
+.admin-auth .admin-auth-footer { padding-block:1rem 1.5rem; font-size:.75rem; text-align:center; }
+.admin-auth .admin-auth-skip { position:absolute; top:0; left:1rem; z-index:20; transform:translateY(-150%); padding:1rem; background:var(--card); }
+.admin-auth .admin-auth-skip:focus { transform:translateY(0); }
