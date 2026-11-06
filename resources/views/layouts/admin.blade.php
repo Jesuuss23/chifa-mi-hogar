@@ -141,6 +141,13 @@
                 Configuración
             </div>
 
+            <a href="{{ route('admin.appearance.index') }}"
+               @if(request()->routeIs('admin.appearance.*')) aria-current="page" @endif
+               class="shrink-0 whitespace-nowrap rounded-none px-4 py-3 text-sm transition
+                      {{ request()->routeIs('admin.appearance.*') ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent' }}">
+                Apariencia
+            </a>
+
             {{-- Configuración general --}}
             <a href="{{ route('admin.settings.edit') }}"
                @if(request()->routeIs('admin.settings.*')) aria-current="page" @endif

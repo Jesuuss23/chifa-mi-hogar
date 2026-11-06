@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1"
     >
 
-    <meta name="theme-color" content="#6a0a17">
+    <meta name="theme-color" content="{{ $storefrontTheme === 'formal' ? '#6a0a17' : '#af3a03' }}">
 
     @if(isset($seo))
         @include('components.storefront-seo')
@@ -32,10 +32,12 @@
     {{-- Estilos adicionales --}}
     @stack('styles')
 
-    @vite([
-        'resources/css/app.css',
-        'resources/js/app.js'
-    ])
+    @if($themePreview)
+        <meta name="robots" content="noindex,nofollow">
+        @vite(['resources/css/app.css'])
+    @else
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 </head>
 
 @php
@@ -91,7 +93,7 @@
     );
 @endphp
 
-<body data-theme="formal" class="storefront-theme flex min-h-screen flex-col bg-background text-foreground antialiased">
+<body @if($themePreview) inert @endif data-theme="{{ $storefrontTheme }}" class="storefront-theme flex min-h-screen flex-col bg-background text-foreground antialiased">
 
     {{-- =====================================================
          BARRA SUPERIOR

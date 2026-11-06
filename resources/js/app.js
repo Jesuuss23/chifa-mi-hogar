@@ -18,3 +18,5 @@ window.L = L;
 import './customer-profile';
 
 import './combo-carousel';
+
+import './admin-appearance';

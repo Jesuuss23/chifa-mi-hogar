@@ -27,6 +27,15 @@ class AppServiceProvider extends ServiceProvider
                 ->forView($view->name(), $view->getData()));
         });
 
+        \Illuminate\Support\Facades\View::composer([
+            'layouts.storefront', 'customer.auth.layout',
+            'customer.account', 'storefront.combos.index',
+        ], function ($view) {
+            $themes = app(\App\Services\StorefrontTheme::class);
+            $view->with('storefrontTheme', $themes->forRequest(request()));
+            $view->with('themePreview', $themes->isPreview(request()));
+        });
+
         \Illuminate\Support\Facades\View::composer(['layouts.storefront', 'layouts.admin'], function ($view) {
             $settings = \App\Models\StoreSetting::current()->load('logo');
             $view->with('brandLogoUrl', $settings->logoUrl());

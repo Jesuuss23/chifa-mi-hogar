@@ -204,6 +204,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('products.recommendations', ProductRecommendationController::class)
             ->except(['show']);
 
+        Route::get('/appearance', [\App\Http\Controllers\Admin\AppearanceController::class, 'index'])
+            ->name('appearance.index');
+        Route::put('/appearance', [\App\Http\Controllers\Admin\AppearanceController::class, 'update'])
+            ->middleware('throttle:10,1')->name('appearance.update');
+        Route::get('/appearance/preview/{theme}', [\App\Http\Controllers\Admin\AppearanceController::class, 'preview'])
+            ->whereIn('theme', array_keys(\App\Services\StorefrontTheme::THEMES))
+            ->name('appearance.preview');
+
         // Configuración general del negocio
         Route::get('/settings', [
             \App\Http\Controllers\Admin\StoreSettingController::class,

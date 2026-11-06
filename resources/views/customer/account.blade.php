@@ -8,7 +8,7 @@
     <title>Mi cuenta | Chifa Mi Hogar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body data-theme="formal" class="storefront-theme customer-surface customer-account">
+<body data-theme="{{ $storefrontTheme }}" class="storefront-theme customer-surface customer-account">
     <a href="#account-profile" class="account-skip">Ir a mis datos</a>
     <header class="account-header">
         @php
