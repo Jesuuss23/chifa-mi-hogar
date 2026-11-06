@@ -63,6 +63,8 @@
         </div>
     </section>
 
+    @include('admin.whatsapp.command-help')
+
     {{-- REGISTRAR ADMINISTRADOR --}}
     <section class="rounded-none border bg-card p-6 shadow-storefront">
         <h2 class="mb-2 text-xl font-bold">
@@ -132,7 +134,7 @@
                     <span>
                         <span class="block font-semibold">Controlar tienda</span>
                         <span class="text-xs text-foreground/75">
-                            Abrir y cerrar pedidos
+                            Abrir, cerrar y consultar estado
                         </span>
                     </span>
                 </label>
@@ -144,7 +146,7 @@
                     <span>
                         <span class="block font-semibold">Recibir pedidos</span>
                         <span class="text-xs text-foreground/75">
-                            Notificaciones futuras
+                            Avisos de pedidos
                         </span>
                     </span>
                 </label>
@@ -232,7 +234,7 @@
                        target="_blank"
                        rel="noopener noreferrer"
                        class="text-sm font-semibold text-green-700 underline">
-                        Abrir WhatsApp
+                        Chatear con este administrador
                     </a>
 
                     <button type="submit"
@@ -254,7 +256,7 @@
             Historial de comandos
         </h2>
         <p class="mb-5 text-sm text-foreground/75">
-            Últimos comandos procesados por el webhook de Meta.
+            Últimos 20 comandos procesados. El estado mostrado corresponde a la tienda al ejecutar cada comando.
         </p>
 
         <div class="overflow-x-auto">
@@ -265,7 +267,7 @@
                         <th scope="col" class="p-3">Fecha</th>
                         <th scope="col" class="p-3">Remitente</th>
                         <th scope="col" class="p-3">Comando</th>
-                        <th scope="col" class="p-3">Resultado</th>
+                        <th scope="col" class="p-3">Estado de tienda</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
@@ -302,35 +304,6 @@
         </div>
     </section>
 
-    {{-- COMANDOS --}}
-    <section class="rounded-none border bg-card p-6 text-foreground shadow-storefront">
-        <h2 class="mb-4 text-xl font-bold">
-            Comandos disponibles
-        </h2>
 
-        <div class="space-y-3 text-sm">
-            <div class="rounded-none bg-accent p-3">
-                <code class="font-bold">ABRIR CHIFA</code>
-                <p class="mt-1 text-foreground/75">
-                    Habilita la recepción de nuevos pedidos.
-                </p>
-            </div>
-
-            <div class="rounded-none bg-accent p-3">
-                <code class="font-bold">CERRAR CHIFA</code>
-                <p class="mt-1 text-foreground/75">
-                    Deshabilita la recepción de nuevos pedidos.
-                </p>
-            </div>
-
-            <div class="rounded-none bg-accent p-3">
-                <code class="font-bold">ESTADO CHIFA</code>
-                <p class="mt-1 text-foreground/75">
-                    Consulta el estado. La respuesta automática
-                    se habilitará al conectar el servicio de envío.
-                </p>
-            </div>
-        </div>
-    </section>
 </div>
 @endsection
