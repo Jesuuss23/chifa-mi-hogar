@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './manrope.css';
 @import './storefront-theme.css';
 @import './customer-auth.css';
 @import './customer-account.css';
