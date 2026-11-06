@@ -45,7 +45,7 @@ class LegacyCatalogImageMigrationTest extends TestCase
     {
         $this->image();
         $product = $this->product();
-        $before = $product->getAttributes();
+        $before = $product->fresh()->getAttributes();
         $this->mock(ImageService::class)->shouldNotReceive('upload');
         $this->artisan('catalog:migrate-images')->expectsOutputToContain('LISTO')->assertExitCode(0);
         $this->assertSame($before, $product->fresh()->getAttributes());
