@@ -212,6 +212,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->whereIn('theme', array_keys(\App\Services\StorefrontTheme::THEMES))
             ->name('appearance.preview');
 
+        Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])
+            ->name('customers.index');
+        Route::get('/customers/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])
+            ->whereNumber('customer')->name('customers.show');
+        Route::get('/customers/{customer}/avatar', [\App\Http\Controllers\Admin\CustomerController::class, 'avatar'])
+            ->whereNumber('customer')->name('customers.avatar');
+
         // Configuración general del negocio
         Route::get('/settings', [
             \App\Http\Controllers\Admin\StoreSettingController::class,

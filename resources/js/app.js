@@ -20,3 +20,5 @@ import './customer-profile';
 import './combo-carousel';
 
 import './admin-appearance';
+
+import './admin-customers';
