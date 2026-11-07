@@ -59,7 +59,7 @@
                             Editar
                         </a>
                         <a href="{{ route('admin.products.recommendations.index', $product) }}"
-                           class="rounded-none bg-accent px-3 py-2 text-sm text-primary">
+                           class="rounded-none bg-accent px-3 py-2 text-sm text-accent-foreground">
                             Recomendaciones
                         </a>
                         <form method="POST"
