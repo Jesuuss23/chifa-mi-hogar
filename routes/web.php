@@ -197,6 +197,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('logout');
         Route::resource('extras', ExtraController::class)
             ->except(['show']);
+        Route::get('/products/order-availability', [ProductController::class, 'orderAvailability'])
+            ->middleware('throttle:120,1')->name('products.order-availability');
         Route::resource('products', ProductController::class)
             ->except(['show']);
         Route::resource('extra-categories', ExtraCategoryController::class)

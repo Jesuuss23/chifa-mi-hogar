@@ -174,4 +174,70 @@ class ProductOrderTest extends TestCase
             ->assertViewHas('products', fn ($products) =>
                 $products->pluck('id')->all() === [$featured->id, $ordinary->id]);
     }
+
+    public function test_availability_reports_owner_across_categories_without_mutation(): void
+    {
+        $product = $this->product(4, ['name' => '<b>Chaufa</b>', 'is_available' => false]);
+        $before = $product->fresh()->getAttributes();
+        $response = $this->actingAs(User::factory()->create(['role' => 'admin']))
+            ->getJson(route('admin.products.order-availability', ['sort_order' => 4]))
+            ->assertOk()->assertJsonPath('available', false)
+            ->assertJsonPath('occupied_by', '<b>Chaufa</b>')
+            ->assertJsonPath('suggested_order', 5)
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+        $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
+        $this->assertSame($before, $product->fresh()->getAttributes());
+    }
+
+    public function test_availability_accepts_current_order_including_legacy_ties(): void
+    {
+        $first = $this->product(2);
+        $this->product(2);
+        $this->actingAs(User::factory()->create(['role' => 'admin']))
+            ->getJson(route('admin.products.order-availability', [
+                'sort_order' => 2, 'product_id' => $first->id,
+            ]))->assertOk()->assertJsonPath('available', true)
+            ->assertJsonPath('current', true)->assertJsonPath('occupied_by', null);
+    }
+
+    public function test_availability_treats_deleted_position_as_free(): void
+    {
+        $this->product(0)->delete();
+        $this->actingAs(User::factory()->create(['role' => 'admin']))
+            ->getJson(route('admin.products.order-availability', ['sort_order' => 0]))
+            ->assertOk()->assertJsonPath('available', true)->assertJsonPath('current', false);
+    }
+
+    public function test_availability_validates_input_and_edit_target(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
+        foreach ([-1, '1.5', 2147483648, 'abc', ['1']] as $order) {
+            $this->getJson(route('admin.products.order-availability', ['sort_order' => $order]))
+                ->assertUnprocessable()->assertJsonValidationErrors('sort_order');
+        }
+        $this->getJson(route('admin.products.order-availability', [
+            'sort_order' => 1, 'product_id' => 999999,
+        ]))->assertNotFound();
+    }
+
+    public function test_availability_requires_administrator(): void
+    {
+        $url = route('admin.products.order-availability', ['sort_order' => 1]);
+        $this->getJson($url)->assertUnauthorized();
+        foreach (['customer', 'delivery'] as $role) {
+            $this->actingAs(User::factory()->create(['role' => $role]))
+                ->getJson($url)->assertForbidden();
+        }
+    }
+
+    public function test_server_conflict_names_product_even_without_browser_check(): void
+    {
+        $this->product(3, ['name' => 'Chaufa especial']);
+        try {
+            app(ProductOrderService::class)->save($this->data(3), []);
+            $this->fail('Expected occupied order rejection.');
+        } catch (ValidationException $exception) {
+            $this->assertStringContainsString('Chaufa especial', $exception->errors()['sort_order'][0]);
+        }
+    }
 }

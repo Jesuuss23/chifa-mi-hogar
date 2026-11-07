@@ -23,6 +23,27 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products'));
     }
 
+    public function orderAvailability(Request $request, ProductOrderService $orders)
+    {
+        $data = $request->validate([
+            'sort_order' => ['required', 'integer', 'min:0', 'max:2147483647'],
+            'product_id' => ['nullable', 'integer', 'min:1'],
+        ]);
+        $current = isset($data['product_id']) ? Product::findOrFail($data['product_id']) : null;
+        $order = (int) $data['sort_order'];
+        // Keep the same legacy-tie behaviour as ProductOrderService::save.
+        $unchanged = $current && $current->sort_order === $order;
+        $occupied = $unchanged ? null : Product::where('sort_order', $order)->orderBy('id')->first(['name']);
+
+        return response()->json([
+            'order' => $order,
+            'available' => $occupied === null,
+            'current' => (bool) $unchanged,
+            'occupied_by' => $occupied?->name,
+            'suggested_order' => $occupied ? $orders->suggestedOrder() : null,
+        ]);
+    }
+
     public function create()
     {
         return view('admin.products.form', [

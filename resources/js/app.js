@@ -24,3 +24,5 @@ import './admin-appearance';
 import './admin-customers';
 
 import './admin-image-preview';
+
+import './product-order-check';

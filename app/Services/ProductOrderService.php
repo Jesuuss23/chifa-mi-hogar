@@ -48,9 +48,9 @@ class ProductOrderService
 
             // Preserve legacy ties when only editing other fields; never introduce a new tie.
             $moving = ! $current || $current->sort_order !== $order;
-            if ($moving && Product::where('sort_order', $order)->exists()) {
+            if ($moving && ($occupied = Product::where('sort_order', $order)->orderBy('id')->first(['name']))) {
                 throw ValidationException::withMessages([
-                    'sort_order' => 'Ese orden ya pertenece a otro plato, aunque esté en otra categoría o no esté disponible. Elige un número libre.',
+                    'sort_order' => 'Número ocupado por el plato: '.$occupied->name.'. Elige un número libre.',
                 ]);
             }
 
