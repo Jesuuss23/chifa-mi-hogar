@@ -11,6 +11,7 @@ class StorefrontTheme
         'formal' => 'Formal',
         'original' => 'Original',
         'christmas' => 'Navidad',
+        'summer' => 'Verano',
     ];
 
     public function current(): string

@@ -11,6 +11,7 @@
 @import './storefront-formal.css';
 @import './storefront-home.css';
 @import './storefront-christmas.css';
+@import './storefront-summer.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

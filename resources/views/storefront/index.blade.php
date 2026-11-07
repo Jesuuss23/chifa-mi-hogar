@@ -12,6 +12,8 @@
 <section class="catalog-surface home-hero" aria-labelledby="home-title">
     @if($storefrontTheme === 'christmas')
         @include('storefront.partials.christmas-decor')
+    @elseif($storefrontTheme === 'summer')
+        @include('storefront.partials.summer-decor')
     @endif
     <div class="home-hero__inner {{ $heroImage ? 'home-hero__inner--with-image' : '' }}">
         <div>

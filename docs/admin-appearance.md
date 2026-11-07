@@ -1,6 +1,6 @@
 # Apariencia de la tienda
 
-En Administración → Apariencia se puede elegir Formal, Original o Navidad. La migración
+En Administración → Apariencia se puede elegir Formal, Original, Navidad o Verano. La migración
 conserva Formal como valor inicial, también para la fila de configuración existente.
 Solo se guardan identificadores permitidos; no se acepta CSS o HTML proporcionado por el usuario.
 
@@ -20,11 +20,11 @@ sin depender de JavaScript ni cambiar URLs o contenido SEO público.
 
 El tema se aplica a la carta, detalle, combos, carrito, acceso y cuenta de clientes.
 Original recupera sus colores/tipografía/acabados, conservando la distribución actual.
-El administrador y delivery mantienen su diseño. Verano y un interruptor
-claro/oscuro quedan fuera de esta entrega.
+El administrador y delivery mantienen su diseño. Un interruptor claro/oscuro queda fuera de esta entrega.
 
 Navidad añade adornos y nieve en la portada; en la vista previa la nieve es estática.
 Ver [detalles de Navidad](christmas-theme.md).
+Verano añade sol y ondas estáticas: [detalles de Verano](summer-theme.md).
 
 ## Validación antes de fusionar
 No se ejecutaron PHP, Vite ni pruebas de navegador en el entorno de edición.
@@ -38,7 +38,7 @@ npm run build
 php artisan view:clear
 ```
 
-Comprobar manualmente el modal con ambos temas, teclado (Escape/cierre y retorno
+Comprobar manualmente el modal con los cuatro temas, teclado (Escape/cierre y retorno
 del foco), scroll móvil/escritorio y carga de fotos/fuentes. Mientras se previsualiza,
 abrir la tienda en otra sesión y confirmar que sigue igual. Aplicar Original,
 revisar carta/login/cuenta/carrito; restaurar Formal y revisar botones redondeados.

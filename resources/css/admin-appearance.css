@@ -16,3 +16,11 @@
 .appearance-swatch--christmas { background: radial-gradient(circle at 90% 15%, #d8b56d 0 2px, transparent 3px), #103f33; color: #f7e3ad; border: 1px solid #d8b56d; }
 .appearance-swatch--christmas .appearance-swatch-card { background: #fff8e8; color: #103f33; border-top: 4px solid #d8b56d; }
 .appearance-swatch--christmas .appearance-swatch-button { background: #ac2038; color: white; border-radius: 12px; }
+
+.appearance-swatch--summer {
+    background: radial-gradient(circle at 90% 15%, #ffd474 0 22px, transparent 23px), #ddf3ed;
+    color: #07565c;
+    border: 1px solid #90ccc4;
+}
+.appearance-swatch--summer .appearance-swatch-card { background: #fff9ee; color: #153e40; border-bottom: 4px solid #9bded5; }
+.appearance-swatch--summer .appearance-swatch-button { background: #b53d2d; color: white; border-radius: 12px; }

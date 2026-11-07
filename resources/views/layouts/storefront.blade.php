@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1"
     >
 
-    <meta name="theme-color" content="{{ match ($storefrontTheme) { 'formal' => '#6a0a17', 'christmas' => '#103f33', default => '#af3a03' } }}">
+    <meta name="theme-color" content="{{ match ($storefrontTheme) { 'formal' => '#6a0a17', 'christmas' => '#103f33', 'summer' => '#086b70', default => '#af3a03' } }}">
 
     @if(isset($seo))
         @include('components.storefront-seo')
