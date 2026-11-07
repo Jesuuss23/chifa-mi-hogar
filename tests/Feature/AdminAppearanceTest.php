@@ -93,7 +93,7 @@ class AdminAppearanceTest extends TestCase
 
     public static function invalidThemes(): array
     {
-        return [[[]], [['theme' => 'christmas']], [['theme' => ['formal']]], [['theme' => '<script>']]];
+        return [[[]], [['theme' => 'unknown-season']], [['theme' => ['formal']]], [['theme' => '<script>']]];
     }
 
     #[DataProvider('invalidThemes')]

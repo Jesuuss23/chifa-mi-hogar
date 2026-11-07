@@ -23,7 +23,11 @@
                         {{ $label }}
                         @if($activeTheme === $key)<span class="ml-auto text-xs font-normal">Activo</span>@endif
                     </label>
-                    <p class="mt-3 text-sm text-foreground/75">{{ $key === 'formal' ? 'Borgoña, fondos claros, Manrope y botones redondeados.' : 'Tonos cálidos, tipografía monoespaciada y acabados rectos.' }}</p>
+                    <p class="mt-3 text-sm text-foreground/75">{{ match ($key) {
+                        'formal' => 'Borgoña, fondos claros, Manrope y botones redondeados.',
+                        'christmas' => 'Verde pino, rojo y dorado. Bastones, gorrito y nieve en la portada, con opción de pausa.',
+                        default => 'Tonos cálidos, tipografía monoespaciada y acabados rectos.',
+                    } }}</p>
                     <a href="{{ route('admin.appearance.preview', ['theme' => $key]) }}" data-theme-preview data-theme-label="{{ $label }}" target="_blank" rel="noopener"
                        class="mt-4 inline-block rounded-lg border border-border px-4 py-2 text-sm font-semibold underline">Previsualizar {{ $label }}</a>
                 </div>

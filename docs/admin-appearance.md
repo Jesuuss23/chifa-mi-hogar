@@ -1,6 +1,6 @@
 # Apariencia de la tienda
 
-En Administración → Apariencia se puede elegir Formal u Original. La migración
+En Administración → Apariencia se puede elegir Formal, Original o Navidad. La migración
 conserva Formal como valor inicial, también para la fila de configuración existente.
 Solo se guardan identificadores permitidos; no se acepta CSS o HTML proporcionado por el usuario.
 
@@ -20,8 +20,11 @@ sin depender de JavaScript ni cambiar URLs o contenido SEO público.
 
 El tema se aplica a la carta, detalle, combos, carrito, acceso y cuenta de clientes.
 Original recupera sus colores/tipografía/acabados, conservando la distribución actual.
-El administrador y delivery mantienen su diseño. Navidad, Verano y un interruptor
+El administrador y delivery mantienen su diseño. Verano y un interruptor
 claro/oscuro quedan fuera de esta entrega.
+
+Navidad añade adornos y nieve en la portada; en la vista previa la nieve es estática.
+Ver [detalles de Navidad](christmas-theme.md).
 
 ## Validación antes de fusionar
 No se ejecutaron PHP, Vite ni pruebas de navegador en el entorno de edición.

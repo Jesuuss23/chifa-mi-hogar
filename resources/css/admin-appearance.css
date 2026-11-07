@@ -12,3 +12,7 @@
 .appearance-preview-stage { overflow: auto; padding: 12px; background: var(--muted); }
 .appearance-preview-stage iframe { display: block; width: 1100px; height: 65dvh; min-height: 260px; margin-inline: auto; border: 0; background: white; }
 .appearance-preview-stage iframe[data-width="mobile"] { width: 375px; }
+
+.appearance-swatch--christmas { background: radial-gradient(circle at 90% 15%, #d8b56d 0 2px, transparent 3px), #103f33; color: #f7e3ad; border: 1px solid #d8b56d; }
+.appearance-swatch--christmas .appearance-swatch-card { background: #fff8e8; color: #103f33; border-top: 4px solid #d8b56d; }
+.appearance-swatch--christmas .appearance-swatch-button { background: #ac2038; color: white; border-radius: 12px; }

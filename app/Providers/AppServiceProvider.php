@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \Illuminate\Support\Facades\View::composer([
-            'layouts.storefront', 'customer.auth.layout',
+            'storefront.index', 'layouts.storefront', 'customer.auth.layout',
             'customer.account', 'storefront.combos.index',
         ], function ($view) {
             $themes = app(\App\Services\StorefrontTheme::class);

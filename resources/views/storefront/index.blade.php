@@ -10,6 +10,9 @@
     $heroImage = $heroProduct ? app(\App\Services\CatalogImageService::class)->url($heroProduct, 'card') : null;
 @endphp
 <section class="catalog-surface home-hero" aria-labelledby="home-title">
+    @if($storefrontTheme === 'christmas')
+        @include('storefront.partials.christmas-decor')
+    @endif
     <div class="home-hero__inner {{ $heroImage ? 'home-hero__inner--with-image' : '' }}">
         <div>
             <p class="home-eyebrow">CHIFA MI HOGAR · SOLO DELIVERY</p>

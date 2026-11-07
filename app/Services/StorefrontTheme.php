@@ -10,6 +10,7 @@ class StorefrontTheme
     public const THEMES = [
         'formal' => 'Formal',
         'original' => 'Original',
+        'christmas' => 'Navidad',
     ];
 
     public function current(): string

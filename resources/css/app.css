@@ -10,6 +10,7 @@
 @import './admin-auth.css';
 @import './storefront-formal.css';
 @import './storefront-home.css';
+@import './storefront-christmas.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
