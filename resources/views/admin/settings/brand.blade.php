@@ -47,6 +47,7 @@
             <label for="logo" class="mb-2 block text-sm font-semibold">Subir o reemplazar logo</label>
             <input id="logo" name="logo" type="file" accept="image/jpeg,image/png,image/webp"
                    class="block w-full rounded-none border border-input p-3 text-sm">
+            <x-admin-image-preview input="logo" :max-mb="2" />
             <p class="mt-2 text-xs text-foreground/75">
                 JPG, PNG o WebP, máximo 2 MB y 4096 × 4096 píxeles.
                 Puedes subir logo.jpeg. Se optimiza automáticamente.

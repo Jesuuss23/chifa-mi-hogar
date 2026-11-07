@@ -126,6 +126,7 @@
                 </label>
 
                 @if ($combo->mediaAsset)
+                    <p class="mt-3 text-xs font-semibold text-foreground/75">Imagen guardada actualmente</p>
                     <img
                         src="{{ $combo->mediaAsset->cardUrl() }}"
                         alt="{{ $combo->name }}"
@@ -140,6 +141,7 @@
                     accept="image/jpeg,image/png,image/webp"
                     class="mt-3 block w-full rounded-none border p-3"
                 >
+            <x-admin-image-preview input="admin-combo-image" :max-mb="5" />
 
                 <p class="mt-2 text-xs text-foreground/75">
                     JPG, PNG o WEBP. Máximo 5 MB.

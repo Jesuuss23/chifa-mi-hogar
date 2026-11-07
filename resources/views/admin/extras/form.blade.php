@@ -72,12 +72,14 @@
         <div>
             <label for="admin-extras-image" class="mb-2 block font-medium">Fotografía</label>
             @if($editing && ($extra->mediaAsset || $extra->image_path))
+                <p class="mb-2 text-xs font-semibold text-foreground/75">Imagen guardada actualmente</p>
                 <x-catalog-image :item="$extra" variant="card"
                     class="mb-3 aspect-[4/3] w-64 rounded-none object-cover" />
             @endif
             <input id="admin-extras-image" name="image" type="file"
                    accept="image/jpeg,image/png,image/webp"
                    class="w-full rounded-none border p-3">
+            <x-admin-image-preview input="admin-extras-image" :max-mb="5" />
             <p class="mt-1 text-xs text-foreground/75">JPG, PNG o WebP. Máximo 5 MB.</p>
         </div>
 

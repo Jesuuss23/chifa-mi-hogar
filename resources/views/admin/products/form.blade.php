@@ -83,6 +83,7 @@
         <div>
             <label for="admin-products-image" class="mb-2 block font-medium">Fotografía del plato *</label>
             @if($editing && ($product->mediaAsset || $product->image_path))
+                <p class="mb-2 text-xs font-semibold text-foreground/75">Imagen guardada actualmente</p>
                 <x-catalog-image :item="$product" variant="card"
                     class="mb-3 aspect-[4/3] w-64 rounded-none object-cover" />
             @endif
@@ -90,6 +91,7 @@
                    accept="image/jpeg,image/png,image/webp"
                    @required(!$editing || (!$product->media_asset_id && !$product->image_path))
                    class="w-full rounded-none border p-3">
+            <x-admin-image-preview input="admin-products-image" :max-mb="5" />
             <p class="mt-1 text-xs text-foreground/75">Máximo 5 MB. Se optimiza a WebP.</p>
         </div>
 
@@ -110,7 +112,8 @@
                                value="{{ $extra->id }}"
                                @checked(in_array($extra->id, $chosen))>
 
-                        <x-catalog-image :item="$extra" variant="thumbnail"
+                        <p class="mb-2 text-xs font-semibold text-foreground/75">Imagen guardada actualmente</p>
+                <x-catalog-image :item="$extra" variant="thumbnail"
                             class="h-12 w-12 rounded-none object-cover" />
 
                         <span class="flex-1 text-sm">

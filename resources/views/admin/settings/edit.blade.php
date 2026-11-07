@@ -122,6 +122,7 @@
                        type="file"
                        accept="image/jpeg,image/png,image/webp"
                        class="block w-full rounded-none border border-input p-3 text-sm">
+            <x-admin-image-preview input="payment_qr" :max-mb="5" />
 
                 <p class="mt-2 text-xs text-foreground/75">
                     JPG, PNG o WebP. Máximo 5 MB.

@@ -16,6 +16,7 @@
 @import './plus-jakarta-sans.css';
 @import './sage-theme.css';
 @import './admin-shell.css';
+@import './admin-image-preview.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

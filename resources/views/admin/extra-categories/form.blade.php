@@ -39,12 +39,14 @@
         <div>
             <label for="admin-extra-categories-image" class="mb-2 block font-medium">Imagen de categoría</label>
             @if($editing && ($category->mediaAsset || $category->image_path))
+                <p class="mb-2 text-xs font-semibold text-foreground/75">Imagen guardada actualmente</p>
                 <x-catalog-image :item="$category" variant="card"
                     class="mb-3 aspect-[16/9] w-64 rounded-none object-cover" />
             @endif
             <input type="file" id="admin-extra-categories-image" name="image"
                    accept="image/jpeg,image/png,image/webp"
                    class="w-full rounded-none border p-3">
+            <x-admin-image-preview input="admin-extra-categories-image" :max-mb="5" />
             <p class="mt-1 text-xs text-foreground/75">Máximo 5 MB.</p>
         </div>
 

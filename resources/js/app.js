@@ -22,3 +22,5 @@ import './combo-carousel';
 import './admin-appearance';
 
 import './admin-customers';
+
+import './admin-image-preview';

@@ -40,6 +40,7 @@
         <div>
             <label for="admin-categories-image" class="mb-2 block font-medium">Fotografía *</label>
             @if($editing && ($category->mediaAsset || $category->image_path))
+                <p class="mb-2 text-xs font-semibold text-foreground/75">Imagen guardada actualmente</p>
                 <x-catalog-image :item="$category" variant="card"
                     class="mb-3 aspect-[16/9] w-64 rounded-none object-cover" />
             @endif
@@ -48,6 +49,7 @@
                    accept="image/jpeg,image/png,image/webp"
                    @required(!$editing || (!$category->media_asset_id && !$category->image_path))
                    class="w-full rounded-none border p-3">
+            <x-admin-image-preview input="admin-categories-image" :max-mb="5" />
             <p class="mt-1 text-xs text-foreground/75">JPG, PNG o WebP. Máximo 5 MB.</p>
             @error('image') <p class="text-sm text-destructive">{{ $message }}</p> @enderror
         </div>
