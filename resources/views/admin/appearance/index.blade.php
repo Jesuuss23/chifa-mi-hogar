@@ -24,6 +24,7 @@
                         @if($activeTheme === $key)<span class="ml-auto text-xs font-normal">Activo</span>@endif
                     </label>
                     <p class="mt-3 text-sm text-foreground/75">{{ match ($key) {
+                        'sage' => 'Blanco y verde salvia, Plus Jakarta Sans y bordes amplios y redondeados.',
                         'summer' => 'Turquesa, coral y arena. Sol y ondas en la portada, con botones redondeados.',
                         'formal' => 'Borgoña, fondos claros, Manrope y botones redondeados.',
                         'christmas' => 'Verde pino, rojo y dorado. Bastones, gorrito y nieve en la portada, con opción de pausa.',

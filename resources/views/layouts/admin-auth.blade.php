@@ -8,7 +8,7 @@
     <title>@yield('title', 'Administración') | Chifa Mi Hogar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="storefront-theme customer-surface admin-auth antialiased">
+<body data-admin-theme="sage" class="storefront-theme admin-sage customer-surface admin-auth antialiased">
     <a href="#admin-access" class="admin-auth-skip">Ir al formulario</a>
     <header class="admin-auth-header">
         @php($adminAuthLogo = \App\Models\StoreSetting::current()->logoUrl())

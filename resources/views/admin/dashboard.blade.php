@@ -12,6 +12,12 @@
         </p>
     </div>
 
+    <nav class="admin-quick-links" aria-label="Acciones frecuentes">
+        <a href="{{ route('admin.orders.index') }}">Gestionar pedidos →</a>
+        <a href="{{ route('admin.products.index') }}">Revisar productos</a>
+        <a href="{{ route('admin.customers.index') }}">Ver clientes</a>
+    </nav>
+
     <dl class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         @foreach ([
             ['title' => 'Pedidos de hoy', 'value' => $ordersToday, 'unit' => '',

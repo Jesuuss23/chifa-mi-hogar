@@ -12,6 +12,7 @@ class StorefrontTheme
         'original' => 'Original',
         'christmas' => 'Navidad',
         'summer' => 'Verano',
+        'sage' => 'Salvia',
     ];
 
     public function current(): string
