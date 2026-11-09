@@ -45,7 +45,7 @@ class StorefrontController extends Controller
 
         $combos = Combo::query()
             ->with(['mediaAsset', 'items.product', 'items.extra'])
-            ->where('is_available', true)
+            ->availableNow()
             ->where('show_in_menu', true)
             ->orderBy('sort_order')
             ->orderBy('name')

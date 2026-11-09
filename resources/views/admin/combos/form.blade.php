@@ -231,6 +231,55 @@
 
         </section>
 
+        <section class="rounded-2xl border bg-card p-6 shadow-storefront">
+            <h2 class="text-xl font-bold">Disponibilidad del combo</h2>
+            <p class="mt-2 text-sm text-foreground/75">Horario de Perú. Fuera de los días elegidos, el combo no se muestra ni se puede comprar.</p>
+            <label class="mt-4 block" for="availability-mode">Disponible</label>
+            <select id="availability-mode" name="availability_mode" class="mt-2 w-full rounded-xl border bg-card p-3">
+                @foreach(['always' => 'Todos los días', 'weekdays' => 'Días de la semana', 'dates' => 'Fechas concretas'] as $mode => $label)
+                    <option value="{{ $mode }}" @selected(old('availability_mode', $combo->availability_mode ?? 'always') === $mode)>{{ $label }}</option>
+                @endforeach
+            </select>
+            <fieldset class="mt-5" data-combo-schedule="weekdays">
+                <legend class="font-semibold">Días de la semana</legend>
+                <div class="mt-3 flex flex-wrap gap-4">
+                    @foreach([1 => 'Lunes', 2 => 'Martes', 3 => 'Miércoles', 4 => 'Jueves', 5 => 'Viernes', 6 => 'Sábado', 7 => 'Domingo'] as $day => $label)
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" name="available_weekdays[]" value="{{ $day }}" @checked(in_array($day, old('available_weekdays', $combo->available_weekdays ?? [])))>
+                            {{ $label }}
+                        </label>
+                    @endforeach
+                </div>
+            </fieldset>
+            <div class="mt-5" data-combo-schedule="dates">
+                <label for="combo-dates" class="block font-semibold">Fechas del calendario</label>
+                <p id="combo-dates-help" class="mt-2 text-sm">Una fecha por línea, con formato AAAA-MM-DD. Puedes elegir fechas de distintos meses.</p>
+                <div class="my-3 flex flex-wrap items-end gap-3" data-date-picker hidden>
+                    <label>Elegir fecha <input type="date" id="combo-date-picker" class="block rounded-xl border p-2"></label>
+                    <button type="button" id="combo-add-date" class="rounded-full bg-primary px-4 py-2 text-primary-foreground">Agregar fecha</button>
+                </div>
+                <textarea id="combo-dates" name="available_dates" rows="5" aria-describedby="combo-dates-help" class="mt-2 w-full rounded-xl border bg-card p-3">{{ old('available_dates', implode("\n", $combo->available_dates ?? [])) }}</textarea>
+            </div>
+        </section>
+        <script>
+        (() => {
+            const mode = document.getElementById('availability-mode');
+            const refresh = () => document.querySelectorAll('[data-combo-schedule]').forEach(panel => {
+                panel.hidden = panel.dataset.comboSchedule !== mode.value;
+            });
+            mode.addEventListener('change', refresh);
+            refresh();
+            document.querySelector('[data-date-picker]').hidden = false;
+            document.getElementById('combo-add-date').addEventListener('click', () => {
+                const picker = document.getElementById('combo-date-picker');
+                const dates = document.getElementById('combo-dates');
+                if (!picker.value || !picker.checkValidity()) return;
+                dates.value = [...new Set([...dates.value.split(/[\s,]+/).filter(Boolean), picker.value])].sort().join('\n');
+                picker.value = '';
+            });
+        })();
+        </script>
+
         <button
             type="submit"
             class="w-full rounded-none bg-primary px-6 py-4 font-bold text-primary-foreground"

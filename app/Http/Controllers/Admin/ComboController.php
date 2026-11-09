@@ -63,6 +63,9 @@ class ComboController extends Controller
                 'slug' => Str::slug($data['name']) . '-' . Str::lower(Str::random(6)),
                 'description' => $data['description'] ?? null,
                 'price' => $data['price'],
+                'availability_mode' => $data['availability_mode'],
+                'available_weekdays' => $data['available_weekdays'],
+                'available_dates' => $data['available_dates'],
                 'media_asset_id' => $mediaAssetId,
                 'sort_order' => $data['sort_order'] ?? 0,
                 'is_available' => true,
@@ -124,7 +127,12 @@ class ComboController extends Controller
 
     private function validateCombo(Request $request): array
     {
+        $request->mergeIfMissing(['availability_mode' => 'always']);
         $data = $request->validate([
+            'availability_mode' => ['required', Rule::in(['always', 'weekdays', 'dates'])],
+            'available_weekdays' => ['exclude_unless:availability_mode,weekdays', 'required', 'array', 'min:1', 'max:7'],
+            'available_weekdays.*' => ['integer', 'between:1,7', 'distinct'],
+            'available_dates' => ['exclude_unless:availability_mode,dates', 'required', 'string', 'max:5000'],
             'name' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string', 'max:2000'],
             'price' => ['required', 'numeric', 'min:0.01', 'decimal:0,2'],
@@ -155,6 +163,18 @@ class ComboController extends Controller
                 ->whereNull('deleted_at'),
         ],
         ]);
+
+        $data['available_weekdays'] = $data['availability_mode'] === 'weekdays'
+            ? array_map('intval', $data['available_weekdays']) : null;
+        $dates = $data['availability_mode'] === 'dates'
+            ? preg_split('/[\\s,]+/', trim($data['available_dates']), -1, PREG_SPLIT_NO_EMPTY) : null;
+        if ($dates !== null) {
+            Validator::make(['available_dates' => $dates], [
+                'available_dates' => ['required', 'array', 'min:1', 'max:366'],
+                'available_dates.*' => ['required', 'date_format:Y-m-d', 'distinct'],
+            ], ['available_dates.*.date_format' => 'Usa fechas válidas con formato AAAA-MM-DD.'])->validate();
+        }
+        $data['available_dates'] = $dates;
 
         $seen = [];
 
@@ -246,6 +266,9 @@ class ComboController extends Controller
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
                 'price' => $data['price'],
+                'availability_mode' => $data['availability_mode'],
+                'available_weekdays' => $data['available_weekdays'],
+                'available_dates' => $data['available_dates'],
                 'media_asset_id' => $mediaAssetId,
                 'sort_order' => $data['sort_order'] ?? 0,
                 'show_in_menu' => $data['show_in_menu'] ?? false,

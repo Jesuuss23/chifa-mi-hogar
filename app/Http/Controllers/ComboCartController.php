@@ -13,14 +13,13 @@ class ComboCartController extends Controller
         $data = $request->validate([
             'combo_id' => ['required', 'integer', 'exists:combos,id'],
             'quantity' => ['required', 'integer', 'min:1', 'max:20'],
-            'components' => ['nullable', 'array', 'max:50'],
-            'components.*.type' => ['required', 'in:product,extra'],
-            'components.*.id' => ['required', 'integer', 'min:1'],
-            'components.*.quantity' => ['required', 'integer', 'min:1', 'max:50'],
+            'components' => ['prohibited'],
+            'extras' => ['prohibited'],
+            'notes' => ['prohibited'],
         ]);
 
         $combo = Combo::query()
-            ->where('is_available', true)
+            ->availableNow()
             ->findOrFail($data['combo_id']);
 
         $components = $data['components'] ?? [];

@@ -90,6 +90,21 @@ class CartController extends Controller
             abort(404);
         }
 
+        if (($cart[$key]['type'] ?? null) === 'combo') {
+            if ($request->input('edit_mode') === 'configuration') {
+                throw ValidationException::withMessages(['cart' => 'Solo puedes cambiar la cantidad de combos.']);
+            }
+            $data = $request->validate([
+                'quantity' => ['required', 'integer', 'between:1,20'],
+                'components' => ['prohibited'], 'extras' => ['prohibited'], 'notes' => ['prohibited'],
+            ]);
+            app(ComboService::class)->buildLine([
+                'id' => $cart[$key]['combo_id'],
+                'quantity' => $data['quantity'],
+                'components' => $cart[$key]['components'] ?? [],
+            ]);
+        }
+
         /*
         * Compatibilidad con la actualización tradicional.
         * Conservamos el comportamiento anterior.
@@ -157,51 +172,7 @@ class CartController extends Controller
         * Preparar nueva configuración.
         */
         if ($type === 'combo') {
-
-            $components = collect($data['components'] ?? [])
-                ->map(fn ($component) => [
-                    'type' => $component['type'],
-                    'id' => (int) $component['id'],
-                    'quantity' => (int) $component['quantity'],
-                ])
-                ->sortBy(fn ($component) =>
-                    $component['type'] . ':' .
-                    str_pad((string) $component['id'], 12, '0', STR_PAD_LEFT)
-                )
-                ->values()
-                ->all();
-
-            $comboId = (int) ($entry['combo_id'] ?? 0);
-
-            // Validación completa de los componentes.
-            app(\App\Services\ComboService::class)->buildLine([
-                'type' => 'combo',
-                'id' => $comboId,
-                'quantity' => 1,
-                'components' => $components,
-            ]);
-
-            $newEntry = [
-                'type' => 'combo',
-                'combo_id' => $comboId,
-                'quantity' => 1,
-                'components' => $components,
-            ];
-
-            $identity = [
-                'type' => 'combo',
-                'id' => $comboId,
-                'components' => $components,
-            ];
-
-            $newKey = hash(
-                'sha256',
-                'edited-combo:' . json_encode(
-                    $identity,
-                    JSON_THROW_ON_ERROR
-                )
-            );
-
+            throw ValidationException::withMessages(['cart' => 'Solo puedes cambiar la cantidad de combos.']);
         } else {
 
             if (!in_array($type, ['product', 'recommendation'], true)) {
@@ -441,6 +412,7 @@ class CartController extends Controller
                     ];
 
                 } catch (ValidationException $exception) {
+                    $request->session()->flash('cart_notice', 'Retiramos un combo que ya no está disponible o cuya composición cambió. Revisa tu carrito antes de continuar.');
                     // El combo dejó de estar disponible
                     // o cambió la configuración del catálogo.
                     continue;

@@ -41,9 +41,7 @@
                 {{ $combo->description }}
             </p>
 
-            <p class="mt-6 text-3xl font-black text-primary">
-                S/ {{ number_format((float) $combo->price, 2) }}
-            </p>
+            <div class="mt-6"><x-combo-price :combo="$combo" /></div>
 
             @if($errors->any())
                 <div class="mt-6 rounded-none bg-destructive/10 p-4 text-destructive">
@@ -66,73 +64,15 @@
                 >
 
                 <div>
-                    <h2 class="text-xl font-bold">
-                        Personaliza tu combo
-                    </h2>
-
-                    <p class="mt-2 text-sm text-foreground/75">
-                        Puedes aumentar las cantidades incluidas.
-                        Cada unidad adicional se cobra por separado.
-                    </p>
-                </div>
-
-                <div class="space-y-4">
-
-                    @foreach($combo->items as $index => $item)
-
-                        @php
-                            $catalogItem = $item->product ?: $item->extra;
-                            $type = $item->product_id ? 'product' : 'extra';
-                            $included = (int) $item->quantity;
-                            $price = (float) $catalogItem->price;
-                        @endphp
-
-                        <div class="rounded-none border bg-card p-4">
-
-                            <div class="flex flex-wrap items-center justify-between gap-4">
-
-                                <div>
-                                    <h3 class="font-bold">
-                                        {{ $catalogItem->name }}
-                                    </h3>
-
-                                    <p class="mt-1 text-xs text-foreground/75">
-                                        Incluye {{ $included }}
-                                        · Adicional S/ {{ number_format($price, 2) }}
-                                    </p>
-                                </div>
-
-                                <input
-                                    type="number"
-                                    name="components[{{ $index }}][quantity]"
-                                    value="{{ old('components.'.$index.'.quantity', $included) }}"
-                                    min="{{ $included }}"
-                                    max="50"
-                                    required
-                                    data-combo-component
-                                    data-included="{{ $included }}"
-                                    data-price-cents="{{ (int) round($price * 100) }}"
-                                    class="w-24 rounded-none border p-3"
-                                >
-
-                            </div>
-
-                            <input
-                                type="hidden"
-                                name="components[{{ $index }}][type]"
-                                value="{{ $type }}"
-                            >
-
-                            <input
-                                type="hidden"
-                                name="components[{{ $index }}][id]"
-                                value="{{ $catalogItem->id }}"
-                            >
-
-                        </div>
-
-                    @endforeach
-
+                    <h2 class="text-xl font-bold">Incluye por combo</h2>
+                    <p class="mt-2 text-sm text-foreground/75">Composición fija, sin cambios ni adicionales. Elige cuántos combos deseas.</p>
+                    <ul class="mt-4 space-y-3">
+                        @foreach($combo->items as $item)
+                            <li class="rounded-xl border bg-card p-4">
+                                <strong>{{ $item->quantity }} ×</strong> {{ $item->product?->name ?? $item->extra?->name }}
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
 
                 <div>
@@ -189,25 +129,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('combo-form');
+
     const quantityInput = document.getElementById('combo-quantity');
     const totalElement = document.getElementById('combo-total');
-    const components = form.querySelectorAll('[data-combo-component]');
+
 
     const baseCents = @json((int) round((float) $combo->price * 100));
 
     function calculateTotal() {
-        let unitCents = baseCents;
-
-        components.forEach(function (input) {
-            const included = Number(input.dataset.included);
-            const priceCents = Number(input.dataset.priceCents);
-            const selected = Number(input.value);
-
-            const additional = Math.max(0, selected - included);
-
-            unitCents += additional * priceCents;
-        });
+        const unitCents = baseCents;
 
         const quantity = Math.max(1, Number(quantityInput.value) || 1);
         const totalCents = unitCents * quantity;
@@ -216,9 +146,6 @@ document.addEventListener('DOMContentLoaded', function () {
             'S/ ' + (totalCents / 100).toFixed(2);
     }
 
-    components.forEach(function (input) {
-        input.addEventListener('input', calculateTotal);
-    });
 
     quantityInput.addEventListener('input', calculateTotal);
 

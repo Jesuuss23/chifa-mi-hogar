@@ -21,7 +21,7 @@
     <h1 class="mt-5 text-3xl font-bold">Nuestros combos</h1>
 
     <p class="mt-2 text-foreground/75">
-        Disfruta nuestros combos y personalízalos a tu gusto.
+        Disfruta nuestros combos. Elige tu favorito y la cantidad que deseas.
     </p>
 
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -57,9 +57,7 @@
                         @endforeach
                     </ul>
 
-                    <p class="mt-4 text-2xl font-bold text-primary">
-                        S/ {{ number_format((float) $combo->price, 2) }}
-                    </p>
+                    <x-combo-price :combo="$combo" />
 
                     <a
                         href="{{ route('combos.show', $combo) }}"

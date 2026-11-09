@@ -34,6 +34,9 @@
     </div>
 
     {{-- MENSAJES --}}
+    @if(session('cart_notice'))
+        <p role="alert" class="mb-4 rounded-xl border border-border bg-accent p-4">{{ session('cart_notice') }}</p>
+    @endif
     @if(session('success'))
         <div
             role="status"
@@ -154,7 +157,7 @@
                         );
 
                         $canEdit = $isCombo
-                            ? $comboComponents->isNotEmpty()
+                            ? false
                             : $availableExtras->isNotEmpty();
                     @endphp
 

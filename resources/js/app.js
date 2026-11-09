@@ -26,3 +26,5 @@ import './admin-customers';
 import './admin-image-preview';
 
 import './product-order-check';
+
+import './category-strip';

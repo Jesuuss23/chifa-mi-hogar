@@ -21,12 +21,18 @@ class ComboService
         $combo = Combo::query()
             ->with(['items.product.category', 'items.extra'])
             ->whereKey($id)
-            ->where('is_available', true)
+            ->availableNow()
             ->first();
 
         if (!$combo || $combo->items->isEmpty()) {
             throw ValidationException::withMessages([
                 'items' => 'El combo no está disponible.',
+            ]);
+        }
+
+        if (!empty($item['extras']) || !empty($item['notes'])) {
+            throw ValidationException::withMessages([
+                'items' => 'El combo no admite adicionales ni modificaciones.',
             ]);
         }
 
@@ -111,9 +117,9 @@ class ComboService
 
             $chosen = $selected[$key] ?? $included;
 
-            if ($chosen < $included || $chosen > 50) {
+            if ($chosen !== $included) {
                 throw ValidationException::withMessages([
-                    'items' => 'No puedes reducir los componentes incluidos.',
+                    'items' => 'Los combos tienen una composición fija. Solo puedes cambiar la cantidad de combos.',
                 ]);
             }
 

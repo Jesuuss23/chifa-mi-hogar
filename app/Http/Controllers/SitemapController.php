@@ -22,7 +22,7 @@ class SitemapController extends Controller
             ->where('is_available', true)
             ->whereHas('category', fn ($query) => $query->where('is_active', true));
         $combos = Combo::query()->select(['id', 'slug'])
-            ->where('is_available', true)->where('show_in_menu', true);
+            ->availableNow()->where('show_in_menu', true);
 
         foreach ([$products, $combos] as $query) {
             foreach ($query->lazyById(500) as $item) {

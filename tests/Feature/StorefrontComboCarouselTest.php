@@ -28,7 +28,7 @@ class StorefrontComboCarouselTest extends TestCase
         $response = $this->get(route('storefront.index'))->assertOk()
             ->assertViewHas('combos', fn ($combos) => $combos->modelKeys() === [$first->id, $last->id])
             ->assertSeeInOrder(['id="combos"', 'Combo Alfa', 'Combo Zeta', 'id="carta"'], false)
-            ->assertSee('Personalizar combo')
+            ->assertSee('Ver combo')
             ->assertSee('S/ 35.00')
             ->assertSee('href="'.route('combos.show', $first).'"', false)
             ->assertSee('href="#combos"', false);

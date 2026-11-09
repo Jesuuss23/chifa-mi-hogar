@@ -10,7 +10,7 @@
                 </p>
                 <h2 id="combos-title" class="text-3xl font-black sm:text-4xl">Arma tu momento con un combo</h2>
                 <p class="mt-3 text-sm leading-6 text-foreground/75">
-                    Elige tu combinación favorita y personalízala a tu gusto.
+                    Elige tu combinación favorita y elige tu cantidad a tu gusto.
                 </p>
             </div>
             <div class="combo-carousel__controls items-center gap-2" data-combo-controls hidden>
@@ -68,18 +68,18 @@
                                     @endforeach
                                 </ul>
                                 @if($includedItems->count() > 3)
-                                    <p class="mt-1 text-xs text-foreground/75">Descubre todo lo que incluye al personalizar.</p>
+                                    <p class="mt-1 text-xs text-foreground/75">Descubre todo lo que incluye en el detalle.</p>
                                 @endif
                             @endif
                             <div class="mt-auto pt-5">
                                 <div class="mb-4 flex items-baseline justify-between gap-3 border-t border-border pt-4">
                                     <span class="text-xs text-foreground/75">Precio del combo</span>
-                                    <span class="whitespace-nowrap text-2xl font-black text-primary">S/ {{ number_format((float) $combo->price, 2) }}</span>
+                                    <x-combo-price :combo="$combo" />
                                 </div>
                                 <a href="{{ route('combos.show', $combo) }}"
-                                   aria-label="Personalizar combo: {{ $combo->name }}"
+                                   aria-label="Ver combo: {{ $combo->name }}"
                                    class="flex min-h-12 items-center justify-center bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition hover:bg-primary/90">
-                                    Personalizar combo <span class="ml-2" aria-hidden="true">↗</span>
+                                    Ver combo <span class="ml-2" aria-hidden="true">↗</span>
                                 </a>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                 </li>
             @endforeach
         </ul>
-        <p class="mt-2 text-xs text-foreground/75">El precio final se actualiza según tu personalización.</p>
+        <p class="mt-2 text-xs text-foreground/75">Combos de composición fija. Solo elige la cantidad.</p>
     </div>
 </section>
 @endif

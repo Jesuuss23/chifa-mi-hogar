@@ -56,7 +56,7 @@
     </div>
 
     <!-- CATEGORÍAS -->
-    <nav aria-label="Categorías"
+    <nav data-category-strip aria-label="Categorías"
          class="home-categories mb-9 flex gap-3 overflow-x-auto pb-3">
 
         <a href="{{ route('storefront.index') }}#carta"
