@@ -1,34 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    @include('components.storefront-seo')
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body data-theme="{{ $storefrontTheme }}" class="storefront-theme catalog-surface min-h-screen bg-background">
-
-@include('components.store-availability')
-
-<main class="mx-auto max-w-7xl px-4 py-8">
+@extends('layouts.storefront')
+@section('title', 'Combos y promociones | Chifa Mi Hogar')
+@section('content')
+<section class="mx-auto max-w-7xl px-4 py-8">
 
     <a href="{{ route('storefront.index') }}"
        class="text-sm font-semibold text-primary">
         ← Volver a la carta
     </a>
 
-    <h1 class="mt-5 text-3xl font-bold">Nuestros combos</h1>
+    <h1 class="mt-5 text-3xl font-bold">Combos y promociones</h1>
 
-    <p class="mt-2 text-foreground/75">
-        Disfruta nuestros combos. Elige tu favorito y la cantidad que deseas.
-    </p>
+
 
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
+        @php($firstOfferId = $combos->first(fn ($entry) => $entry->reference_price > (float) $entry->price)?->id)
         @forelse ($combos as $combo)
 
-            <article class="overflow-hidden rounded-none bg-card shadow-storefront">
+            <article class="promo-card overflow-hidden rounded-none bg-card shadow-storefront">
+                <x-combo-offer :combo="$combo" :animate="$combo->id === $firstOfferId" />
 
                 @if ($combo->mediaAsset)
                     <img
@@ -84,7 +74,6 @@
         {{ $combos->links('pagination.storefront') }}
     </div>
 
-</main>
+</section>
 
-</body>
-</html>
+@endsection

@@ -16,6 +16,7 @@ L.Icon.Default.mergeOptions({
 window.L = L;
 
 import './customer-profile';
+import './customer-interface';
 
 import './combo-carousel';
 

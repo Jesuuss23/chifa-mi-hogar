@@ -81,7 +81,7 @@
     </nav>
 
     <!-- PRODUCTOS -->
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div class="customer-product-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
         @forelse($products as $product)
             <article class="home-product group flex h-full flex-col overflow-hidden
@@ -115,7 +115,7 @@
 
                 <div class="flex flex-1 flex-col p-5">
 
-                    <p class="text-xs font-bold uppercase
+                    <p class="customer-product-category text-xs font-bold uppercase
                               tracking-wide text-primary">
                         {{ $product->category->name }}
                     </p>

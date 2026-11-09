@@ -2,12 +2,10 @@
 @section('title', 'Iniciar sesión')
 @section('content')
         <h1 id="auth-title" class="mt-5 text-2xl font-bold text-foreground">
-            Bienvenido nuevamente
+            Qué gusto verte
         </h1>
 
-        <p class="mt-2 text-sm text-foreground/75">
-            Ingresa para consultar tus pedidos.
-        </p>
+
 
         @if(session('password_status'))
             <p role="status" class="mt-4 border border-border p-3">{{ session('password_status') }}</p>
@@ -23,7 +21,7 @@
                 <label for="email" class="block text-sm font-medium">Correo electrónico</label>
                 <input id="email" type="email" name="email" required
                        value="{{ old('email') }}"
-                       autocomplete="email"
+                       autocomplete="email" placeholder="tu@correo.com"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
                        aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
                        @if($errors->has('email')) aria-describedby="email-error" @endif>
@@ -32,18 +30,7 @@
                 @enderror
             </div>
 
-            <div>
-                <label for="password" class="block text-sm font-medium">Contraseña</label>
-                <input id="password" type="password" name="password" required
-                       autocomplete="current-password"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
-                       aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
-                       @if($errors->has('password')) aria-describedby="password-error" @endif>
-            </div>
-
-            @error('password')
-                <p id="password-error" role="alert" class="text-sm text-destructive">{{ $message }}</p>
-            @enderror
+            <x-customer-password autocomplete="current-password" placeholder="Tu contraseña" />
 
             <button type="submit"
                     class="w-full rounded-none bg-primary p-3 font-semibold text-primary-foreground hover:bg-primary/90">

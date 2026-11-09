@@ -17,7 +17,7 @@
             @if($authLogo)<img src="{{ $authLogo }}" alt="" width="48" height="48">@endif
             <span>CHIFA<br>MI HOGAR</span>
         </a>
-        <a class="auth-back" href="{{ route('storefront.index') }}">← Volver al restaurante</a>
+        <a class="auth-back" href="{{ route('storefront.index') }}">← Volver a la carta</a>
     </header>
     <main class="auth-shell">
         <section id="auth-content" class="auth-panel" aria-labelledby="auth-title" tabindex="-1">
@@ -29,22 +29,17 @@
             @endif
             @if(app(\App\Services\CustomerCheckoutReturn::class)->active(request()))
                 <div class="mt-4 border border-border bg-muted p-4 text-sm">
-                    <p>Después de ingresar o crear tu cuenta, volverás a tu pedido. Tu carrito se conserva.</p>
+                    <p>Al ingresar, volverás a tu pedido.</p>
                     <a class="mt-2 inline-block font-semibold underline" href="{{ route('cart.checkout') }}">Volver al pedido sin iniciar sesión</a>
                 </div>
             @endif
             @yield('content')
         </section>
         <aside class="auth-story" aria-labelledby="auth-story-title">
-            <p class="auth-eyebrow">DE NUESTRA COCINA A TU HOGAR</p>
-            <h2 id="auth-story-title">Tu próximo<br>antojo empieza<br><span>aquí.</span></h2>
-            <p>Tu chifa de siempre, con tus datos a mano para el próximo pedido.</p>
-            <ul class="auth-benefits">
-                <li><span aria-hidden="true">01</span><div><strong>Tus pedidos, en un lugar</strong><p>Consulta tus compras desde Mi cuenta.</p></div></li>
-                <li><span aria-hidden="true">02</span><div><strong>Menos datos, la próxima vez</strong><p>Guarda tu dirección y ajústala para cada entrega.</p></div></li>
-                <li><span aria-hidden="true">03</span><div><strong>Tu opinión cuenta</strong><p>Valora tu experiencia después de recibir tu pedido.</p></div></li>
-            </ul>
-            <p class="auth-guest">¿Solo vienes por algo rico?<br><a href="{{ route('storefront.index') }}">Puedes comprar sin crear una cuenta →</a></p>
+            <div class="auth-story__art" aria-hidden="true"><span>✦</span><span>🍜</span><span>✦</span></div>
+            <h2 id="auth-story-title">Tu chifa.<br>Tu momento.</h2>
+            <p>Guarda tu dirección. Repite tus favoritos.</p>
+            <a class="auth-guest-link" href="{{ route('storefront.index') }}">Comprar sin cuenta →</a>
         </aside>
     </main>
     <footer class="auth-footer">

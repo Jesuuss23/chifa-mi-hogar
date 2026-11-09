@@ -6,7 +6,7 @@
         <div class="mb-6 flex flex-wrap items-end justify-between gap-5">
             <div class="max-w-xl">
                 
-                <h2 id="combos-title" class="text-3xl font-black sm:text-4xl">Combos para compartir</h2>
+                <h2 id="combos-title" class="text-3xl font-black sm:text-4xl">Combos y promociones</h2>
                 
             </div>
             <div class="combo-carousel__controls items-center gap-2" data-combo-controls hidden>
@@ -29,12 +29,14 @@
 
         <ul id="combo-cards" data-combo-viewport class="combo-carousel__track"
             tabindex="0" aria-label="Combos disponibles" aria-describedby="combo-scroll-help">
+            @php($firstOfferId = $combos->first(fn ($entry) => $entry->reference_price > (float) $entry->price)?->id)
             @foreach($combos as $combo)
                 @php
                     $includedItems = $combo->items->filter(fn ($item) => $item->product || $item->extra);
                 @endphp
                 <li class="combo-carousel__card">
-                    <article class="flex h-full flex-col overflow-hidden border border-border bg-card">
+                    <article class="promo-card flex h-full flex-col overflow-hidden border border-border bg-card">
+                        <x-combo-offer :combo="$combo" :animate="$combo->id === $firstOfferId" />
                         <div class="relative aspect-[16/10] overflow-hidden bg-muted">
                             @if($combo->mediaAsset || $combo->image_path)
                                 <x-catalog-image :item="$combo" variant="card"
@@ -46,7 +48,7 @@
                                     <span class="text-xs font-bold uppercase tracking-widest">Tu próximo favorito</span>
                                 </div>
                             @endif
-                            <span class="absolute left-3 top-3 border border-border bg-card px-3 py-1 text-xs font-bold text-primary">
+                            <span class="sr-only">
                                 Combo
                             </span>
                         </div>

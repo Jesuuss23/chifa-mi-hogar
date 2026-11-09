@@ -10,9 +10,7 @@
             Crear mi cuenta
         </h1>
 
-        <p class="mt-2 text-sm text-foreground/75">
-            Regístrate para consultar tus pedidos y valorar tus compras.
-        </p>
+
 
         @include('customer.auth.social')
 
@@ -20,13 +18,12 @@
               method="POST"
               class="mt-6 space-y-4">
             @csrf
-            @include('legal.collection-notice')
 
             <div>
                 <label for="name" class="block text-sm font-medium">Nombre</label>
                 <input id="name" type="text" name="name" required maxlength="150"
                        value="{{ old('name') }}"
-                       autocomplete="name"
+                       autocomplete="name" placeholder="Tu nombre"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
                        aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}"
                        @if($errors->has('name')) aria-describedby="name-error" @endif>
@@ -39,7 +36,7 @@
                 <label for="email" class="block text-sm font-medium">Correo electrónico</label>
                 <input id="email" type="email" name="email" required maxlength="255"
                        value="{{ old('email') }}"
-                       autocomplete="email"
+                       autocomplete="email" placeholder="tu@correo.com"
                        class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
                        aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
                        @if($errors->has('email')) aria-describedby="email-error" @endif>
@@ -48,30 +45,9 @@
                 @enderror
             </div>
 
-            <div>
-                <label for="password" class="block text-sm font-medium">Contraseña</label>
-                <input id="password" type="password" name="password" required
-                       autocomplete="new-password"
-                       minlength="8"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
-                       aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
-                       aria-describedby="password-guidance{{ $errors->has('password') ? ' password-error' : '' }}">
-                @error('password')
-                    <p id="password-error" role="alert" class="mt-1 text-sm text-destructive">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="password_confirmation" class="block text-sm font-medium">
-                    Confirmar contraseña
-                </label>
-                <input id="password_confirmation" type="password" name="password_confirmation" required
-                       autocomplete="new-password"
-                       minlength="8"
-                       class="mt-1 w-full rounded-none border border-input bg-card text-foreground p-3"
-                       aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
-                       aria-describedby="password-guidance{{ $errors->has('password') ? ' password-error' : '' }}">
-            </div>
+            <x-customer-password :min-length="8" :strength="true" placeholder="Mínimo 8 caracteres" />
+            <x-customer-password id="password_confirmation" name="password_confirmation"
+                label="Confirmar contraseña" :min-length="8" placeholder="Repite tu contraseña" />
 
             @if(config('turnstile.enabled'))
                 @if(config('turnstile.site_key'))
@@ -87,6 +63,7 @@
                 <p role="alert" class="text-sm text-destructive">{{ $message }}</p>
             @enderror
 
+            @include('legal.collection-notice')
             <button type="submit"
                     class="w-full rounded-none bg-primary p-3 font-semibold text-primary-foreground hover:bg-primary/90">
                 Crear cuenta
