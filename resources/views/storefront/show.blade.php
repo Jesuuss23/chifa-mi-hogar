@@ -237,12 +237,10 @@
                 >
                     <div>
                         <h2 class="text-sm font-bold text-foreground">
-                            Cantidad total
+                            Cantidad
                         </h2>
 
-                        <p class="mt-1 text-xs text-foreground/75">
-                            Elige cuántos platos deseas.
-                        </p>
+                        
                     </div>
 
                     <div
@@ -275,12 +273,7 @@
                     </div>
                 </div>
 
-                <p
-                    id="quantity-help"
-                    class="mt-3 text-xs leading-5 text-foreground/75"
-                >
-                    Puedes añadir tus complementos favoritos más abajo.
-                </p>
+                
 
             </div>
 
@@ -297,11 +290,7 @@
 
             <div class="mb-6">
 
-                <p
-                    class="text-xs font-bold uppercase tracking-[0.16em] text-primary"
-                >
-                    A tu gusto
-                </p>
+                
 
                 <h2
                     id="configuration-heading"
@@ -434,9 +423,7 @@
                                     Nuestras recomendaciones
                                 </h4>
 
-                                <p class="mt-1 text-xs leading-5 text-foreground/75">
-                                    Agrega una configuración con un toque.
-                                </p>
+                                
 
                             </div>
 
@@ -597,12 +584,7 @@
 
                             </div>
 
-                            <p
-                                id="recommendation-notice"
-                                class="mt-2 text-xs leading-5 text-foreground/75"
-                            >
-                                Selecciona una recomendación para añadir sus complementos.
-                            </p>
+                            
 
                         </div>
 
@@ -618,9 +600,7 @@
                                     Adicionales
                                 </h4>
 
-                                <p class="mt-1 text-xs leading-5 text-foreground/75">
-                                    Aumenta o disminuye la cantidad de cada complemento.
-                                </p>
+                                
 
                             </div>
 
@@ -1289,10 +1269,6 @@ document.addEventListener('DOMContentLoaded', () => {
         $('quantity-output').textContent = quantity;
         $('form-quantity').value = quantity;
 
-        $('quantity-help').textContent =
-            quantity === 1
-                ? 'Puedes personalizar tu plato con los adicionales disponibles.'
-                : `Personaliza cada uno de tus ${quantity} platos de forma independiente.`;
 
         root.querySelector(
             '[data-action="quantity-minus"]'
@@ -1375,7 +1351,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $('configuration-description').textContent =
             isMultiple
                 ? 'Cada plato conserva su propia configuración.'
-                : 'Elige una recomendación o agrega tus complementos favoritos.';
+                : 'Adicionales opcionales.';
 
         $('active-plate-title').textContent =
             isMultiple

@@ -72,6 +72,18 @@ class OrderController extends Controller
         ]);
     }
 
+    public function updates(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $data = $request->validate([
+            'ids' => ['required', 'array', 'min:1', 'max:50'],
+            'ids.*' => ['required', 'integer', 'min:1', 'distinct'],
+        ]);
+        return response()->json([
+            'orders' => Order::query()->whereIn('id', $data['ids'])
+                ->get(['id', 'status', 'payment_status']),
+        ])->header('Cache-Control', 'private, no-store');
+    }
+
     public function show(Order $order): View
     {
         $order->load([

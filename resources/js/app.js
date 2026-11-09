@@ -28,3 +28,5 @@ import './admin-image-preview';
 import './product-order-check';
 
 import './category-strip';
+
+import './admin-order-updates';

@@ -19,9 +19,9 @@
         <div>
             <p class="home-eyebrow">CHIFA MI HOGAR · SOLO DELIVERY</p>
             <h1 id="home-title">El sabor que<br>te hace volver.</h1>
-            <p class="home-hero__description">Tu plato favorito, preparado al momento y a tu gusto. Elige, personaliza y disfruta en casa.</p>
+            <p class="home-hero__description">Chifa recién preparado, directo a tu puerta.</p>
             <a href="#carta" class="home-hero__cta">Explorar carta <span aria-hidden="true">↓</span></a>
-            <p class="home-hero__note">Platos y combos · Adicionales a tu elección</p>
+            
         </div>
         @if($heroImage)
             <a href="{{ route('storefront.show', $heroProduct->slug) }}" class="home-hero__feature" aria-label="Ver plato: {{ $heroProduct->name }}">
@@ -38,21 +38,16 @@
 @include('storefront.partials.combo-carousel')
 
 <!-- CARTA -->
-<section id="carta" class="home-menu catalog-surface mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
+<section id="carta" class="home-menu catalog-surface mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-10">
 
     <div class="mb-8">
-        <p class="mb-2 text-xs font-bold uppercase
-                  tracking-[0.2em] text-primary">
-            Nuestros platos
-        </p>
+        
 
         <h2 class="text-3xl font-black sm:text-4xl">
             Nuestra carta
         </h2>
 
-        <p class="mt-3 text-foreground/75">
-            Descubre el sabor de cada especialidad.
-        </p>
+        
     </div>
 
     <!-- CATEGORÍAS -->
@@ -129,10 +124,9 @@
                         {{ $product->name }}
                     </h3>
 
-                    <p class="mt-2 line-clamp-2 text-sm
-                              leading-6 text-foreground/75">
-                        {{ $product->description ?: 'Preparado con nuestro sabor especial.' }}
-                    </p>
+                    @if($product->description)
+                        <p class="mt-2 line-clamp-2 text-sm leading-6 text-foreground/75">{{ $product->description }}</p>
+                    @endif
 
                     <div class="mt-auto flex items-center
                                 justify-between gap-3 pt-6">

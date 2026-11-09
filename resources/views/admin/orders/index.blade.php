@@ -3,6 +3,7 @@
 @section('page-title', 'Pedidos')
 
 @section('content')
+@include('admin.orders.live-updates', ['liveOrders' => $orders->getCollection()])
 <div class="catalog-surface admin-orders-surface max-w-7xl mx-auto space-y-6">
     <div>
         <h1 class="text-2xl font-bold text-foreground">Gestión de pedidos</h1>

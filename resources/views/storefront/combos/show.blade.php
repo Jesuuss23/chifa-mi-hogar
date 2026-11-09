@@ -65,7 +65,7 @@
 
                 <div>
                     <h2 class="text-xl font-bold">Incluye por combo</h2>
-                    <p class="mt-2 text-sm text-foreground/75">Composición fija, sin cambios ni adicionales. Elige cuántos combos deseas.</p>
+                    <p class="mt-2 text-sm text-foreground/75">Sin cambios ni adicionales.</p>
                     <ul class="mt-4 space-y-3">
                         @foreach($combo->items as $item)
                             <li class="rounded-xl border bg-card p-4">
@@ -105,9 +105,7 @@
                         S/ {{ number_format((float) $combo->price, 2) }}
                     </p>
 
-                    <p class="mt-2 text-xs text-foreground/75">
-                        El precio definitivo se verifica al procesar el pedido.
-                    </p>
+                    
 
                 </div>
 

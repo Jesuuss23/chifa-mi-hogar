@@ -2,16 +2,12 @@
 @if($combos->isNotEmpty())
 <section class="catalog-surface combo-carousel border-b border-border bg-accent/40"
          data-combo-carousel aria-labelledby="combos-title">
-    <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:py-14">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-10">
         <div class="mb-6 flex flex-wrap items-end justify-between gap-5">
             <div class="max-w-xl">
-                <p class="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-                    Más sabor en un solo pedido
-                </p>
-                <h2 id="combos-title" class="text-3xl font-black sm:text-4xl">Arma tu momento con un combo</h2>
-                <p class="mt-3 text-sm leading-6 text-foreground/75">
-                    Elige tu combinación favorita y elige tu cantidad a tu gusto.
-                </p>
+                
+                <h2 id="combos-title" class="text-3xl font-black sm:text-4xl">Combos para compartir</h2>
+                
             </div>
             <div class="combo-carousel__controls items-center gap-2" data-combo-controls hidden>
                 <button type="button" data-combo-prev aria-label="Ver combos anteriores"
@@ -27,7 +23,7 @@
             </div>
         </div>
 
-        <p id="combo-scroll-help" class="mb-4 text-xs text-foreground/75">
+        <p id="combo-scroll-help" class="sr-only">
             Desliza para explorar. También puedes recorrer los combos con el teclado.
         </p>
 
@@ -68,12 +64,12 @@
                                     @endforeach
                                 </ul>
                                 @if($includedItems->count() > 3)
-                                    <p class="mt-1 text-xs text-foreground/75">Descubre todo lo que incluye en el detalle.</p>
+                                    <p class="mt-1 text-xs text-foreground/75">+ {{ $includedItems->count() - 3 }} más</p>
                                 @endif
                             @endif
                             <div class="mt-auto pt-5">
                                 <div class="mb-4 flex items-baseline justify-between gap-3 border-t border-border pt-4">
-                                    <span class="text-xs text-foreground/75">Precio del combo</span>
+                                    
                                     <x-combo-price :combo="$combo" />
                                 </div>
                                 <a href="{{ route('combos.show', $combo) }}"
@@ -87,7 +83,7 @@
                 </li>
             @endforeach
         </ul>
-        <p class="mt-2 text-xs text-foreground/75">Combos de composición fija. Solo elige la cantidad.</p>
+        
     </div>
 </section>
 @endif

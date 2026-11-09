@@ -3,6 +3,7 @@
 @section('page-title', 'Detalle del pedido')
 
 @section('content')
+@include('admin.orders.live-updates', ['liveOrders' => collect([$order])])
 <div class="catalog-surface admin-orders-surface max-w-6xl mx-auto space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div>

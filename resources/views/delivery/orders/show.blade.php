@@ -116,6 +116,15 @@
 
 <main class="catalog-surface [overflow-wrap:anywhere] mx-auto max-w-2xl space-y-5 px-4 py-6 sm:py-8">
 
+    @if(session('success'))
+        <p role="status" class="rounded-xl bg-accent p-4 font-semibold">{{ session('success') }}</p>
+    @endif
+    @if($errors->any())
+        <div role="alert" class="rounded-xl bg-destructive/10 p-4 text-destructive">
+            @foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach
+        </div>
+    @endif
+
     {{-- ===============================================
          ENCABEZADO
     ================================================ --}}
@@ -446,6 +455,37 @@
         </div>
 
     </section>
+
+    @if($order->status === 'on_the_way')
+        <section class="rounded-2xl border border-border bg-card p-5 shadow-storefront">
+            <h2 class="text-lg font-black">Finalizar entrega</h2>
+            @if($order->payment_status === 'verified' || ($order->payment_method === 'cash' && $order->payment_status === 'pending'))
+                <form method="POST" action="{{ route('delivery.orders.deliver', $order) }}" class="mt-4 space-y-4">
+                    @csrf
+                    @method('PATCH')
+                    @if($order->payment_method === 'cash' && $order->payment_status === 'pending')
+                        <label class="flex items-start gap-3">
+                            <input type="checkbox" name="confirm_collection" value="1" required class="mt-1">
+                            <span>Confirmo que cobré S/ {{ number_format((float) $order->total, 2) }}.</span>
+                        </label>
+                    @else
+                        <p class="text-sm text-foreground/75">Pago verificado.</p>
+                    @endif
+                    <label class="flex items-start gap-3">
+                        <input type="checkbox" name="confirm_delivery" value="1" required class="mt-1">
+                        <span>Entregué el pedido al cliente.</span>
+                    </label>
+                    <button type="submit" class="min-h-12 w-full rounded-full bg-primary px-5 py-3 font-bold text-primary-foreground">
+                        Marcar pedido entregado
+                    </button>
+                </form>
+            @else
+                <p class="mt-3 text-sm text-destructive">Falta la verificación del pago por administración.</p>
+            @endif
+        </section>
+    @elseif($order->status === 'delivered')
+        <p class="rounded-xl bg-accent p-4 font-semibold">Pedido entregado · {{ $order->delivered_at?->format('d/m/Y H:i') }}</p>
+    @endif
 
     {{-- ===============================================
          SEGUIMIENTO GPS DEL REPARTIDOR

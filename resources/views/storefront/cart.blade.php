@@ -11,17 +11,13 @@
     <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
 
         <div>
-            <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary">
-                Tu selección
-            </p>
+            
 
             <h1 class="mt-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
                 Mi carrito
             </h1>
 
-            <p class="mt-2 text-sm text-foreground/75">
-                Revisa y personaliza tus platos antes de confirmar.
-            </p>
+            
         </div>
 
         <a
@@ -397,9 +393,7 @@
                                         Personalizar configuración
                                     </h3>
 
-                                    <p class="mt-1 text-xs leading-5 text-foreground/75">
-                                        Cambia los adicionales sin abandonar el carrito.
-                                    </p>
+                                    
 
                                 </div>
 
@@ -724,11 +718,7 @@
 
                     <div class="border-b border-border px-5 py-5 sm:px-6">
 
-                        <p
-                            class="text-xs font-bold uppercase tracking-wide text-primary"
-                        >
-                            Tu pedido
-                        </p>
+                        
 
                         <h2 class="mt-1 text-xl font-black text-foreground">
                             Resumen
@@ -781,8 +771,7 @@
                         </div>
 
                         <p class="mt-3 text-xs leading-5 text-foreground/75">
-                            El costo de delivery se calculará según tu ubicación
-                            durante la confirmación del pedido.
+                            Delivery calculado al indicar tu dirección.
                         </p>
 
                         <a

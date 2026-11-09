@@ -262,6 +262,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/orders', [OrderController::class, 'index'])
             ->name('orders.index');
 
+        Route::get('/orders/updates', [OrderController::class, 'updates'])
+            ->middleware('throttle:30,1')->name('orders.updates');
+
         Route::get('/orders/{order}', [OrderController::class, 'show'])
             ->name('orders.show');
 
@@ -335,6 +338,9 @@ Route::prefix('repartidor')
                 DeliveryOrderController::class,
                 'index',
             ])->name('orders.index');
+
+            Route::patch('/pedidos/{order}/entregar', [DeliveryOrderController::class, 'deliver'])
+                ->middleware('throttle:10,1')->name('orders.deliver');
 
             Route::get('/pedidos/{order}', [
                 DeliveryOrderController::class,
