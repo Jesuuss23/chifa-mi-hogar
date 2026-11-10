@@ -68,28 +68,29 @@
                     <p class="mt-2 text-sm text-foreground/75">Sin cambios ni adicionales.</p>
                     <ul class="mt-4 space-y-3">
                         @foreach($combo->items as $item)
-                            <li class="rounded-xl border bg-card p-4">
-                                <strong>{{ $item->quantity }} ×</strong> {{ $item->product?->name ?? $item->extra?->name }}
+                            @php
+                                $component = $item->product ?? $item->extra;
+                            @endphp
+                            <li class="combo-component rounded-xl border border-border bg-card p-3">
+                                <div class="combo-component__image">
+                                    @if($component)
+                                        <x-catalog-image :item="$component" variant="thumbnail" class="h-full w-full object-contain" />
+                                    @else
+                                        <span class="text-xs">Sin imagen</span>
+                                    @endif
+                                </div>
+                                <div class="combo-component__name"><strong>{{ $item->quantity }} ×</strong> {{ $component?->name ?? 'Componente no disponible' }}</div>
                             </li>
                         @endforeach
                     </ul>
                 </div>
 
                 <div>
-                    <label for="combo-quantity" class="mb-2 block font-semibold">
+                    <p class="mb-2 block font-semibold">
                         Cantidad de combos
-                    </label>
+                    </p>
 
-                    <input
-                        id="combo-quantity"
-                        type="number"
-                        name="quantity"
-                        value="{{ old('quantity', 1) }}"
-                        min="1"
-                        max="20"
-                        required
-                        class="w-28 rounded-none border p-3"
-                    >
+                    <x-quantity-stepper id="combo-quantity" :value="old('quantity', 1)" label="combos" />
                 </div>
 
                 <div class="rounded-none bg-accent p-5">

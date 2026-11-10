@@ -1,0 +1,26 @@
+/* Neutral canvas + brand colour; a small warm accent gives promotions emphasis. */
+.storefront-theme .promo-banners { --promo-accent: #f5c451; background: var(--card); border-bottom: 1px solid var(--border); }
+.promo-banners__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.promo-banners__track::-webkit-scrollbar { display: none; }
+.promo-banners__slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; display: grid; align-items: center; background: var(--card); }
+.promo-banners__slide picture { display: block; }
+.promo-banners__slide img { display: block; width: 100%; height: auto; max-height: 560px; object-fit: contain; }
+.promo-banners__controls { display: flex; justify-content: center; align-items: center; gap: .75rem; padding: .5rem 1rem; }
+.promo-banners__controls[hidden] { display: none; }
+.promo-banners__controls button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border-radius: 999px; color: var(--foreground); cursor: pointer; }
+.promo-banners__controls > button { border: 1px solid var(--border); background: var(--card); }
+.promo-banners__controls > button:hover { background: var(--primary); color: var(--primary-foreground); }
+.promo-banners__controls button:disabled { opacity: .35; cursor: default; }
+.promo-banners__dots { display: flex; flex-wrap: wrap; justify-content: center; }
+.promo-banners__dots span { width: 9px; height: 9px; border-radius: 99px; background: var(--muted-foreground); }
+.promo-banners__dots [aria-current="true"] span { width: 25px; background: var(--promo-accent); box-shadow: 0 0 0 1px #755119; }
+.promo-banners :is(a, button, [tabindex]):focus-visible { outline: 3px solid var(--primary); outline-offset: -3px; }
+@media (max-width: 639px) { .promo-banners__slide img { max-height: 520px; } .promo-banners__controls { gap: .25rem; } }
+.quantity-stepper { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--border); border-radius: 999px; padding: .25rem; background: var(--card); }
+.quantity-stepper button { width: 44px; height: 44px; border-radius: 999px; font-size: 1.25rem; font-weight: 700; background: var(--primary); color: var(--primary-foreground); }
+.quantity-stepper button:disabled { opacity: .35; }
+.quantity-stepper output { min-width: 2rem; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.quantity-stepper button:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+.combo-component { display: flex; align-items: center; gap: 1rem; }
+.combo-component__image { width: 72px; height: 72px; flex: none; border-radius: .75rem; overflow: hidden; background: var(--muted); }
+.combo-component__name { min-width: 0; overflow-wrap: anywhere; }

@@ -632,24 +632,7 @@
                                                             class="h-12 w-12 shrink-0 overflow-hidden rounded-none bg-accent sm:h-14 sm:w-14"
                                                         >
 
-                                                            @if($extra->mediaAsset || $extra->image_path)
-
-                                                                <x-catalog-image
-                                                                    :item="$extra"
-                                                                    variant="thumbnail"
-                                                                    loading="lazy"
-                                                                    class="h-full w-full object-cover"
-                                                                />
-
-                                                            @else
-
-                                                                <div
-                                                                    class="flex h-full items-center justify-center text-lg"
-                                                                >
-                                                                    🍴
-                                                                </div>
-
-                                                            @endif
+                                                            <x-catalog-image :item="$extra" variant="thumbnail" loading="lazy" class="h-full w-full object-contain" />
 
                                                         </div>
 

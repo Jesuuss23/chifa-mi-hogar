@@ -38,6 +38,7 @@
                         ],
                         'Negocio' => [
                             ['Apariencia', 'admin.appearance.index', 'admin.appearance.*'],
+                            ['Banners', 'admin.banners.index', 'admin.banners.*'],
                             ['Configuración general', 'admin.settings.edit', 'admin.settings.*'],
                             ['WhatsApp Meta', 'admin.whatsapp.index', 'admin.whatsapp.*'],
                             ['Redes sociales', 'admin.social-links.index', 'admin.social-links.*'],

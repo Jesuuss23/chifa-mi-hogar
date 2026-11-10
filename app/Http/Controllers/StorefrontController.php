@@ -52,7 +52,14 @@ class StorefrontController extends Controller
             ->orderBy('id')
             ->get();
 
+        $banners = \App\Models\PromotionalBanner::visible()
+            ->with(['mediaAsset', 'mobileMediaAsset', 'product', 'combo'])
+            ->orderBy('sort_order')->orderBy('id')->get()
+            ->filter(fn ($banner) => app(\App\Services\CatalogImageService::class)->url($banner, 'detail') !== null)
+            ->values();
+
         return view('storefront.index', compact(
+            'banners',
             'categories',
             'products',
             'selectedCategory',

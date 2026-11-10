@@ -28,8 +28,8 @@ class ComboStorefrontController extends Controller
 
         $combo->load([
             'mediaAsset',
-            'items.product',
-            'items.extra',
+            'items.product.mediaAsset',
+            'items.extra.mediaAsset',
         ]);
 
         return view('storefront.combos.show', compact('combo'));
