@@ -1,0 +1,41 @@
+/* Explicit checkout layout: optional notices must never become grid columns. */
+.storefront-theme .checkout-page { width: 100%; }
+.storefront-theme .checkout-page .checkout-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+.storefront-theme .checkout-page :is(.checkout-fields, .checkout-summary) { min-width: 0; }
+.storefront-theme .checkout-page .checkout-fields > section,
+.storefront-theme .checkout-page .checkout-summary > div,
+.storefront-theme .checkout-page .checkout-access { border-radius: 1.1rem; }
+.storefront-theme .checkout-page :is(input:not([type="hidden"]):not([type="radio"]), select, textarea) {
+    min-width: 0; max-width: 100%; font-size: 1rem; border-radius: .75rem;
+}
+.storefront-theme .checkout-page :is(input:not([type="hidden"]):not([type="radio"]), select) { min-height: 48px; }
+.storefront-theme .checkout-page :is(button, .checkout-access a) { border-radius: 999px; min-height: 44px; }
+.storefront-theme .checkout-page #delivery-map { height: clamp(250px, 40vw, 340px); border-radius: .8rem; }
+.storefront-theme .checkout-page #yape-panel { background: var(--muted); }
+.storefront-theme .checkout-page #btn-confirm-location { color: var(--customer-link, var(--primary)); border-color: currentColor; }
+.storefront-theme .checkout-page [data-payment-card] { border-radius: .9rem; }
+.storefront-theme .checkout-page [data-payment-card]:focus-within { outline: 3px solid var(--customer-link, var(--primary)); outline-offset: 3px; }
+.storefront-theme .checkout-page [id] { scroll-margin-top: 100px; }
+.storefront-theme .checkout-page .checkout-summary [hidden] { display: none !important; }
+.storefront-theme .checkout-page .checkout-privacy a { font-weight: 600; text-underline-offset: 3px; }
+@media (min-width: 640px) {
+    .storefront-theme .checkout-page .checkout-contact-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (min-width: 1024px) {
+    .storefront-theme .checkout-page .checkout-layout { grid-template-columns: minmax(0, 1fr) minmax(290px, 340px); gap: 2rem; }
+}
+@media (min-width: 1024px) and (min-height: 800px) {
+    .storefront-theme .checkout-page .checkout-summary { position: sticky; top: 100px; }
+}
+@media (max-width: 639px) {
+    .storefront-theme .checkout-page { padding-top: 1.25rem; }
+    .storefront-theme .checkout-page .checkout-fields > section { padding: 1rem; }
+    .storefront-theme .checkout-page .checkout-access > div { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .storefront-theme .checkout-page .checkout-access :is(button, a) { justify-content: center; padding: .65rem; font-size: .85rem; }
+    .storefront-theme .checkout-page .checkout-access a { grid-column: 1 / -1; }
+}

@@ -55,7 +55,7 @@
 
 @section('content')
 
-<section class="customer-surface mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:pt-12">
+<section class="checkout-page customer-surface mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:pt-12">
 
     {{-- ENCABEZADO --}}
 
@@ -67,34 +67,27 @@
             ← Volver al carrito
         </a>
 
-        <p class="mt-7 text-xs font-bold uppercase tracking-[0.16em] text-primary">
-            Último paso
-        </p>
-
         <h1 class="mt-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
             Confirmar pedido
         </h1>
 
-        <p class="mt-2 text-sm leading-6 text-foreground/75">
-            Completa tus datos, confirma tu ubicación y elige cómo deseas pagar.
-        </p>
     </div>
 
     @guest
-        <section class="mb-6 border border-border bg-card p-5" aria-labelledby="checkout-access-title">
+        <section class="checkout-access mb-6 border border-border bg-card p-5" aria-labelledby="checkout-access-title">
             <h2 id="checkout-access-title" class="font-bold">¿Ya tienes una cuenta?</h2>
-            <p class="mt-2 text-sm text-foreground/75">Antes de completar tus datos, puedes iniciar sesión para usar tu información guardada. Volverás aquí con tu carrito.</p>
+            <p class="mt-2 text-sm text-foreground/75">Ingresa para usar tus datos guardados.</p>
             <div class="mt-3 flex flex-wrap gap-3">
-                <button class="inline-flex min-h-12 items-center border border-primary px-4 py-3 font-semibold text-primary" type="submit" form="checkout-form" formmethod="POST" formnovalidate data-checkout-auth="true" formaction="{{ route('cart.checkout.access', 'login') }}">Iniciar sesión y volver al pedido</button>
+                <button class="inline-flex min-h-12 items-center border border-primary px-4 py-3 font-semibold text-primary" type="submit" form="checkout-form" formmethod="POST" formnovalidate data-checkout-auth="true" formaction="{{ route('cart.checkout.access', 'login') }}">Iniciar sesión</button>
                 <button class="inline-flex min-h-12 items-center border border-border px-4 py-3" type="submit" form="checkout-form" formmethod="POST" formnovalidate data-checkout-auth="true" formaction="{{ route('cart.checkout.access', 'register') }}">Crear cuenta</button>
-                <a class="inline-flex min-h-12 items-center px-4 py-3 underline" href="#checkout-form">Continuar como invitado</a>
+                <a class="inline-flex min-h-12 items-center px-4 py-3 underline" href="#customer_name">Seguir como invitado</a>
             </div>
-            <p class="mt-2 text-xs text-foreground/75">Al continuar guardaremos lo que escribiste durante 30 minutos, solo para este pedido. Revisa los datos y vuelve a cotizar al regresar.</p>
+            <p class="mt-2 text-xs text-foreground/75">Al ingresar o registrarte, guardamos tu avance durante 30 minutos.</p>
         </section>
     @endguest
 
     @if($checkoutDraft)
-        <p role="status" class="mb-6 border border-border bg-card p-4 text-sm">Recuperamos los datos que guardaste antes de identificarte. Revisa la dirección y el punto del mapa; vuelve a calcular el delivery antes de confirmar.</p>
+        <p role="status" class="mb-6 border border-border bg-card p-4 text-sm">Recuperamos los datos. Revisa la ubicación y vuelve a calcular el delivery.</p>
     @endif
 
     {{-- ERRORES --}}
@@ -125,68 +118,13 @@
         </div>
     @endif
 
-    {{-- COTIZACIÓN DESDE LARAVEL --}}
-
-    @if($quote)
-        <div id="checkout-quote-summary"
-            class="mb-7 rounded-none border border-border bg-card p-5 shadow-storefront sm:p-6"
-        >
-            <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-none bg-green-50 text-green-700">
-                    ✓
-                </div>
-
-                <div>
-                    <h2 id="checkout-quote-title" class="font-black text-foreground">
-                        Cotización calculada
-                    </h2>
-
-                    <p class="text-xs text-foreground/75">
-                        Importes calculados desde nuestro sistema.
-                    </p>
-                </div>
-            </div>
-
-            <div id="checkout-quote-amounts" class="mt-5 space-y-3 text-sm">
-                <div class="flex justify-between gap-3">
-                    <span class="text-foreground/75">Productos</span>
-                    <span class="font-semibold">
-                        S/ {{ number_format((float) $quote['subtotal'], 2) }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between gap-3">
-                    <span class="text-foreground/75">Delivery</span>
-                    <span class="font-semibold">
-                        S/ {{ number_format((float) $quote['delivery_fee'], 2) }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between gap-3 border-t border-border pt-4">
-                    <span class="font-black">Total cotizado</span>
-
-                    <strong class="text-2xl text-primary">
-                        S/ {{ number_format((float) $quote['total'], 2) }}
-                    </strong>
-                </div>
-            </div>
-
-            <p id="checkout-quote-notice" role="status" aria-live="polite" class="mt-3 text-xs leading-5 text-foreground/75">
-                Si cambias tu ubicación o tus datos de pago,
-                vuelve a calcular. El total definitivo
-                se verificará al confirmar el pedido.
-            </p>
-        </div>
-    @endif
-
     <form
         id="checkout-form"
         method="POST"
         action="{{ route('cart.checkout.quote') }}"
-        class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_300px]"
+        class="checkout-form"
     >
         @csrf
-            @include('legal.collection-notice')
 
         <input
             type="hidden"
@@ -201,7 +139,8 @@
             value="delivery"
         >
 
-        <div class="min-w-0 space-y-6">
+        <div class="checkout-layout">
+        <div class="checkout-fields min-w-0 space-y-6">
 
             {{-- =============================================
                  1. DATOS DEL CLIENTE
@@ -219,9 +158,6 @@
                             Tus datos
                         </h2>
 
-                        <p class="text-xs text-foreground/75">
-                            Información para identificar tu pedido.
-                        </p>
                     </div>
                 </div>
 
@@ -242,18 +178,18 @@
                             autocomplete="name"
                             maxlength="150"
                             value="{{ old('customer_name', $checkoutDefaults['customer_name'] ?? null) }}"
-                            placeholder="Ingresa tu nombre completo"
+                            placeholder="Tu nombre y apellidos"
                             class="w-full rounded-none border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         >
                     </div>
 
-                    <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="checkout-contact-grid grid gap-4">
                         <div>
                             <label
                                 for="customer_phone"
                                 class="mb-2 block text-sm font-semibold text-foreground"
                             >
-                                Número de celular
+                                Celular
                             </label>
 
                             <input
@@ -275,7 +211,7 @@
                                 for="customer_email"
                                 class="mb-2 block text-sm font-semibold text-foreground"
                             >
-                                Correo electrónico
+                                Correo
                                 <span class="font-normal text-foreground/75">
                                     (opcional)
                                 </span>
@@ -314,9 +250,6 @@
                             Dirección de entrega
                         </h2>
 
-                        <p class="text-xs text-foreground/75">
-                            Entregamos tus platos a domicilio.
-                        </p>
                     </div>
 
                 </div>
@@ -391,8 +324,7 @@
                             </h3>
 
                             <p class="mt-1 text-xs leading-5 text-foreground/75">
-                                Usa tu ubicación actual o mueve el marcador hasta
-                                el lugar exacto de entrega.
+                                Mueve el marcador hasta el punto de entrega.
                             </p>
                         </div>
 
@@ -419,7 +351,7 @@
                         <div
                             id="delivery-map"
                             class="relative mt-4 w-full overflow-hidden rounded-none border border-border bg-muted"
-                            style="height: 320px; min-height: 320px; width: 100%; z-index: 0;"
+                            style="width: 100%; z-index: 0;"
                             aria-label="Mapa para seleccionar la ubicación de entrega"
                         ></div>
 
@@ -481,9 +413,6 @@
                             Método de pago
                         </h2>
 
-                        <p class="text-xs text-foreground/75">
-                            Selecciona una de las dos opciones.
-                        </p>
                     </div>
 
                 </div>
@@ -558,9 +487,6 @@
                             Pago en efectivo
                         </h3>
 
-                        <p class="mt-1 text-xs leading-5 text-foreground/75">
-                            Paga al momento de recibir tu pedido.
-                        </p>
                     </div>
 
                     <div>
@@ -622,8 +548,7 @@
                         </div>
 
                         <p class="mt-2 text-xs leading-5 text-foreground/75">
-                            Indica un importe superior al total de tu pedido
-                            para que podamos preparar el vuelto.
+                            El importe debe cubrir el total del pedido.
                         </p>
 
                     </div>
@@ -648,8 +573,7 @@
                         </div>
 
                         <p class="mt-3 text-xs leading-6 text-foreground/75">
-                            Puedes escanear nuestro QR con otro dispositivo
-                            o copiar el número para yapear desde tu celular.
+                            Escanea el QR o copia el número.
                         </p>
 
                     </div>
@@ -676,10 +600,6 @@
                                     Toca el QR para ampliarlo
                                 </span>
                             </button>
-
-                            <p class="mt-2 text-[11px] text-foreground/75">
-                                Puedes ampliar el QR y tomar una captura de pantalla.
-                            </p>
 
                         </div>
 
@@ -719,7 +639,7 @@
                                 aria-live="polite"
                                 class="mt-2 text-xs text-foreground/75"
                             >
-                                Copia el número y pégalo en Yape.
+
                             </p>
 
                         </div>
@@ -785,10 +705,6 @@
                     </span>
                 </label>
 
-                <p class="mt-1 text-xs text-foreground/75">
-                    Puedes añadir una indicación para tu pedido.
-                </p>
-
                 <textarea
                     id="customer_notes"
                     name="customer_notes"
@@ -806,18 +722,14 @@
              RESUMEN Y CONFIRMACIÓN
         ============================================== --}}
 
-        <aside class="min-w-0 lg:sticky lg:top-24">
+        <aside class="checkout-summary min-w-0" aria-labelledby="checkout-summary-title">
 
             <div class="overflow-hidden rounded-none border border-border bg-card shadow-storefront">
 
                 <div class="border-b border-border p-5">
 
-                    <p class="text-xs font-bold uppercase tracking-widest text-primary">
+                    <h2 id="checkout-summary-title" class="text-xl font-black text-foreground">
                         Tu pedido
-                    </p>
-
-                    <h2 class="mt-1 text-xl font-black text-foreground">
-                        Confirmación
                     </h2>
 
                 </div>
@@ -854,59 +766,24 @@
                     </div>
 
                     @if($quote)
-
-                        <div class="mt-5 space-y-3 border-t border-border pt-5 text-sm">
-
-                            <div class="flex justify-between gap-3">
-                                <span class="text-foreground/75">
-                                    Productos
-                                </span>
-
-                                <strong>
-                                    S/ {{ number_format((float) $quote['subtotal'], 2) }}
-                                </strong>
+                        <div id="checkout-quote-summary" class="checkout-quote mt-5 border-t border-border pt-5">
+                            <h3 id="checkout-quote-title" class="text-sm font-bold">Total calculado</h3>
+                            <div id="checkout-quote-amounts" class="mt-4 space-y-3 text-sm">
+                                <div class="flex justify-between gap-3"><span>Productos</span><strong>S/ {{ number_format((float) $quote['subtotal'], 2) }}</strong></div>
+                                <div class="flex justify-between gap-3"><span>Delivery</span><strong>S/ {{ number_format((float) $quote['delivery_fee'], 2) }}</strong></div>
+                                <div class="flex justify-between gap-3 border-t border-border pt-4"><span class="font-bold">Total</span><strong class="text-2xl text-primary">S/ {{ number_format((float) $quote['total'], 2) }}</strong></div>
                             </div>
-
-                            <div class="flex justify-between gap-3">
-                                <span class="text-foreground/75">
-                                    Delivery
-                                </span>
-
-                                <strong>
-                                    S/ {{ number_format((float) $quote['delivery_fee'], 2) }}
-                                </strong>
-                            </div>
-
-                            <div class="flex items-center justify-between gap-3 border-t border-border pt-4">
-
-                                <span class="font-black">
-                                    Total cotizado
-                                </span>
-
-                                <strong class="text-xl text-primary">
-                                    S/ {{ number_format((float) $quote['total'], 2) }}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-                    @else
-
-                        <div class="mt-5 rounded-none bg-accent p-4">
-                            <p class="text-xs leading-6 text-foreground/75">
-                                Calcula la cotización para conocer
-                                el importe del delivery y el total
-                                antes de confirmar.
+                            <p id="checkout-quote-notice" role="status" aria-live="polite" class="mt-3 text-xs leading-5 text-foreground/75">
+                                Si cambias la entrega o el pago, vuelve a calcular.
                             </p>
                         </div>
-
+                    @else
+                        <p class="mt-5 rounded-none bg-accent p-4 text-sm">Calcula el delivery para ver el total.</p>
                     @endif
 
                     @if(!$settings->accepting_orders)
                         <p class="mt-5 text-sm font-semibold text-destructive">
-                            No podemos cotizar ni registrar pedidos nuevos en este momento.
-                            Cuando retomemos la atención, recarga esta página para continuar.
+                            No recibimos pedidos ahora. Vuelve cuando retomemos la atención.
                         </p>
                     @endif
 
@@ -919,7 +796,7 @@
                             @disabled(!$settings->accepting_orders)
                             class="flex min-h-12 w-full items-center justify-center rounded-none border border-primary bg-card px-5 py-3 text-center text-sm font-black text-primary transition hover:bg-accent"
                         >
-                            Calcular cotización
+                            Calcular delivery
                         </button>
 
                         <button
@@ -929,15 +806,21 @@
                             formaction="{{ route('cart.checkout.confirm') }}"
                             class="flex min-h-12 w-full items-center justify-center rounded-none bg-primary px-5 py-3 text-center text-sm font-black text-primary-foreground transition hover:bg-primary/90"
                         >
-                            Confirmar mi pedido
+                            Confirmar pedido
                         </button>
 
                     </div>
 
                     <p class="mt-4 text-xs leading-6 text-foreground/75">
-                        Al confirmar, registraremos tu pedido.
                         Los pagos por Yape requieren verificación.
                     </p>
+
+                    @if($settings->legalPagesAvailable())
+                        <p class="checkout-privacy mt-4 text-xs leading-5 text-foreground/75">
+                            Usamos tus datos para gestionar este pedido.
+                            <a href="{{ route('legal.privacy') }}" class="underline">Privacidad</a>.
+                        </p>
+                    @endif
 
                     <a
                         href="{{ route('cart.index') }}"
@@ -951,6 +834,7 @@
 
         </aside>
 
+        </div>{{-- checkout-layout --}}
     </form>
 
 </section>

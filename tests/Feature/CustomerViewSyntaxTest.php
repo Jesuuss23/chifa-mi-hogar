@@ -10,6 +10,7 @@ class CustomerViewSyntaxTest extends TestCase
     public static function views(): array
     {
         return [
+            'checkout' => ['storefront/checkout'],
             'carousel' => ['storefront/partials/combo-carousel'],
             'combo list' => ['storefront/combos/index'],
             'storefront layout' => ['layouts/storefront'],
