@@ -29,7 +29,9 @@
 
         <ul id="combo-cards" data-combo-viewport class="combo-carousel__track"
             tabindex="0" aria-label="Combos disponibles" aria-describedby="combo-scroll-help">
-            @php($firstOfferId = $combos->first(fn ($entry) => $entry->reference_price > (float) $entry->price)?->id)
+            @php
+                $firstOfferId = $combos->first(fn ($entry) => $entry->reference_price > (float) $entry->price)?->id;
+            @endphp
             @foreach($combos as $combo)
                 @php
                     $includedItems = $combo->items->filter(fn ($item) => $item->product || $item->extra);

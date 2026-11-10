@@ -14,7 +14,9 @@
 
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-        @php($firstOfferId = $combos->first(fn ($entry) => $entry->reference_price > (float) $entry->price)?->id)
+        @php
+            $firstOfferId = $combos->first(fn ($entry) => $entry->reference_price > (float) $entry->price)?->id;
+        @endphp
         @forelse ($combos as $combo)
 
             <article class="promo-card overflow-hidden rounded-none bg-card shadow-storefront">
