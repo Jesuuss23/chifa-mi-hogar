@@ -24,4 +24,14 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->dontFlash(['cf-turnstile-response']);
+        $exceptions->shouldRenderJsonWhen(fn ($request, $exception) =>
+            $request->is('api/v1/admin/*') || $request->expectsJson()
+        );
+        $exceptions->respond(function ($response) {
+            if (request()->is('api/v1/admin/*')) {
+                $response->headers->set('Cache-Control', 'no-store, private');
+                $response->headers->set('Pragma', 'no-cache');
+            }
+            return $response;
+        });
     })->create();
