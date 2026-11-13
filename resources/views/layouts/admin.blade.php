@@ -28,6 +28,7 @@
                             ['Pedidos', 'admin.orders.index', 'admin.orders.*'],
                             ['Clientes', 'admin.customers.index', 'admin.customers.*'],
                             ['Repartidores', 'admin.delivery-drivers.index', 'admin.delivery-drivers.*'],
+                            ['Mis entregas', 'delivery.orders.index', 'delivery.orders.*'],
                         ],
                         'Carta' => [
                             ['Productos', 'admin.products.index', 'admin.products.*'],

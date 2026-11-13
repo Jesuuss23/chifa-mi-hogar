@@ -10,6 +10,10 @@
 <body class="storefront-theme min-h-screen bg-background text-foreground">
     <main class="catalog-surface [overflow-wrap:anywhere] max-w-2xl mx-auto p-4 space-y-5">
 
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('admin.dashboard') }}" class="inline-flex min-h-11 items-center text-sm font-semibold text-primary">← Volver al administrador</a>
+        @endif
+
         <header class="border border-border bg-card rounded-none p-5 shadow-storefront">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -22,7 +26,7 @@
                 <form method="POST" action="{{ route('delivery.logout') }}">
                     @csrf
                     <button class="min-h-11 px-3 text-sm text-destructive font-semibold">
-                        Salir
+                        Cerrar sesión
                     </button>
                 </form>
             </div>

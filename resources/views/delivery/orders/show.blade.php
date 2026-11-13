@@ -130,6 +130,9 @@
     ================================================ --}}
 
     <header class="space-y-4">
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('admin.orders.show', $order) }}" class="inline-flex min-h-11 items-center text-sm font-semibold text-primary">← Ver pedido en administración</a>
+        @endif
 
         <a
             href="{{ route('delivery.orders.index') }}"

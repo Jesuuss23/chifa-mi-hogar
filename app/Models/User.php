@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->role === 'delivery';
     }
 
+    public function canDeliverOrders(): bool
+    {
+        return $this->isDelivery() || $this->isAdmin();
+    }
+
     public function assignedDeliveries(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(

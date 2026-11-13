@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         $limiter->ensureAllowed($request, $credentials['email']);
 
-        $credentials['role'] = 'delivery';
+        $credentials['role'] = ['delivery', 'admin'];
 
         if (!Auth::attempt($credentials)) {
             $limiter->failed($request, $credentials['email']);

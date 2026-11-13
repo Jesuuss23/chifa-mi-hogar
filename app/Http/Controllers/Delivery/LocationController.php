@@ -13,7 +13,7 @@ class LocationController extends Controller
     private function authorizeOrder(Request $request, Order $order): void
     {
         abort_unless(
-            $request->user()?->isDelivery()
+            $request->user()?->canDeliverOrders()
             && (int) $order->delivery_user_id === (int) $request->user()->id,
             403,
             'No tienes permiso para actualizar esta entrega.'
