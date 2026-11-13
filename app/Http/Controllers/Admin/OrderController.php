@@ -84,7 +84,7 @@ class OrderController extends Controller
         ])->header('Cache-Control', 'private, no-store');
     }
 
-    public function show(Order $order): View
+    public function show(Request $request, Order $order): View
     {
         $order->load([
             'items.extras',
@@ -99,7 +99,12 @@ class OrderController extends Controller
             'statuses' => self::STATUSES,
             'nextStatuses' => self::TRANSITIONS[$order->status] ?? [],
             'drivers' => \App\Models\User::query()
-                ->where('role', 'delivery')
+                ->where(function ($query) use ($request) {
+                    $query->where('role', 'delivery')
+                        ->orWhere(function ($query) use ($request) {
+                            $query->where('role', 'admin')->where('id', $request->user()->id);
+                        });
+                })
                 ->orderBy('name')
                 ->get(),
         ]);
@@ -340,7 +345,12 @@ class OrderController extends Controller
                 'required',
                 'integer',
                 Rule::exists('users', 'id')
-                    ->where('role', 'delivery'),
+                    ->where(function ($query) use ($request) {
+                        $query->where('role', 'delivery')
+                            ->orWhere(function ($query) use ($request) {
+                                $query->where('role', 'admin')->where('id', $request->user()->id);
+                            });
+                    }),
             ],
         ]);
 

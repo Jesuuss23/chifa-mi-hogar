@@ -345,7 +345,7 @@
                                             $order->delivery_user_id
                                         ) == $driver->id
                                     )>
-                                    {{ $driver->name }}
+                                    {{ $driver->id === auth()->id() ? 'Yo · '.$driver->name.' (administrador)' : $driver->name }}
                                 </option>
                             @endforeach
                         </select>

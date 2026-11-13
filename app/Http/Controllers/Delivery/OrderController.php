@@ -15,7 +15,7 @@ class OrderController extends Controller
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($request, $order) {
             $locked = Order::query()->whereKey($order->id)->lockForUpdate()->firstOrFail();
-            abort_unless($request->user()?->isDelivery()
+            abort_unless($request->user()?->canDeliverOrders()
                 && (int) $locked->delivery_user_id === (int) $request->user()->id, 403);
             abort_unless($locked->delivery_type === 'delivery', 422);
 

@@ -10,8 +10,8 @@ class EnsureUserIsDelivery
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()?->isDelivery()) {
-            abort(403, 'Acceso exclusivo para repartidores.');
+        if (!$request->user()?->canDeliverOrders()) {
+            abort(403, 'Acceso exclusivo para repartidores y administradores.');
         }
 
         return $next($request);
