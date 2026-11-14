@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Extra;
+use App\Models\Combo;
 use App\Models\Product;
 use App\Models\QuickSale;
 use App\Services\QuickSaleService;
@@ -16,7 +17,7 @@ class QuickSaleController extends Controller
 {
     public function create()
     {
-        $catalog = collect(['product' => Product::class, 'extra' => Extra::class])->flatMap(
+        $catalog = collect(['product' => Product::class, 'combo' => Combo::class, 'extra' => Extra::class])->flatMap(
             fn ($class, $type) => $class::orderBy('name')->get(['id', 'name', 'price'])->map(fn ($item) => [
                 'type' => $type, 'id' => $item->id, 'name' => $item->name,
                 'price_cents' => QuickSaleService::cents((string) $item->price),
@@ -34,7 +35,7 @@ class QuickSaleController extends Controller
             'payment_method' => ['required', Rule::in(['cash', 'yape'])],
             'total' => ['nullable', 'regex:/\A\d{1,5}(?:\.\d{1,2})?\z/'],
             'items' => ['required', 'array', 'min:1', 'max:50'],
-            'items.*.type' => ['required', Rule::in(['product', 'extra'])],
+            'items.*.type' => ['required', Rule::in(['product', 'combo', 'extra'])],
             'items.*.id' => ['required', 'integer', 'min:1'],
             'items.*.quantity' => ['required', 'integer', 'between:1,99'],
         ]);

@@ -4,7 +4,7 @@
 
 Admin → Operación → Ventas rápidas → Nueva venta.
 
-1. Seleccionar platos o adicionales y pulsar Agregar.
+1. Seleccionar platos, combos o adicionales y pulsar Agregar.
 2. Ajustar cantidades con −/+; cada adicional tiene su propia cantidad total.
 3. Revisar el total automático o escribir el total cobrado. No se solicita motivo.
 4. Nombre opcional, Efectivo o Yape, Guardar venta.
@@ -13,10 +13,13 @@ La fecha predeterminada es hoy en Lima. El apartado plegable Fecha de venta
 permite registrar ventas anteriores (desde 2000), nunca futuras.
 Al guardar aparece el detalle y un botón para registrar otra venta.
 
-Se usan platos y adicionales no eliminados del catálogo, aunque estén temporalmente
+Se usan platos, combos y adicionales no eliminados del catálogo, aunque estén temporalmente
 desactivados online: este registro también sirve para ventas pasadas o presenciales.
 Los adicionales son líneas independientes y no requieren vinculación a un plato.
-No incluye combos en esta entrega.
+Los combos se registran como una unidad con su precio de catálogo: solo cambia
+su cantidad, no sus componentes. Se permite registrar un combo fuera de su
+calendario online porque el módulo también registra ventas pasadas. Los adicionales
+que se agreguen son líneas separadas, no una modificación de lo incluido en el combo.
 
 ## Reportes
 
@@ -73,8 +76,9 @@ paginación, autorización, CSRF, datos manipulados, reintentos y snapshots hist
 Las pruebas de doble envío son secuenciales: no sustituyen una prueba concurrente
 real de PostgreSQL o un corte físico de conexión en un dispositivo.
 
-Validación local: 42 pruebas Laravel (242 aserciones) sobre PHP 8.3/SQLite y seis
-pruebas JavaScript aprobadas. Build Vite y caché Blade correctos. El build se
+Validación de la ampliación con combos: 14 pruebas del módulo (130 aserciones)
+sobre PHP 8.3/SQLite y siete pruebas JavaScript aprobadas; caché Blade correcta.
+La entrega base también pasó las pruebas de regresión y el build Vite. El build se
 ejecutó mediante la API Vite con preserveSymlinks por restricciones locales de
 Windows, sin cambiar las dependencias ni la configuración del proyecto.
 No se realizó inspección visual en navegador ni ejecución contra PostgreSQL.

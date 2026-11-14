@@ -20,12 +20,12 @@
         <script type="application/json" data-sale-catalog>@json($catalog)</script>
         <script type="application/json" data-sale-initial>@json(old('items', []))</script>
         <section class="rounded-2xl border bg-card p-5">
-            <h2 class="mb-3 text-lg font-bold">Platos y adicionales</h2>
+            <h2 class="mb-3 text-lg font-bold">Platos, combos y adicionales</h2>
             <div class="flex flex-wrap items-end gap-3">
                 <label class="min-w-0 flex-1" for="sale-item">Seleccionar
                     <select id="sale-item" data-sale-choice class="mt-1 w-full rounded-xl border p-3">
-                        <option value="">Elige un plato o adicional</option>
-                        @foreach(['product' => 'Platos', 'extra' => 'Adicionales'] as $type => $label)
+                        <option value="">Elige un plato, combo o adicional</option>
+                        @foreach(['product' => 'Platos', 'combo' => 'Combos', 'extra' => 'Adicionales'] as $type => $label)
                             <optgroup label="{{ $label }}">
                                 @foreach($catalog->where('type', $type) as $item)
                                     <option value="{{ $type }}:{{ $item['id'] }}">{{ $item['name'] }} · S/ {{ number_format($item['price_cents'] / 100, 2) }}</option>
@@ -37,7 +37,7 @@
                 <button type="button" data-sale-add class="rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground">+ Agregar</button>
             </div>
             <div data-sale-lines class="mt-4 space-y-3" aria-label="Detalle de venta"></div>
-            <p data-sale-empty class="mt-4 text-sm text-muted-foreground">Agrega los platos y adicionales vendidos.</p>
+            <p data-sale-empty class="mt-4 text-sm text-muted-foreground">Agrega los platos, combos y adicionales vendidos.</p>
             <p class="mt-4 text-right text-sm">Según carta: <strong data-sale-subtotal>S/ 0.00</strong></p>
         </section>
         <section class="rounded-2xl border bg-card p-5">

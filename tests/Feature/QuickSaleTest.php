@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Combo;
 use App\Models\Extra;
 use App\Models\Product;
 use App\Models\QuickSale;
@@ -69,6 +70,40 @@ class QuickSaleTest extends TestCase
         $this->assertSame(350, $sale->items[1]['unit_price_cents']);
         $this->assertDatabaseCount('orders', 0);
         $this->get(route('admin.quick-sales.show', $sale))->assertOk()->assertSee('32.00')->assertSee('Sin nombre');
+    }
+
+    public function test_existing_combo_can_be_selected_with_products_and_extras_and_keeps_historical_price(): void
+    {
+        $this->admin();
+        $product = $this->product();
+        $combo = Combo::create(['name' => 'Dúo chifero', 'slug' => 'duo', 'price' => '22.99',
+            'is_available' => false, 'availability_mode' => 'dates', 'available_dates' => ['2020-01-01']]);
+        $extra = Extra::create(['name' => 'Gaseosa', 'price' => '3.50']);
+        $this->get(route('admin.quick-sales.create'))->assertOk()->assertSee('optgroup label="Combos"', false)->assertSee('Dúo chifero');
+        $data = $this->payload($product);
+        $data['items'][] = ['type' => 'combo', 'id' => $combo->id, 'quantity' => 2, 'price' => '0.01'];
+        $data['items'][] = ['type' => 'extra', 'id' => $extra->id, 'quantity' => 1];
+        $this->save($data)->assertSessionHasNoErrors();
+        $sale = QuickSale::firstOrFail();
+        $this->assertSame(7448, $sale->total_cents);
+        $this->assertSame('combo', $sale->items[1]['type']);
+        $this->assertSame(2299, $sale->items[1]['unit_price_cents']);
+        $combo->update(['name' => 'Nuevo nombre', 'price' => 50]);
+        $combo->delete();
+        $this->save($data)->assertSessionHasNoErrors();
+        $this->assertDatabaseCount('quick_sales', 1);
+        $this->get(route('admin.quick-sales.show', $sale))->assertOk()->assertSee('Dúo chifero')->assertSee('74.48');
+    }
+
+    public function test_deleted_combo_is_rejected_for_new_sale(): void
+    {
+        $this->admin();
+        $product = $this->product();
+        $combo = Combo::create(['name' => 'Combo eliminado', 'slug' => 'deleted', 'price' => '22.99']);
+        $combo->delete();
+        $this->save($this->payload($product, ['items' => [['type' => 'combo', 'id' => $combo->id, 'quantity' => 1]]]))
+            ->assertSessionHasErrors('items.0.id');
+        $this->assertDatabaseCount('quick_sales', 0);
     }
 
     public function test_admin_can_override_total_without_a_reason_and_prices_are_preserved(): void

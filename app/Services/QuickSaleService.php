@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Extra;
+use App\Models\Combo;
 use App\Models\Product;
 use App\Models\QuickSale;
 use App\Models\StoreSetting;
@@ -47,9 +48,14 @@ class QuickSaleService
             $items = [];
             $subtotal = 0;
             foreach ($payload['items'] as $index => $row) {
-                $model = $row['type'] === 'product' ? Product::find($row['id']) : Extra::find($row['id']);
+                $model = match ($row['type']) {
+                    'product' => Product::find($row['id']),
+                    'combo' => Combo::find($row['id']),
+                    'extra' => Extra::find($row['id']),
+                    default => null,
+                };
                 if (! $model) {
-                    throw ValidationException::withMessages(["items.{$index}.id" => 'Un plato o adicional ya no existe. Revisa la selección.']);
+                    throw ValidationException::withMessages(["items.{$index}.id" => 'Un plato, combo o adicional ya no existe. Revisa la selección.']);
                 }
                 $unit = self::cents((string) $model->price);
                 $line = $unit * $row['quantity'];
