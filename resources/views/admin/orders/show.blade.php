@@ -383,7 +383,7 @@
                                     required>
                                 <option value="">Seleccionar</option>
                                 @foreach($nextStatuses as $status)
-                                    <option value="{{ $status }}">
+                                    <option value="{{ $status }}" @selected(old('status') === $status)>
                                         {{ $statuses[$status] }}
                                     </option>
                                 @endforeach
@@ -395,7 +395,7 @@
                                 Comentario
                             </label>
                             <textarea id="order-comment" name="comment" rows="2"
-                                      class="w-full rounded-none border-input"></textarea>
+                                      class="w-full rounded-none border-input">{{ is_string(old('comment')) ? old('comment') : '' }}</textarea>
                         </div>
 
                         <div>
@@ -403,7 +403,7 @@
                                 Motivo de cancelación (obligatorio al cancelar)
                             </label>
                             <textarea id="order-cancellation-reason" name="cancellation_reason" rows="3"
-                                      class="w-full rounded-none border-input"></textarea>
+                                      class="w-full rounded-none border-input">{{ is_string(old('cancellation_reason')) ? old('cancellation_reason') : '' }}</textarea>
                         </div>
 
                         <button type="submit"

@@ -29,7 +29,8 @@ function setup({ changed = true, status = 200, hidden = false, networkError = fa
             location: { href: 'https://example.test/admin/orders', reload: () => state.reloads++ },
             addEventListener: (name, fn) => { windowEvents[name] = fn; },
         },
-        fetch: async () => {
+        fetch: async (url, options) => {
+            state.options = options;
             state.requests++;
             if (networkError) throw new Error('offline');
             return { ok: status === 200, status, redirected: false,
@@ -63,6 +64,13 @@ test('unchanged orders never reload', async () => {
     await h.tick();
     assert.equal(h.state.reloads, 0);
     assert.equal(h.timers.size, 1);
+});
+
+test('poll is marked as AJAX so it does not replace the form return URL', async () => {
+    const h = setup({ changed: false });
+    await h.tick();
+    assert.equal(h.state.options.headers['X-Requested-With'], 'XMLHttpRequest');
+    assert.equal(h.state.options.headers.Accept, 'application/json');
 });
 
 test('dirty or focused forms keep values and show a refresh notice', async () => {
