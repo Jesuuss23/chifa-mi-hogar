@@ -30,6 +30,16 @@ test('quantity and number of lines are bounded', () => {
     assert.equal(lines.length, 50);
 });
 
+test('combo quantities use combo price and remain separate from products with the same id', () => {
+    const lines = [];
+    context.addSaleItem(lines, {type: 'product', id: 1});
+    context.addSaleItem(lines, {type: 'combo', id: 1});
+    context.addSaleItem(lines, {type: 'combo', id: 1});
+    assert.equal(lines.length, 2);
+    assert.equal(lines[1].quantity, 2);
+    assert.equal(context.saleSubtotal(lines, [{type: 'product', id: 1, price_cents: 1250}, {type: 'combo', id: 1, price_cents: 2299}]), 5848);
+});
+
 function interfaceSetup() {
     class Node {
         constructor() { this.children = []; this.listeners = {}; this.attributes = {}; this.dataset = {}; this.value = ''; }
