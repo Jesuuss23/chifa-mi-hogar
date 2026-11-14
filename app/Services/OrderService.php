@@ -144,7 +144,8 @@ class OrderService
             |--------------------------------------------------------------------------
             */
 
-            $totalCents = $subtotalCents + $deliveryFeeCents;
+            $discount = app(ReferralDiscountService::class)->calculate($lines, $data['referral_coupon_id'] ?? null, true);
+            $totalCents = $subtotalCents + $deliveryFeeCents - $discount['discount_cents'];
 
             /*
             |--------------------------------------------------------------------------
@@ -245,7 +246,7 @@ class OrderService
 
                 'subtotal' => $this->money($subtotalCents),
                 'delivery_fee' => $this->money($deliveryFeeCents),
-                'discount_amount' => '0.00',
+                'discount_amount' => $this->money($discount['discount_cents']),
                 'total' => $this->money($totalCents),
 
                 'payment_method' => $paymentMethod,
@@ -268,6 +269,8 @@ class OrderService
                 'customer_notes' =>
                     $data['customer_notes'] ?? null,
             ]);
+
+            app(ReferralDiscountService::class)->reserve($order, $discount);
 
             /*
             |--------------------------------------------------------------------------
@@ -699,7 +702,8 @@ class OrderService
             ]);
         }
 
-        $totalCents = $subtotalCents + $deliveryFeeCents;
+        $discount = app(ReferralDiscountService::class)->calculate($lines, $data['referral_coupon_id'] ?? null);
+        $totalCents = $subtotalCents + $deliveryFeeCents - $discount['discount_cents'];
 
         $paymentMethod = $data['payment_method'] ?? null;
 
@@ -755,7 +759,7 @@ class OrderService
             'delivery_distance_km' => $deliveryDistanceKm,
             'subtotal' => $this->money($subtotalCents),
             'delivery_fee' => $this->money($deliveryFeeCents),
-            'discount_amount' => '0.00',
+            'discount_amount' => $this->money($discount['discount_cents']),
             'total' => $this->money($totalCents),
             'payment_method' => $paymentMethod,
             'cash_payment_type' => $cashType,

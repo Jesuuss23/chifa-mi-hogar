@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \App\Models\Order::observe(\App\Observers\ReferralOrderObserver::class);
         \Illuminate\Support\Facades\View::composer([
             'storefront.index', 'storefront.show',
             'storefront.combos.index', 'storefront.combos.show',

@@ -765,16 +765,21 @@
 
                     </div>
 
+                    @include('customer.referral-coupons', ['selectable' => true])
+
                     @if($quote)
                         <div id="checkout-quote-summary" class="checkout-quote mt-5 border-t border-border pt-5">
                             <h3 id="checkout-quote-title" class="text-sm font-bold">Total calculado</h3>
                             <div id="checkout-quote-amounts" class="mt-4 space-y-3 text-sm">
                                 <div class="flex justify-between gap-3"><span>Productos</span><strong>S/ {{ number_format((float) $quote['subtotal'], 2) }}</strong></div>
                                 <div class="flex justify-between gap-3"><span>Delivery</span><strong>S/ {{ number_format((float) $quote['delivery_fee'], 2) }}</strong></div>
+                                @if((float) ($quote['discount_amount'] ?? 0) > 0)
+                                    <div class="flex justify-between gap-3 text-primary"><span>Descuento</span><strong>− S/ {{ number_format((float) $quote['discount_amount'], 2) }}</strong></div>
+                                @endif
                                 <div class="flex justify-between gap-3 border-t border-border pt-4"><span class="font-bold">Total</span><strong class="text-2xl text-primary">S/ {{ number_format((float) $quote['total'], 2) }}</strong></div>
                             </div>
                             <p id="checkout-quote-notice" role="status" aria-live="polite" class="mt-3 text-xs leading-5 text-foreground/75">
-                                Si cambias la entrega o el pago, vuelve a calcular.
+                                Si cambias la entrega, el pago o el cupón, vuelve a calcular.
                             </p>
                         </div>
                     @else
@@ -929,11 +934,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('checkout-quote-amounts').hidden = true;
         document.getElementById('checkout-quote-title').textContent = 'Vuelve a calcular el delivery';
         document.getElementById('checkout-quote-notice').textContent =
-            'Cambiaste la entrega o el pago. Calcula nuevamente para revisar el total actualizado.';
+            'Cambiaste tu pedido. Calcula nuevamente para revisar el total actualizado.';
     }
     const quoteFields = new Set([
         'delivery_address', 'delivery_latitude', 'delivery_longitude',
-        'payment_method', 'cash_payment_type', 'cash_received_amount',
+        'payment_method', 'cash_payment_type', 'cash_received_amount', 'referral_coupon_id',
     ]);
     function handleQuoteEdit(event) {
         if (quoteFields.has(event.target.name)) invalidateDisplayedQuote();

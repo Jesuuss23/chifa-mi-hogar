@@ -113,7 +113,9 @@ class StoreSetting extends Model
 
     public static function current(): self
     {
-        return static::firstOrCreate(
+        // Keep the singleton key explicit even when PostgreSQL's sequence has advanced.
+        // This internal value is not a request field and is also the checkout mutex.
+        return static::unguarded(fn () => static::firstOrCreate(
             ['id' => 1],
             [
                 'business_owner' => 'Rossi Rivadeneyra Jara',
@@ -125,6 +127,6 @@ class StoreSetting extends Model
                 'closed_message' =>
                     'Por el momento no estamos recibiendo pedidos.',
             ]
-        );
+        ));
     }
 }

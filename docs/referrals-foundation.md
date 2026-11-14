@@ -1,5 +1,9 @@
 # Referidos: primera entrega y banners compactos
 
+> Documento histórico de la primera entrega. El funcionamiento vigente de descuentos
+> y cupones se describe en [referral-discounts.md](referral-discounts.md).
+> El plan de ruletas y metas de este documento fue sustituido por dos porcentajes.
+
 ## Alcance
 
 Esta entrega prepara campañas y atribución de invitaciones. NO genera giros,

@@ -52,6 +52,15 @@ test('payment selection invalidates quote', () => {
     x.listeners.change({ target: { name: 'payment_method' } });
     assert.equal(x.nodes['checkout-quote-amounts'].hidden, true);
 });
+
+test('selecting or removing a coupon hides the previously calculated total', () => {
+    for (const value of ['12', '']) {
+        const x = setup();
+        x.listeners.change({ target: { name: 'referral_coupon_id', value } });
+        assert.equal(x.nodes['checkout-quote-amounts'].hidden, true);
+        assert.equal(x.nodes['checkout-quote-summary'].dataset.stale, 'true');
+    }
+});
 test('editing without quote is harmless', () => {
     assert.doesNotThrow(() => setup(false).listeners.input({ target: { name: 'delivery_address' } }));
 });
