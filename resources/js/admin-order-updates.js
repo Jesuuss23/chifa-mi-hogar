@@ -41,7 +41,7 @@ export function startOrderUpdates(root, env) {
         try {
             const response = await fetch(url.toString(), {
                 credentials: 'same-origin', cache: 'no-store',
-                headers: { Accept: 'application/json' }, signal: controller.signal,
+                headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, signal: controller.signal,
             });
             if (response.redirected || response.status === 401 || response.status === 403) {
                 stopped = true;

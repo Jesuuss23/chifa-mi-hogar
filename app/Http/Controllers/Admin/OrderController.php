@@ -114,7 +114,7 @@ class OrderController extends Controller
         Request $request,
         Order $order
     ): RedirectResponse {
-        $data = $request->validate([
+        $data = $this->validateOrderAction($request, $order, [
             'decision' => [
                 'required',
                 Rule::in(['verified', 'rejected']),
@@ -158,17 +158,17 @@ class OrderController extends Controller
         }, 3);
 
         if ($error !== null) {
-            return back()->withErrors(['payment' => $error]);
+            return redirect()->route('admin.orders.show', $order)->withErrors(['payment' => $error]);
         }
 
-        return back()->with('success', 'Estado del pago actualizado.');
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Estado del pago actualizado.');
     }
 
     public function collectCashPayment(
         Request $request,
         Order $order
     ): RedirectResponse {
-        $data = $request->validate([
+        $data = $this->validateOrderAction($request, $order, [
             'confirm_collection' => [
                 'required',
                 'accepted',
@@ -206,10 +206,10 @@ class OrderController extends Controller
         }, 3);
 
         if ($error !== null) {
-            return back()->withErrors(['payment' => $error]);
+            return redirect()->route('admin.orders.show', $order)->withErrors(['payment' => $error]);
         }
 
-        return back()->with(
+        return redirect()->route('admin.orders.show', $order)->with(
             'success',
             'Cobro en efectivo registrado correctamente.'
         );
@@ -219,7 +219,7 @@ class OrderController extends Controller
         Request $request,
         Order $order
     ): RedirectResponse {
-        $data = $request->validate([
+        $data = $this->validateOrderAction($request, $order, [
             'status' => [
                 'required',
                 Rule::in(array_keys(self::STATUSES)),
@@ -330,17 +330,18 @@ class OrderController extends Controller
         }, 3);
 
         if ($error !== null) {
-            return back()->withErrors(['status' => $error]);
+            return redirect()->route('admin.orders.show', $order)->withErrors(['status' => $error])
+                ->withInput($request->only(['status', 'comment', 'cancellation_reason']));
         }
 
-        return back()->with('success', 'Estado actualizado correctamente.');
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Estado actualizado correctamente.');
     }
 
     public function assignDriver(
         Request $request,
         Order $order
     ): RedirectResponse {
-        $data = $request->validate([
+        $data = $this->validateOrderAction($request, $order, [
             'delivery_user_id' => [
                 'required',
                 'integer',
@@ -383,9 +384,21 @@ class OrderController extends Controller
         }, 3);
 
         if ($error !== null) {
-            return back()->withErrors(['delivery_user_id' => $error]);
+            return redirect()->route('admin.orders.show', $order)->withErrors(['delivery_user_id' => $error]);
         }
 
-        return back()->with('success', 'Repartidor asignado correctamente.');
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Repartidor asignado correctamente.');
+    }
+
+    private function validateOrderAction(Request $request, Order $order, array $rules): array
+    {
+        try {
+            return $request->validate($rules);
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            // A background GET may have replaced the session's previous URL.
+            // Keep form errors on this order, never on the JSON polling endpoint.
+            $exception->redirectTo(route('admin.orders.show', $order));
+            throw $exception;
+        }
     }
 }
