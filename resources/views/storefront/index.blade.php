@@ -5,6 +5,9 @@
 @section('content')
 
 <div class="storefront-home">
+@if($banners->isNotEmpty())
+    @include('storefront.partials.promotional-banners')
+@else
 @php
     $heroProduct = $products->first(fn ($product) => $product->mediaAsset || $product->image_path);
     $heroImage = $heroProduct ? app(\App\Services\CatalogImageService::class)->url($heroProduct, 'card') : null;
@@ -34,6 +37,8 @@
         @endif
     </div>
 </section>
+
+@endif
 
 @include('storefront.partials.combo-carousel')
 

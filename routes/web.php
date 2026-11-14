@@ -185,6 +185,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('login.submit');
     });
     Route::middleware(['auth', 'admin'])->group(function () {
+        Route::resource('banners', \App\Http\Controllers\Admin\PromotionalBannerController::class)->except('show');
         Route::patch(
             '/orders/{order}/assign-driver',
             [OrderController::class, 'assignDriver']

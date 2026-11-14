@@ -31,3 +31,6 @@ import './product-order-check';
 import './category-strip';
 
 import './admin-order-updates';
+
+import './promotional-banners';
+import './quantity-stepper';

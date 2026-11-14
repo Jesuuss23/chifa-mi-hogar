@@ -309,7 +309,7 @@
         return {
             type,
             id,
-            quantity: Number(item.quantity) || 1
+            quantity: Math.max(1, Math.min(20, Math.trunc(Number(item.quantity) || 1)))
         };
     });
 
@@ -322,7 +322,7 @@
 
         items.forEach((item, index) => {
             const row = document.createElement('div');
-            row.className = 'grid gap-3 rounded-none border p-3 md:grid-cols-[1fr_110px_90px]';
+            row.className = 'grid gap-3 rounded-none border p-3 md:grid-cols-[1fr_auto_90px]';
 
             const select = document.createElement('select');
             select.setAttribute('aria-label', `Componente ${index + 1}`);
@@ -359,7 +359,8 @@
             });
             const quantity = document.createElement('input');
             quantity.setAttribute('aria-label', `Cantidad del componente ${index + 1}`);
-            quantity.type = 'number';
+            quantity.type = 'hidden';
+            quantity.dataset.quantityInput = '';
             quantity.min = 1;
             quantity.max = 20;
             quantity.value = item.quantity;
@@ -382,7 +383,26 @@
             });
 
             row.appendChild(select);
-            row.appendChild(quantity);
+            const stepper = document.createElement('div');
+            stepper.className = 'quantity-stepper';
+            stepper.dataset.quantityStepper = '';
+            stepper.setAttribute('role', 'group');
+            stepper.setAttribute('aria-label', `Cantidad del componente ${index + 1}`);
+            const count = document.createElement('output');
+            count.textContent = item.quantity;
+            count.setAttribute('aria-live', 'polite');
+            const minus = document.createElement('button');
+            const plus = document.createElement('button');
+            [[minus, -1, 'Disminuir'], [plus, 1, 'Aumentar']].forEach(([button, step, label]) => {
+                button.type = 'button';
+                button.dataset.quantityStep = step;
+                button.textContent = step === -1 ? '−' : '+';
+                button.setAttribute('aria-label', `${label} cantidad del componente ${index + 1}`);
+            });
+            minus.disabled = item.quantity <= 1;
+            plus.disabled = item.quantity >= 20;
+            stepper.append(minus, count, quantity, plus);
+            row.appendChild(stepper);
             row.appendChild(remove);
 
             const hiddenId = document.createElement('input');
