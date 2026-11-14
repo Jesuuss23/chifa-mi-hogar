@@ -14,8 +14,8 @@ class StorefrontSeoService
     {
         $settings = StoreSetting::current()->load('logo');
         $base = $this->baseUrl($settings);
-        $title = 'Chifa Mi Hogar | Dark Kitchen de chifa en SJL';
-        $description = 'Hoy se antoja chifa. Descubre nuestros platos y combos y pide tu favorito a domicilio en San Juan de Lurigancho, Lima.';
+        $title = 'Chifa Mi Hogar | Chaufa y combos · Dark Kitchen';
+        $description = 'Prueba nuestra sazón: chaufa, platos y combos para compartir. Revisa la carta y las promociones disponibles. Delivery en San Juan de Lurigancho, Lima.';
         $image = $base.route('brand.share-image', [], false)
             .'?v='.$this->images->version($this->images->source($settings));
         $imageAlt = 'Chifa Mi Hogar, dark kitchen de chifa a domicilio';
@@ -47,14 +47,14 @@ class StorefrontSeoService
             case 'storefront.combos.index':
                 $path = route('combos.index', [], false);
                 $title = 'Combos de chifa a domicilio en SJL | Chifa Mi Hogar';
-                $description = 'Encuentra tu combo favorito de chifa, personalízalo y pídelo por delivery en San Juan de Lurigancho.';
+                $description = 'Más sabor para compartir. Descubre nuestros combos de chifa, revisa qué incluyen y su disponibilidad, y pide por delivery en San Juan de Lurigancho.';
                 $page = $data['combos']->currentPage();
                 break;
             case 'storefront.combos.show':
                 $combo = $data['combo'];
                 $path = route('combos.show', $combo, false);
                 $title = $combo->name.' | Chifa Mi Hogar';
-                $description = $combo->description ?: 'Disfruta '.$combo->name.'. Personaliza tu combo y pídelo por delivery en SJL.';
+                $description = $combo->description ?: 'Disfruta '.$combo->name.'. Revisa qué incluye, elige cuántos quieres y pide por delivery en San Juan de Lurigancho.';
                 $media = $combo->mediaAsset;
                 $imageAlt = $combo->name;
                 $page = 1;
