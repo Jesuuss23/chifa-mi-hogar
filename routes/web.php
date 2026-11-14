@@ -161,6 +161,9 @@ Route::middleware('guest')->group(function () {
 // Área privada de clientes.
 Route::middleware(['auth', 'customer'])->group(function () {
 
+    Route::post('/mi-cuenta/invitacion', [\App\Http\Controllers\CustomerReferralController::class, 'store'])
+        ->middleware('throttle:5,1')->name('customer.referrals.store');
+
     Route::get('/mi-cuenta', [CustomerAuthController::class, 'account'])
         ->name('customer.account');
 
@@ -185,6 +188,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('login.submit');
     });
     Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('referrals', [\App\Http\Controllers\Admin\ReferralCampaignController::class, 'index'])->name('referrals.index');
+        Route::post('referrals', [\App\Http\Controllers\Admin\ReferralCampaignController::class, 'store'])->middleware('throttle:10,1')->name('referrals.store');
+        Route::patch('referrals/{campaign}', [\App\Http\Controllers\Admin\ReferralCampaignController::class, 'update'])->middleware('throttle:10,1')->name('referrals.update');
         Route::resource('banners', \App\Http\Controllers\Admin\PromotionalBannerController::class)->except('show');
         Route::patch(
             '/orders/{order}/assign-driver',

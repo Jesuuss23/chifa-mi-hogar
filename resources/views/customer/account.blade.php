@@ -55,6 +55,7 @@
                 </div>
             </aside>
             <div class="account-content">
+                @include('customer.referral-code')
                 @include('customer.avatar')
                 @include('customer.profile')
 

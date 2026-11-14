@@ -63,9 +63,12 @@ class PromotionalBannerController extends Controller
             'combo_id' => ['exclude_unless:target_type,combo', 'required', 'integer', Rule::exists('combos', 'id')->whereNull('deleted_at')],
             'sort_order' => ['required', 'integer', 'between:0,10000'],
             'is_active' => ['required', 'boolean'],
-            'image' => [$banner->exists ? 'nullable' : 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120', 'dimensions:max_width=8000,max_height=8000'],
-            'mobile_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120', 'dimensions:max_width=8000,max_height=8000'],
+            'image' => ['bail', $banner->exists ? 'nullable' : 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120', 'dimensions:min_width=800,min_height=200,max_width=3200,max_height=1600', $this->aspectRatio(2, 4)],
+            'mobile_image' => ['bail', 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120', 'dimensions:min_width=600,min_height=300,max_width=1800,max_height=1440', $this->aspectRatio(1.25, 2)],
             'remove_mobile_image' => ['nullable', 'boolean'],
+        ], [
+            'image.dimensions' => 'La imagen principal debe medir entre 800 × 200 y 3200 × 1600 píxeles.',
+            'mobile_image.dimensions' => 'La imagen móvil debe medir entre 600 × 300 y 1800 × 1440 píxeles.',
         ]);
         $created = [];
         try {
@@ -105,5 +108,15 @@ class PromotionalBannerController extends Controller
         $banner->delete();
 
         return redirect()->route('admin.banners.index')->with('success', 'Banner eliminado.');
+    }
+
+    private function aspectRatio(float $min, float $max): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail) use ($min, $max): void {
+            $size = @getimagesize($value->getRealPath());
+            if (! $size || $size[1] === 0 || $size[0] / $size[1] < $min || $size[0] / $size[1] > $max) {
+                $fail("La imagen debe ser horizontal, con proporción entre {$min}:1 y {$max}:1.");
+            }
+        };
     }
 }

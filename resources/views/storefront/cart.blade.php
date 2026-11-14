@@ -51,6 +51,8 @@
         </div>
     @endif
 
+    @include('storefront.partials.referral-code')
+
     @if(count($cart) === 0)
 
         {{-- CARRITO VACÍO --}}

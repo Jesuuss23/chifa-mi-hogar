@@ -17,7 +17,15 @@ class CartController extends Controller
         $cart = $this->validatedCart($request);
         $subtotal = collect($cart)->sum('total');
 
-        return view('storefront.cart', compact('cart', 'subtotal'));
+        $referralCampaign = \App\Models\ReferralCampaign::accepting();
+        $referralInvitation = null;
+        $canApplyReferral = false;
+        if ($referralCampaign && $request->user()?->role === 'customer') {
+            $referralInvitation = \Illuminate\Support\Facades\DB::table('referral_invitations')
+                ->where('customer_id', $request->user()->id)->first();
+            $canApplyReferral = ! $request->user()->orders()->exists();
+        }
+        return view('storefront.cart', compact('cart', 'subtotal', 'referralCampaign', 'referralInvitation', 'canApplyReferral'));
     }
 
     public function store(Request $request)

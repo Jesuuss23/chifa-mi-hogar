@@ -3,8 +3,10 @@
 .promo-banners__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
 .promo-banners__track::-webkit-scrollbar { display: none; }
 .promo-banners__slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; display: grid; align-items: center; background: var(--card); }
-.promo-banners__slide picture { display: block; }
-.promo-banners__slide img { display: block; width: 100%; height: auto; max-height: 560px; object-fit: contain; }
+.promo-banners__slide picture { display: block; width: 100%; height: clamp(160px, 28vw, 360px); }
+.promo-banners__slide img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.promo-banners { max-width: 1440px; margin: 12px auto; border-radius: 20px; overflow: hidden; }
+[data-banner-destination][hidden] { display: none !important; }
 .promo-banners__controls { display: flex; justify-content: center; align-items: center; gap: .75rem; padding: .5rem 1rem; }
 .promo-banners__controls[hidden] { display: none; }
 .promo-banners__controls button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border-radius: 999px; color: var(--foreground); cursor: pointer; }
@@ -15,7 +17,7 @@
 .promo-banners__dots span { width: 9px; height: 9px; border-radius: 99px; background: var(--muted-foreground); }
 .promo-banners__dots [aria-current="true"] span { width: 25px; background: var(--promo-accent); box-shadow: 0 0 0 1px #755119; }
 .promo-banners :is(a, button, [tabindex]):focus-visible { outline: 3px solid var(--primary); outline-offset: -3px; }
-@media (max-width: 639px) { .promo-banners__slide img { max-height: 520px; } .promo-banners__controls { gap: .25rem; } }
+@media (max-width: 639px) { .promo-banners { margin: 8px 12px; border-radius: 16px; } .promo-banners__slide picture { height: clamp(140px, 58vw, 240px); } .promo-banners__controls { gap: .25rem; padding: .125rem .5rem; } }
 .quantity-stepper { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--border); border-radius: 999px; padding: .25rem; background: var(--card); }
 .quantity-stepper button { width: 44px; height: 44px; border-radius: 999px; font-size: 1.25rem; font-weight: 700; background: var(--primary); color: var(--primary-foreground); }
 .quantity-stepper button:disabled { opacity: .35; }
