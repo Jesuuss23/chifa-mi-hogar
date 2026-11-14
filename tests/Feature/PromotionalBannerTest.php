@@ -64,7 +64,7 @@ class PromotionalBannerTest extends TestCase
             'title' => 'Oferta de hoy', 'target_type' => 'product', 'product_id' => $product->id,
             'sort_order' => 2, 'is_active' => 1,
             'image' => UploadedFile::fake()->image('banner.jpg', 800, 300),
-            'mobile_image' => UploadedFile::fake()->image('mobile.png', 450, 550),
+            'mobile_image' => UploadedFile::fake()->image('mobile.png', 900, 600),
         ])->assertRedirect(route('admin.banners.index'));
         $banner = PromotionalBanner::firstOrFail();
         Storage::disk('public')->assertExists($banner->mediaAsset->detail_path);
@@ -86,6 +86,36 @@ class PromotionalBannerTest extends TestCase
         $this->assertSame(route('combos.show', $combo->slug), $banner->destinationUrl());
         $this->delete(route('admin.banners.destroy', $banner))->assertRedirect();
         $this->assertDatabaseMissing('promotional_banners', ['id' => $banner->id]);
+    }
+
+    public function test_banner_target_is_exclusive_in_server_rendered_form(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
+        $html = $this->get(route('admin.banners.create'))->assertOk()->getContent();
+        $this->assertMatchesRegularExpression('/data-banner-destination="combo"\s+hidden/', $html);
+        $this->assertMatchesRegularExpression('/id="banner-combo"[^>]*disabled/', $html);
+        $combo = Combo::create(['name' => 'Dúo', 'slug' => 'edit-duo', 'price' => 20]);
+        $banner = $this->banner(['product_id' => null, 'combo_id' => $combo->id]);
+        $html = $this->get(route('admin.banners.edit', $banner))->assertOk()->getContent();
+        $this->assertMatchesRegularExpression('/data-banner-destination="product"\s+hidden/', $html);
+        $this->assertMatchesRegularExpression('/id="banner-product"[^>]*disabled/', $html);
+    }
+
+    public function test_new_banner_images_reject_portrait_oversized_and_tiny_dimensions(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
+        $product = $this->product();
+        $data = ['title' => 'Promoción', 'target_type' => 'product', 'product_id' => $product->id, 'sort_order' => 1, 'is_active' => 1];
+        foreach ([[400, 200], [800, 1200], [3300, 1000], [1600, 200]] as [$width, $height]) {
+            $this->post(route('admin.banners.store'), $data + ['image' => UploadedFile::fake()->image('banner.jpg', $width, $height)])
+                ->assertSessionHasErrors('image');
+        }
+        $this->post(route('admin.banners.store'), $data + [
+            'image' => UploadedFile::fake()->image('banner.jpg', 1600, 500),
+            'mobile_image' => UploadedFile::fake()->image('mobile.jpg', 900, 1100),
+        ])->assertSessionHasErrors('mobile_image');
+        $this->assertDatabaseCount('promotional_banners', 0);
+        $this->assertDatabaseCount('media_assets', 0);
     }
 
     public function test_guests_customers_and_delivery_cannot_manage_banners(): void

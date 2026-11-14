@@ -115,6 +115,9 @@ class CustomerAuthController extends Controller
 
         $profile = $request->user()->customerProfile()->first();
 
-        return view('customer.account', compact('orders', 'profile'));
+        $referralCampaign = \App\Models\ReferralCampaign::accepting();
+        $referralCode = $referralCampaign
+            ? app(\App\Services\ReferralService::class)->codeFor($request->user()) : null;
+        return view('customer.account', compact('orders', 'profile', 'referralCampaign', 'referralCode'));
     }
 }
