@@ -32,7 +32,7 @@ class BrandShareImageService
 
     public function version(?string $source): string
     {
-        return substr(hash('sha256', 'brand-card-v1|'.($source ? hash_file('sha256', $source) : 'default')), 0, 24);
+        return substr(hash('sha256', 'brand-card-v2|'.($source ? hash_file('sha256', $source) : 'default')), 0, 24);
     }
 
     public function jpeg(StoreSetting $settings): string
@@ -49,11 +49,12 @@ class BrandShareImageService
         if (!$canvas) {
             throw new RuntimeException('No se pudo crear la imagen de marca.');
         }
-        $background = imagecolorallocate($canvas, 246, 237, 199);
-        $foreground = imagecolorallocate($canvas, 160, 69, 38);
+        $background = imagecolorallocate($canvas, 252, 249, 247);
+        $foreground = imagecolorallocate($canvas, 112, 13, 29);
+        $accent = imagecolorallocate($canvas, 207, 166, 81);
         imagefill($canvas, 0, 0, $background);
         imagefilledrectangle($canvas, 0, 0, 1199, 15, $foreground);
-        imagefilledrectangle($canvas, 0, 614, 1199, 629, $foreground);
+        imagefilledrectangle($canvas, 0, 614, 1199, 629, $accent);
 
         $logo = $source ? @imagecreatefromstring((string) @file_get_contents($source)) : false;
         if ($logo !== false) {
@@ -69,7 +70,8 @@ class BrandShareImageService
             $this->text($canvas, 'CHIFA MI HOGAR', 6, 205);
             $this->text($canvas, 'DARK KITCHEN', 3, 330);
         }
-        $this->text($canvas, 'HOY SE ANTOJA CHIFA. PIDE TU FAVORITO.', 2, 535);
+        $this->text($canvas, 'CHAUFA Y COMBOS PARA COMPARTIR', 2, 510);
+        $this->text($canvas, 'TU ANTOJO, DIRECTO A CASA.', 2, 555);
 
         ob_start();
         try {
@@ -88,8 +90,8 @@ class BrandShareImageService
         $width = imagefontwidth(5) * strlen($text);
         $height = imagefontheight(5);
         $label = imagecreatetruecolor($width, $height);
-        $background = imagecolorallocate($label, 246, 237, 199);
-        $foreground = imagecolorallocate($label, 160, 69, 38);
+        $background = imagecolorallocate($label, 252, 249, 247);
+        $foreground = imagecolorallocate($label, 112, 13, 29);
         imagefill($label, 0, 0, $background);
         imagestring($label, 5, 0, 0, $text, $foreground);
         imagecopyresampled($canvas, $label, (int) ((1200 - $width * $scale) / 2),
