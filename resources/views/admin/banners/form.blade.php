@@ -28,14 +28,14 @@
                     <option value="combo" @selected($targetType === 'combo')>Un combo</option>
                 </select>
             </div>
-            <div data-banner-destination="product"><label for="banner-product" class="block font-semibold">Plato</label>
-                <select id="banner-product" name="product_id" class="mt-2 w-full rounded-xl border p-3">
+            <div data-banner-destination="product" @if($targetType !== 'product') hidden @endif><label for="banner-product" class="block font-semibold">Plato</label>
+                <select id="banner-product" name="product_id" @disabled($targetType !== 'product') @required($targetType === 'product') class="mt-2 w-full rounded-xl border p-3">
                     <option value="">Seleccionar plato</option>
                     @foreach($products as $product)<option value="{{ $product->id }}" @selected((string) old('product_id', $banner->product_id) === (string) $product->id)>{{ $product->name }}</option>@endforeach
                 </select>
             </div>
-            <div data-banner-destination="combo"><label for="banner-combo" class="block font-semibold">Combo</label>
-                <select id="banner-combo" name="combo_id" class="mt-2 w-full rounded-xl border p-3">
+            <div data-banner-destination="combo" @if($targetType !== 'combo') hidden @endif><label for="banner-combo" class="block font-semibold">Combo</label>
+                <select id="banner-combo" name="combo_id" @disabled($targetType !== 'combo') @required($targetType === 'combo') class="mt-2 w-full rounded-xl border p-3">
                     <option value="">Seleccionar combo</option>
                     @foreach($combos as $combo)<option value="{{ $combo->id }}" @selected((string) old('combo_id', $banner->combo_id) === (string) $combo->id)>{{ $combo->name }}</option>@endforeach
                 </select>
@@ -48,7 +48,7 @@
         </section>
         <section class="space-y-4 rounded-2xl border bg-card p-5">
             <h2 class="text-xl font-bold">Imagen principal</h2>
-            <p class="text-sm text-foreground/75">Sugerido: 1600 × 600 px. La imagen se muestra completa, sin recortar. JPG, PNG o WebP; hasta 5 MB.</p>
+            <p class="text-sm text-foreground/75">Recomendado: 1600 × 500 px. Horizontal, entre 2:1 y 4:1; mínimo 800 × 200 px, máximo 3200 × 1600 px. JPG, PNG o WebP; hasta 5 MB. Se muestra completa.</p>
             @if($banner->mediaAsset)<x-catalog-image :item="$banner" variant="detail" class="max-h-64 w-full rounded-xl object-contain" />@endif
             <label for="banner-image" class="block font-semibold">Subir imagen</label>
             <input id="banner-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" @required(!$banner->exists) class="w-full rounded-xl border p-3">
@@ -56,7 +56,7 @@
         </section>
         <section class="space-y-4 rounded-2xl border bg-card p-5">
             <h2 class="text-xl font-bold">Imagen para celular <span class="text-sm font-normal">(opcional)</span></h2>
-            <p class="text-sm text-foreground/75">Sugerido: 900 × 1100 px, con texto grande. Sin esta versión se usa la imagen principal.</p>
+            <p class="text-sm text-foreground/75">Recomendado: 900 × 600 px. Horizontal, entre 1.25:1 y 2:1; mínimo 600 × 300 px, máximo 1800 × 1440 px. Hasta 5 MB. Sin esta versión se usa la principal.</p>
             @if($banner->mobileMediaAsset)
                 <img src="{{ $banner->mobileMediaAsset->detailUrl() }}" alt="Banner actual para celular" class="max-h-64 rounded-xl object-contain">
                 <label class="flex items-center gap-3"><input type="checkbox" name="remove_mobile_image" value="1" @checked(old('remove_mobile_image'))> Quitar versión para celular</label>

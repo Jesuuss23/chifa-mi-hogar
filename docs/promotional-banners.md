@@ -21,8 +21,9 @@ La migración crea `promotional_banners`; no modifica pedidos ni productos. Se d
 
 En el administrador: **Negocio → Banners**. Crear, editar, eliminar, ordenar y activar promociones. Cada banner apunta exclusivamente a un plato o combo elegido del catálogo; no acepta URLs externas.
 
-- Imagen principal sugerida: **1600 × 600 px**.
-- Imagen opcional para celular: **900 × 1100 px**, con texto legible.
+- Imagen principal sugerida: **1600 × 500 px** (horizontal, proporción entre 2:1 y 4:1).
+- Imagen opcional para celular: **900 × 600 px**, con texto legible (proporción entre 1.25:1 y 2:1).
+- Límites nuevos y dimensiones mínimas/máximas: ver `docs/referrals-foundation.md`. Los archivos antiguos se conservan, con altura visual limitada.
 - JPG, PNG o WebP, hasta 5 MB por archivo. Vista previa antes de guardar. La versión móvil puede retirarse sin reemplazar la principal.
 - Se usa el servicio de imágenes existente: original privado y variantes WebP públicas. Las imágenes se muestran completas, sin recorte.
 - Orden ascendente; en empates, primero el banner más antiguo.
