@@ -8,6 +8,9 @@
     <meta name="theme-color" content="#f7f8fa">
     <title>@yield('title', 'Administración') | Chifa Mi Hogar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=2">
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}?v=2">
+               
 </head>
 <body data-admin-theme="sage" class="storefront-theme admin-sage admin-ui min-h-screen bg-background text-foreground">
 <a href="#admin-content" class="admin-skip-link">Ir al contenido</a>
