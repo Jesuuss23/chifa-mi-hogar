@@ -26,6 +26,7 @@
                     $menuGroups = [
                         'Operación' => [
                             ['Pedidos', 'admin.orders.index', 'admin.orders.*'],
+                            ['Ventas rápidas', 'admin.quick-sales.index', 'admin.quick-sales.*'],
                             ['Clientes', 'admin.customers.index', 'admin.customers.*'],
                             ['Repartidores', 'admin.delivery-drivers.index', 'admin.delivery-drivers.*'],
                             ['Mis entregas', 'delivery.orders.index', 'delivery.orders.*'],

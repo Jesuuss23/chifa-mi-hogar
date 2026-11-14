@@ -34,3 +34,4 @@ import './admin-order-updates';
 
 import './promotional-banners';
 import './quantity-stepper';
+import './quick-sales';

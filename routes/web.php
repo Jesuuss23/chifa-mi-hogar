@@ -188,6 +188,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('login.submit');
     });
     Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('quick-sales', [\App\Http\Controllers\Admin\QuickSaleController::class, 'index'])->name('quick-sales.index');
+        Route::get('quick-sales/create', [\App\Http\Controllers\Admin\QuickSaleController::class, 'create'])->name('quick-sales.create');
+        Route::post('quick-sales', [\App\Http\Controllers\Admin\QuickSaleController::class, 'store'])->middleware('throttle:30,1')->name('quick-sales.store');
+        Route::get('quick-sales/{quickSale}', [\App\Http\Controllers\Admin\QuickSaleController::class, 'show'])->whereNumber('quickSale')->name('quick-sales.show');
         Route::get('referrals', [\App\Http\Controllers\Admin\ReferralCampaignController::class, 'index'])->name('referrals.index');
         Route::post('referrals', [\App\Http\Controllers\Admin\ReferralCampaignController::class, 'store'])->middleware('throttle:10,1')->name('referrals.store');
         Route::patch('referrals/{campaign}', [\App\Http\Controllers\Admin\ReferralCampaignController::class, 'update'])->middleware('throttle:10,1')->name('referrals.update');
