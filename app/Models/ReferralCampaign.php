@@ -10,7 +10,8 @@ class ReferralCampaign extends Model
 
     protected function casts(): array
     {
-        return ['starts_at' => 'datetime', 'ends_at' => 'datetime'];
+        return ['include_combos' => 'boolean', 'guest_percent' => 'integer', 'inviter_percent' => 'integer',
+            'starts_at' => 'datetime', 'ends_at' => 'datetime'];
     }
 
     public static function accepting(): ?self

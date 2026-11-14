@@ -43,6 +43,12 @@
 
             <hr>
 
+            @if((float) $order->discount_amount > 0)
+                <div class="flex justify-between gap-2 text-primary">
+                    <span>Descuento</span>
+                    <strong>− S/ {{ number_format((float) $order->discount_amount, 2) }}</strong>
+                </div>
+            @endif
             <div class="flex justify-between gap-2 text-xl">
                 <strong>Total</strong>
                 <strong class="text-primary">

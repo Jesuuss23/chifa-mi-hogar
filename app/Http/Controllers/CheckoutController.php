@@ -14,6 +14,7 @@ class CheckoutController extends Controller
         OrderService $orders
     ): JsonResponse {
         $data = $request->validate([
+            'referral_coupon_id' => ['nullable', 'integer', 'min:1'],
             'checkout_token' => ['required', 'uuid'],
             'customer_name' => ['required', 'string', 'max:150'],
             'customer_phone' => [
@@ -133,6 +134,7 @@ class CheckoutController extends Controller
                 'payment_status' => $order->payment_status,
                 'subtotal' => $order->subtotal,
                 'delivery_fee' => $order->delivery_fee,
+                'discount_amount' => $order->discount_amount,
                 'total' => $order->total,
             ],
         ], 201);

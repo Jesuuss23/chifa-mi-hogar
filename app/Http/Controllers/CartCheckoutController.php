@@ -196,6 +196,7 @@ class CartCheckoutController extends Controller
     private function validatedData(Request $request, bool $confirm = false): array
     {
         $rules = [
+            'referral_coupon_id' => ['nullable', 'integer', 'min:1'],
             'delivery_type' => ['required', Rule::in(['delivery']),],
             'delivery_address' => ['required_if:delivery_type,delivery', 'nullable', 'string', 'max:500'],
             'delivery_reference' => ['nullable', 'string', 'max:500'],

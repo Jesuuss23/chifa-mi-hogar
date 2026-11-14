@@ -16,6 +16,7 @@ class CheckoutQuoteController extends Controller
         OrderService $orderService
     ): JsonResponse {
         $data = $request->validate([
+            'referral_coupon_id' => ['nullable', 'integer', 'min:1'],
             'delivery_type' => [
                 'required',
                 Rule::in(['delivery']),
