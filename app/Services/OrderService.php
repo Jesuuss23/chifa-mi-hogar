@@ -49,6 +49,7 @@ class OrderService
                     ->first();
 
                 if ($existingOrder) {
+                    CheckoutOrderAccess::authorize($existingOrder);
                     return $existingOrder;
                 }
 

@@ -36,7 +36,7 @@ class CartController extends Controller
         $data = $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'quantity' => ['required', 'integer', 'min:1', 'max:20'],
-            'extras' => ['nullable', 'array'],
+            'extras' => ['nullable', 'array', 'max:30'],
             'extras.*' => ['integer', 'distinct'],
         ]);
 
@@ -83,6 +83,7 @@ class CartController extends Controller
             'extra_ids' => $extraIds,
         ];
 
+        \App\Services\CartLimits::ensureCapacity($cart);
         $request->session()->put('cart', $cart);
 
         return redirect()->route('cart.index')
@@ -126,6 +127,7 @@ class CartController extends Controller
 
             $cart[$key]['quantity'] = (int) $data['quantity'];
 
+            \App\Services\CartLimits::ensureCapacity($cart);
             $request->session()->put('cart', $cart);
 
             return redirect()->route('cart.index');
@@ -292,6 +294,7 @@ class CartController extends Controller
 
             $cart[$key] = $newEntry;
 
+            \App\Services\CartLimits::ensureCapacity($cart);
             $request->session()->put('cart', $cart);
 
             return redirect()
@@ -342,6 +345,7 @@ class CartController extends Controller
             ]);
         }
 
+        \App\Services\CartLimits::ensureCapacity($cart);
         $request->session()->put('cart', $cart);
 
         return redirect()
@@ -761,6 +765,7 @@ class CartController extends Controller
         }
 
         // Solo persistir si todas las unidades son válidas.
+        \App\Services\CartLimits::ensureCapacity($cart);
         $request->session()->put('cart', $cart);
 
         return redirect()

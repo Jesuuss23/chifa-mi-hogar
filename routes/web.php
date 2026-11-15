@@ -48,20 +48,25 @@ Route::get('/carrito', [CartController::class, 'index'])
     ->name('cart.index');
 
 Route::post('/carrito', [CartController::class, 'store'])
+    ->middleware([\App\Http\Middleware\LimitCheckoutPayload::class, 'throttle:cart-mutations'])
     ->name('cart.store');
 
 Route::post('/checkout/quote', [CheckoutQuoteController::class, 'store'])
     ->middleware('throttle:30,1')
+    ->middleware(\App\Http\Middleware\LimitCheckoutPayload::class)
     ->name('checkout.quote');
 // Registrar pedidos de clientes e invitados.
 Route::post('/checkout', [CheckoutController::class, 'store'])
     ->middleware('throttle:10,1')
+    ->middleware(\App\Http\Middleware\LimitCheckoutPayload::class)
     ->name('checkout.store');
 
 Route::patch('/carrito/{key}', [CartController::class, 'update'])
+    ->middleware([\App\Http\Middleware\LimitCheckoutPayload::class, 'throttle:cart-mutations'])
     ->name('cart.update');
 
 Route::delete('/carrito/{key}', [CartController::class, 'destroy'])
+    ->middleware([\App\Http\Middleware\LimitCheckoutPayload::class, 'throttle:cart-mutations'])
     ->name('cart.destroy');
 
 Route::get('/combos', [ComboStorefrontController::class, 'index'])
@@ -71,16 +76,19 @@ Route::get('/combos/{combo:slug}', [ComboStorefrontController::class, 'show'])
     ->name('combos.show');
 
 Route::post('/carrito/combos', [ComboCartController::class, 'store'])
+    ->middleware([\App\Http\Middleware\LimitCheckoutPayload::class, 'throttle:cart-mutations'])
     ->name('cart.combos.store');
 Route::get('/carrito/checkout', [CartCheckoutController::class, 'show'])
     ->name('cart.checkout');
 
 Route::post('/carrito/checkout/cotizar', [CartCheckoutController::class, 'quote'])
     ->middleware('throttle:30,1')
+    ->middleware(\App\Http\Middleware\LimitCheckoutPayload::class)
     ->name('cart.checkout.quote');
 
 Route::post('/carrito/checkout/confirmar', [CartCheckoutController::class, 'confirm'])
     ->middleware('throttle:10,1')
+    ->middleware(\App\Http\Middleware\LimitCheckoutPayload::class)
     ->name('cart.checkout.confirm');
     
 Route::get('/carrito/checkout/confirmado', [CartCheckoutController::class, 'success'])
@@ -287,7 +295,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])
             ->name('orders.status');
         Route::post('/checkout', [CheckoutController::class, 'store'])
-            ->middleware('throttle:10,1')
+            ->middleware(['throttle:10,1', \App\Http\Middleware\LimitCheckoutPayload::class])
             ->name('checkout.store');
         Route::patch('/orders/{order}/collect-cash', [OrderController::class, 'collectCashPayment'])
             ->name('orders.collect-cash');

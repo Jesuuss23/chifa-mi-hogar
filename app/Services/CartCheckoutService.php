@@ -8,6 +8,7 @@ class CartCheckoutService
 {
     public function items(array $cart): array
     {
+        CartLimits::ensureCapacity($cart);
         $items = [];
 
         foreach ($cart as $entry) {
