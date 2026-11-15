@@ -21,17 +21,20 @@ function deferred() {
 function page({ initial = 'pending', hidden = false, fetcher = async () => status('pending') } = {}) {
     let script = blade.match(/<script>([\s\S]*?)<\/script>/)[1];
     script = script
+        .replace(/@include\('storefront\.partials\.([a-z-]+)'\)/g, (_, name) =>
+            fs.readFileSync(path.join(__dirname, '../../resources/views/storefront/partials', name + '.blade.php'), 'utf8'))
         .replace("@json(route('orders.tracking.status', ['token' => $trackingToken]))", '"/status"')
         .replace(/@json\(\s*route\('orders.tracking.route', \['token' => \$trackingToken\]\)\s*\)/, '"/route"')
         .replace('@json($order->status)', JSON.stringify(initial))
         .replace('@json($order->payment_status)', '"pending"');
-    assert.equal(script.includes('@json'), false, 'all Blade expressions must be substituted');
+    assert.equal(/@(json|include)/.test(script), false, 'all Blade expressions must be substituted');
 
     const listeners = {};
     const elements = Object.fromEntries([
         'tracking-status', 'tracking-cancelled', 'payment-status',
         'delivery-map-placeholder', 'delivery-route-map', 'delivery-route-info',
-    ].map(id => [id, { textContent: '', hidden: false, className: '' }]));
+        'tracking-retry', 'tracking-sync-status',
+    ].map(id => [id, { textContent: '', hidden: false, className: '', addEventListener() {} }]));
     const document = {
         hidden,
         addEventListener: (event, callback) => { listeners[event] = callback; },
@@ -44,7 +47,8 @@ function page({ initial = 'pending', hidden = false, fetcher = async () => statu
     let nextId = 1;
     const context = {
         document,
-        window: { L: {} },
+        window: { L: {}, addEventListener() {} },
+        navigator: { onLine: true },
         AbortController,
         console: { warn() {} },
         setInterval: (callback, delay) => {
@@ -64,12 +68,20 @@ function page({ initial = 'pending', hidden = false, fetcher = async () => statu
             return fetcher(url, options);
         },
     };
+    context.window.fetch = context.fetch;
     vm.runInNewContext(script, context);
     listeners.DOMContentLoaded();
 
     return {
         elements, document, intervals, timeouts, requests,
-        tick() { for (const timer of [...intervals.values()]) timer.callback(); },
+        tick() {
+            for (const [id, timer] of [...timeouts]) {
+                if (timer.delay >= 15000) {
+                    timeouts.delete(id);
+                    timer.callback();
+                }
+            }
+        },
         visibility(value) {
             document.hidden = value;
             listeners.visibilitychange?.();
@@ -89,7 +101,7 @@ test('polls status and payment every 15 seconds, not only the map', async () => 
     const responses = [status('pending'), status('confirmed', 'verified'), status('preparing', 'verified')];
     const p = page({ fetcher: async () => responses.shift() });
     await flush();
-    assert.equal([...p.intervals.values()][0].delay, 15000);
+    assert.equal([...p.timeouts.values()][0].delay, 15000);
     p.tick();
     await flush();
     assert.equal(p.elements['tracking-status'].textContent, 'Pedido confirmado');
@@ -121,7 +133,7 @@ for (const terminal of ['delivered', 'cancelled']) {
         await flush();
         p.tick();
         await flush();
-        assert.equal(p.intervals.size, 0);
+        assert.equal(p.timeouts.size, 0);
         assert.equal(p.elements['delivery-map-placeholder'].hidden, true);
         assert.equal(p.elements['tracking-cancelled'].hidden, terminal !== 'cancelled');
         const count = p.requests.length;
@@ -136,7 +148,7 @@ for (const terminal of ['delivered', 'cancelled']) {
         await flush();
         p.tick();
         p.visibility(false);
-        assert.equal(p.intervals.size, 0);
+        assert.equal(p.timeouts.size, 0);
         assert.equal(p.requests.length, 0);
     });
 }
@@ -189,7 +201,7 @@ test('recovers after HTTP and network failures and ignores invalid states', asyn
     await flush();
     assert.equal(p.elements['tracking-status'].textContent, 'Pedido confirmado');
     assert.equal(p.elements['payment-status'].textContent, 'Verificado');
-    assert.equal(p.timeouts.size, 0);
+    assert.equal([...p.timeouts.values()][0].delay, 15000);
 });
 
 test('aborts a stuck status request and allows the next poll', async () => {
@@ -218,8 +230,9 @@ test('ignores a late GPS response after delivery', async () => {
     p.tick();
     await flush();
     assert.equal(p.elements['delivery-map-placeholder'].hidden, true);
+    const message = p.elements['delivery-route-info'].textContent;
     route.resolve(noGps());
     await flush();
-    assert.equal(p.elements['delivery-route-info'].textContent, '');
-    assert.equal(p.intervals.size, 0);
+    assert.equal(p.elements['delivery-route-info'].textContent, message);
+    assert.equal(p.timeouts.size, 0);
 });

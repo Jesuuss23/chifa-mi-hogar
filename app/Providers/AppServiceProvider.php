@@ -19,6 +19,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\RateLimiter::for('cart-mutations', function (\Illuminate\Http\Request $request) {
+            $identity = $request->user()
+                ? 'user:'.$request->user()->id
+                : 'ip:'.$request->ip();
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($identity);
+        });
         \App\Models\Order::observe(\App\Observers\ReferralOrderObserver::class);
         \Illuminate\Support\Facades\View::composer([
             'storefront.index', 'storefront.show',
