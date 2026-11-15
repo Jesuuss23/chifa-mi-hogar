@@ -61,6 +61,7 @@ class ComboCartController extends Controller
             'components' => $normalized,
         ];
 
+        \App\Services\CartLimits::ensureCapacity($cart);
         $request->session()->put('cart', $cart);
 
         return redirect()

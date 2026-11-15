@@ -82,6 +82,7 @@ class CartCheckoutController extends Controller
             ->first();
 
         if ($existingOrder) {
+            \App\Services\CheckoutOrderAccess::authorize($existingOrder);
 
             $request->session()->put(
                 'last_confirmed_order_id',
@@ -150,6 +151,8 @@ class CartCheckoutController extends Controller
 
             return redirect()->route('cart.index');
         }
+
+        \App\Services\CheckoutOrderAccess::authorize($order);
 
         if (!$order->tracking_token) {
             $order->tracking_token = (string) Str::uuid();
@@ -234,6 +237,8 @@ class CartCheckoutController extends Controller
         if (!$order) {
             return response()->json(['message' => 'Pedido no encontrado'], 404);
         }
+
+        \App\Services\CheckoutOrderAccess::authorize($order);
 
         return response()->json([
             'status' => $order->status,
