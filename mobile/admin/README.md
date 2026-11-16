@@ -2,7 +2,7 @@
 
 Proyecto nativo Kotlin + Jetpack Compose para abrir en Android Studio. Consume la API Laravel existente: `https://chifamihogar.com/api/v1/admin/`. No requiere crear otra base de datos ni contratar servicios.
 
-**Estado: base Android compilada y probada por el propietario. Esta entrega añade Firebase y está pendiente de compilar y probar en dispositivo.** Ver [FIREBASE.md](FIREBASE.md) para configuración, pruebas y límites.
+**Estado: base Android compilada y probada por el propietario. La recepción Firebase anterior fue confirmada por el propietario. Esta entrega conecta Laravel y está pendiente de pruebas PHP, compilación Android y prueba real.** Ver [FIREBASE.md](FIREBASE.md) para configuración, pruebas y límites.
 
 ## Alcance
 
@@ -13,11 +13,11 @@ Proyecto nativo Kotlin + Jetpack Compose para abrir en Android Studio. Consume l
 - Actualización manual y al volver al primer plano, estados de carga y reintento.
 - Cierre de sesión mediante revocación del token actual.
 
-Esta entrega consulta pedidos. Verificar pagos, cambiar estados, asignar repartidores, registrar ventas y enviar notificaciones automáticas desde Laravel son siguientes entregas; no se simulan acciones locales que el servidor todavía no ofrece.
+Esta entrega consulta pedidos. Verificar pagos, cambiar estados, asignar repartidores, registrar ventas son siguientes entregas; no se simulan acciones locales que el servidor todavía no ofrece.
 
 ## Abrir en Android Studio
 
-1. Obtener la rama `feat/admin-firebase-client` en una copia local del repositorio.
+1. Obtener la rama `feat/admin-order-push` en una copia local del repositorio.
 2. En Android Studio, **Open** y seleccionar `mobile/admin`, no la raíz Laravel.
 3. Usar una versión de Android Studio compatible con AGP 9.3; configurar Gradle JDK 21 y aceptar la sincronización. El wrapper fija Gradle 9.5.0 y verifica el SHA-256 de su distribución.
 4. En SDK Manager instalar Android SDK Platform 36 y Build Tools 36.0.0. Android Studio generará `local.properties` con la ruta de tu SDK; ese archivo no se publica.
@@ -68,7 +68,7 @@ Pruebas manuales antes de aprobar:
 6. Cerrar sesión conectado y reabrir: no debe restaurar la cuenta. Comprobar que no aparecen datos privados en capturas o recientes.
 7. Probar tamaños de fuente grandes y pantallas estrechas; los detalles largos se desplazan verticalmente.
 
-La API debe estar desplegada y sus pruebas aprobadas en una base de pruebas: `php artisan test --filter=AdminMobileApiTest`. La app no tiene endpoints de edición ni añade migraciones.
+La API debe estar desplegada y sus pruebas aprobadas en una base de pruebas: `php artisan test --filter=AdminMobileApiTest`. La app no edita pedidos; el registro de avisos añade dos tablas. Ver FIREBASE.md.
 
 ## Archivos principales
 

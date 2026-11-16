@@ -32,16 +32,13 @@ object PushNotifications {
         if (!allowed(context) || TokenVault(context).load() == null) { result(false); return }
         settings(context).edit().putBoolean("enabled", true).apply()
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
-        FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            // The user might have signed out while Firebase was registering.
-            result(it.isSuccessful && enabled(context))
-        }
+        PushRegistration.sync(context, force = true, result = result)
     }
-    fun stop(context: Context) {
+    fun stop(context: Context, result: ((Boolean) -> Unit)? = null) {
         settings(context).edit().putBoolean("enabled", false).apply()
         FirebaseMessaging.getInstance().isAutoInitEnabled = false
-        FirebaseMessaging.getInstance().deleteToken()
         context.getSystemService(NotificationManager::class.java).cancelAll()
+        PushRegistration.sync(context, force = true, result = result)
     }
     fun show(context: Context, eventId: String, orderId: Long?) {
         if (!enabled(context) || !allowed(context) || TokenVault(context).load() == null) return
@@ -74,8 +71,9 @@ class AdminMessagingService : FirebaseMessagingService() {
         val event = if (id != null) "order:" + id else message.messageId ?: return
         PushNotifications.show(this, event, id)
     }
-    // Automatic Laravel registration of rotated tokens belongs to the server integration delivery.
-    // No token is logged or persisted by this application.
+    override fun onNewToken(token: String) {
+        if (PushNotifications.enabled(this)) PushRegistration.sync(this, force = true)
+    }
 }
 
 object PushMessage {

@@ -95,6 +95,10 @@ class AdminApi {
         return Admin(identity.getString("name"))
     }
     suspend fun logout(token: String) { request("auth/logout", token, JSONObject()) }
+    suspend fun registerPush(token: String, fcm: String) {
+        request("push/register", token, JSONObject().put("fcm_token", fcm))
+    }
+    suspend fun unregisterPush(token: String) { request("push/unregister", token, JSONObject()) }
     suspend fun orders(token: String, page: Int, status: String, search: String): OrderPage {
         val query = "orders?per_page=20&page=" + page +
             (if (status.isEmpty()) "" else "&status=" + URLEncoder.encode(status, "UTF-8")) +
