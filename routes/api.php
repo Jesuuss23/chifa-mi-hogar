@@ -26,6 +26,10 @@ Route::prefix('v1/admin')->middleware(\App\Http\Middleware\AdminMobileResponse::
             ->group(function () {
                 Route::get('auth/me', [\App\Http\Controllers\Api\Admin\MobileAuthController::class, 'me']);
                 Route::post('auth/logout', [\App\Http\Controllers\Api\Admin\MobileAuthController::class, 'logout']);
+                Route::post('push/register', [\App\Http\Controllers\Api\Admin\MobilePushController::class, 'store'])
+                    ->middleware('throttle:10,1');
+                Route::post('push/unregister', [\App\Http\Controllers\Api\Admin\MobilePushController::class, 'destroy'])
+                    ->middleware('throttle:10,1');
                 Route::get('orders', [\App\Http\Controllers\Api\Admin\MobileOrderController::class, 'index']);
                 Route::get('orders/{order}', [\App\Http\Controllers\Api\Admin\MobileOrderController::class, 'show'])
                     ->whereNumber('order');

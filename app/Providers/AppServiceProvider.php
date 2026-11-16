@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
                 : 'ip:'.$request->ip();
             return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($identity);
         });
+        \App\Models\Order::observe(\App\Observers\AdminPushOrderObserver::class);
         \App\Models\Order::observe(\App\Observers\ReferralOrderObserver::class);
         \Illuminate\Support\Facades\View::composer([
             'storefront.index', 'storefront.show',

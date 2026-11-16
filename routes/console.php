@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 \Illuminate\Support\Facades\Schedule::command('whatsapp:retry-orders')
     ->everyMinute()
     ->withoutOverlapping(5);
+
+\Illuminate\Support\Facades\Schedule::command('app:send-admin-push')
+    ->everyMinute()->withoutOverlapping(10)->runInBackground();

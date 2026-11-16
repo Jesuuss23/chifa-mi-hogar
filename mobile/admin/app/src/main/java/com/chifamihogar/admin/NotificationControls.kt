@@ -27,8 +27,8 @@ fun NotificationControls() {
         working = true
         PushNotifications.activate(context) { success ->
             working = false
-            message = if (success) "Permiso concedido y teléfono preparado."
-                else "No pudimos preparar los avisos. Revisa tu conexión y los servicios de Google Play."
+            message = if (success) "Teléfono registrado para recibir pedidos."
+                else "No pudimos registrar el teléfono. Revisa la conexión y que los avisos estén habilitados en el servidor."
         }
     }
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -53,11 +53,15 @@ fun NotificationControls() {
                         .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName))
                 }) { Text("Abrir ajustes del teléfono") }
                 TextButton(enabled = !working, onClick = {
-                    PushNotifications.stop(context)
-                    message = "Avisos desactivados en este teléfono."
+                    working = true
+                    PushNotifications.stop(context) { success ->
+                        working = false
+                        message = if (success) "Avisos desactivados."
+                            else "Desactivados en este teléfono. Sincronización pendiente: reabre la app con conexión."
+                    }
                 }) { Text("Desactivar avisos") }
                 if (BuildConfig.DEBUG) {
-                    Text("Prueba de Firebase · envíos automáticos pendientes", style = MaterialTheme.typography.bodySmall)
+                    Text("Diagnóstico de Firebase", style = MaterialTheme.typography.bodySmall)
                     OutlinedButton(enabled = !working && PushNotifications.enabled(context), onClick = {
                         working = true
                         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->

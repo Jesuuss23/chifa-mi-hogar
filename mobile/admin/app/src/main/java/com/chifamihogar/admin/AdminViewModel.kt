@@ -73,6 +73,7 @@ class AdminViewModel(app: Application) : AndroidViewModel(app) {
         session?.let {
             mutable.value = mutable.value.copy(admin = api.me(it.token))
             loadOrders()
+            PushRegistration.sync(getApplication(), force = true)
         }
     }
     fun retry() {
@@ -92,6 +93,7 @@ class AdminViewModel(app: Application) : AndroidViewModel(app) {
         mutable.value = mutable.value.copy(canRestore = true)
         mutable.value = mutable.value.copy(admin = api.me(authenticated.token))
         loadOrders()
+        PushRegistration.sync(getApplication(), force = true)
     }
     private suspend fun loadOrders(page: Int = 1) {
         val token = session?.token ?: return
@@ -107,6 +109,7 @@ class AdminViewModel(app: Application) : AndroidViewModel(app) {
     fun refresh() = run {
         val token = session?.token ?: return@run
         mutable.value = mutable.value.copy(admin = api.me(token))
+        PushRegistration.sync(getApplication())
         val id = mutable.value.selectedId
         if (id != null) mutable.value = mutable.value.copy(detail = api.order(token, id))
         else loadOrders(mutable.value.orders?.page ?: 1)
