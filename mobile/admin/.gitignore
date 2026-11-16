@@ -5,3 +5,5 @@
 *.jks
 *.keystore
 /.idea/
+**/*service-account*.json
+**/*firebase-adminsdk*.json

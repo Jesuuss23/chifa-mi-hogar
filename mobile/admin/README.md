@@ -2,7 +2,7 @@
 
 Proyecto nativo Kotlin + Jetpack Compose para abrir en Android Studio. Consume la API Laravel existente: `https://chifamihogar.com/api/v1/admin/`. No requiere crear otra base de datos ni contratar servicios.
 
-**Estado: código en revisión. No hay APK validada ni firmada para distribución.** El intento local de compilación se detuvo al resolver `org.jetbrains.kotlin.plugin.compose:2.2.10`; no se ejecutaron las pruebas Android. No fusionar como versión lista para producción hasta compilar y completar las pruebas de esta guía.
+**Estado: base Android compilada y probada por el propietario. Esta entrega añade Firebase y está pendiente de compilar y probar en dispositivo.** Ver [FIREBASE.md](FIREBASE.md) para configuración, pruebas y límites.
 
 ## Alcance
 
@@ -13,11 +13,11 @@ Proyecto nativo Kotlin + Jetpack Compose para abrir en Android Studio. Consume l
 - Actualización manual y al volver al primer plano, estados de carga y reintento.
 - Cierre de sesión mediante revocación del token actual.
 
-Esta entrega consulta pedidos. Verificar pagos, cambiar estados, asignar repartidores, registrar ventas y recibir notificaciones son siguientes entregas; no se simulan acciones locales que el servidor todavía no ofrece.
+Esta entrega consulta pedidos. Verificar pagos, cambiar estados, asignar repartidores, registrar ventas y enviar notificaciones automáticas desde Laravel son siguientes entregas; no se simulan acciones locales que el servidor todavía no ofrece.
 
 ## Abrir en Android Studio
 
-1. Obtener la rama `feat/admin-android-app` en una copia local del repositorio.
+1. Obtener la rama `feat/admin-firebase-client` en una copia local del repositorio.
 2. En Android Studio, **Open** y seleccionar `mobile/admin`, no la raíz Laravel.
 3. Usar una versión de Android Studio compatible con AGP 9.3; configurar Gradle JDK 21 y aceptar la sincronización. El wrapper fija Gradle 9.5.0 y verifica el SHA-256 de su distribución.
 4. En SDK Manager instalar Android SDK Platform 36 y Build Tools 36.0.0. Android Studio generará `local.properties` con la ruta de tu SDK; ese archivo no se publica.

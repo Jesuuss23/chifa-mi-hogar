@@ -1,6 +1,7 @@
 package com.chifamihogar.admin
 
 import android.os.Bundle
+import android.content.Intent
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -43,7 +44,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         enableEdgeToEdge()
+        PushNotifications.channel(this)
+        if (savedInstanceState == null) receiveNotification(intent)
         setContent { AdminApp(model) }
+    }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        receiveNotification(intent)
+    }
+    private fun receiveNotification(intent: Intent) {
+        val id = try {
+            PushMessage.orderId(intent.getStringExtra("order_id"))
+                ?: intent.getLongExtra("push_order_id", 0).takeIf { it > 0 }
+        } catch (_: RuntimeException) { null }
+        id?.let(model::notificationOrder)
     }
 }
 
@@ -148,6 +163,7 @@ private fun Header(state: AdminState, model: AdminViewModel) {
             Text("Mi Hogar", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             Text(if (state.selectedId == null) "Pedidos" else "Detalle del pedido", style = MaterialTheme.typography.bodySmall)
         }
+        NotificationControls()
         TextButton(onClick = { logoutDialog = true }, enabled = !state.busy) { Text("Salir") }
     }
     if (logoutDialog) AlertDialog(onDismissRequest = { logoutDialog = false },
