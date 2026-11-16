@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "112125835169",
+    "project_id": "chifa-mi-hogar-e7fec",
+    "storage_bucket": "chifa-mi-hogar-e7fec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112125835169:android:69f133439a1316b47dfde0",
+        "android_client_info": {
+          "package_name": "com.chifamihogar.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7gjMIPIgaFIzufGx9mg3ewLbPMbI8WaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
