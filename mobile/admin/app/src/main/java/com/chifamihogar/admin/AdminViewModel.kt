@@ -29,6 +29,7 @@ class AdminViewModel(app: Application) : AndroidViewModel(app) {
     private val api = AdminApi()
     private val vault = TokenVault(app)
     private var session: Session? = null
+    private var pendingOrderId: Long? = null
     private val mutable = MutableStateFlow(AdminState())
     val state = mutable.asStateFlow()
 
@@ -48,6 +49,7 @@ class AdminViewModel(app: Application) : AndroidViewModel(app) {
                 val code = (error as? ApiFailure)?.status ?: 0
                 if (code == 401 || code == 403) {
                     session = null
+                    PushNotifications.stop(getApplication())
                     withContext(Dispatchers.IO) { vault.clear() }
                     mutable.value = AdminState(checking = false, error = ApiContract.errorText(code))
                 } else {
@@ -59,12 +61,14 @@ class AdminViewModel(app: Application) : AndroidViewModel(app) {
                 }
             } finally {
                 mutable.value = mutable.value.copy(busy = false, checking = false)
+                openPendingNotification()
             }
         }
     }
 
     private fun restore() = run {
         session = withContext(Dispatchers.IO) { vault.load() }
+        if (session == null) PushNotifications.stop(getApplication())
         mutable.value = mutable.value.copy(canRestore = session != null)
         session?.let {
             mutable.value = mutable.value.copy(admin = api.me(it.token))
@@ -108,14 +112,29 @@ class AdminViewModel(app: Application) : AndroidViewModel(app) {
         else loadOrders(mutable.value.orders?.page ?: 1)
     }
     fun open(id: Long) = run {
+        val token = session?.token ?: return@run
         mutable.value = mutable.value.copy(selectedId = id, detail = null)
-        mutable.value = mutable.value.copy(detail = api.order(session!!.token, id))
+        mutable.value = mutable.value.copy(detail = api.order(token, id))
+    }
+    fun notificationOrder(id: Long) {
+        if (id <= 0) return
+        pendingOrderId = id
+        openPendingNotification()
+    }
+    private fun openPendingNotification() {
+        if (mutable.value.busy || mutable.value.admin == null || session == null ||
+            System.currentTimeMillis() < mutable.value.blockedUntil) return
+        val id = pendingOrderId ?: return
+        pendingOrderId = null
+        open(id)
     }
     fun back() {
         if (!mutable.value.busy) mutable.value = mutable.value.copy(selectedId = null, detail = null, error = null)
     }
     fun logout() = run {
         session?.let { api.logout(it.token) }
+        PushNotifications.stop(getApplication())
+        pendingOrderId = null
         withContext(Dispatchers.IO) { vault.clear() }
         session = null
         mutable.value = AdminState(checking = false)
