@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Combo;
 use App\Models\Product;
+use App\Models\StoreSetting;
 use Illuminate\Http\Request;
 
 class StorefrontController extends Controller
@@ -58,7 +59,11 @@ class StorefrontController extends Controller
             ->filter(fn ($banner) => app(\App\Services\CatalogImageService::class)->url($banner, 'detail') !== null)
             ->values();
 
+        $settings = StoreSetting::current();
+        $ordersWhatsapp = $settings->accepting_orders ? $settings->orders_whatsapp : null;
+
         return view('storefront.index', compact(
+            'ordersWhatsapp',
             'banners',
             'categories',
             'products',
