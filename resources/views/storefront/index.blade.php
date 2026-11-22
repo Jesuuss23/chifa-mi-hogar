@@ -45,14 +45,16 @@
 <!-- CARTA -->
 <section id="carta" class="home-menu catalog-surface mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-10">
 
-    <div class="mb-8">
-        
-
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h2 class="text-3xl font-black sm:text-4xl">
             Nuestra carta
         </h2>
 
-        
+        @if($ordersWhatsapp)
+            <a href="https://wa.me/{{ $ordersWhatsapp }}" class="home-hero__cta">
+                Haz tu pedido directamente desde WhatsApp
+            </a>
+        @endif
     </div>
 
     <!-- CATEGORÍAS -->
